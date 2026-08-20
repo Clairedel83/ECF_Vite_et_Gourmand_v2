@@ -4,8 +4,9 @@
 @import url('./header.css');
 @import url('./footer.css');
 @import url('./pages/accueil.css');
+@import url('./pages/a_propos.css');
 
-/* ==================================================== BASE ====================================================== */
+/* =========================== BASE ======================================== */
 *{
     font-family:"Plus Jakarta Sans";
     margin:0;

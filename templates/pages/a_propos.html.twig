@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vite et Gourmand - Traiteur{% endblock %}
+
+{% block body %}
+
+<section class="story">
+    <div class="story_content">
+        <div class="story_content_title">
+            <h2>L'AVENTURE</h2>
+            <h2>VITE & Gourmand</h2>
+        </div>
+
+        <div class="story_content_text">
+            <p>Tout a commencé en 1999, dans la cuisine de José, avec une conviction simple : la bonne cuisine est un acte de partage.</p>
+
+            <p>Avec son associée Julie, ils ont transformé cette passion en une entreprise de traiteur reconnue à Bordeaux et dans toute la Gironde.</p>
+
+            <p>Au fil des années, leur réputation s’est construite autour d’une cuisine généreuse, de produits soigneusement sélectionnés auprès de producteurs locaux et d’une relation de confiance durable avec leurs clients, dont beaucoup les accompagnent depuis leurs débuts.</p>
+
+            <p>Spécialisés dans les événements privés et professionnels, Julie et José imaginent des menus sur mesure, adaptés à chaque occasion, du repas convivial aux grandes réceptions.</p>
+
+            <p>Aujourd’hui, Vite & Gourmand, c’est plus de 500 événements réalisés, des dizaines de menus pensés avec soin, et toujours la même exigence : faire de chaque moment un souvenir unique.</p>
+        </div>
+    </div>
+
+    <div class="flexbox_story">
+        <div class="background_story">
+        </div>
+
+        <img src="{{ asset('/images/connexion.png') }}" alt="" class="visuel_story">
+    </div>
+</section>
+
+<section class="valeurs">
+    <h2>NOS VALEURS</h2>
+
+    <div class="valeurs_content">
+        <div class="item">
+            <div class="item_title">
+                <h4>AMOUR</h4>
+                <h4>DU TERROIR</h4>                        
+            </div>
+
+            <div class="line_dashed"></div>
+
+            <p>Une cuisine ancrée dans le territoire, valorisant des produits locaux, de saison et le savoir-faire des producteurs de la région, avec authenticité.</p>
+        </div>
+
+        <div class="item">
+            <div class="item_title">
+                <h4>ENGAGEMENT</h4>
+                <h4>RESPONSABLE</h4>                        
+            </div>
+
+            <div class="line_dashed"></div>
+
+            <p>Une cuisine pensée pour limiter son impact, privilégiant les circuits courts, des pratiques durables et une attention portée aux ressources locales.</p>
+        </div>
+
+        <div class="item">
+            <div class="item_title">
+                <h4>PROXIMITE</h4>
+                <h4>& ECOUTE</h4>                        
+            </div>
+
+            <div class="line_dashed"></div>
+
+            <p>Un accompagnement adapté, personnalisé pour chaque événement, avec une attention particulière portée à vos envies, vos besoins et vos attentes.</p>
+        </div>
+    </div>
+</section>
+
+<section class="presentation">
+    <div class="presentation_content julie">
+        <img src="{{ asset('/images/julie.png') }}" alt="" class="presentation_img">
+
+        <h3>Julie - L'âme organisatrice</h3>
+
+        <div class="presentation_text">
+            <p>Julie est le pilier invisible mais essentiel de chaque événement.</p>
+            <p>Dotée d’un sens aigu de l’organisation et d’une grande finesse relationnelle, elle orchestre avec précision la gestion des clients, la coordination des prestataires et le suivi des commandes.</p>
+            <p>À l’écoute et réactive, elle crée un lien de confiance avec chaque client pour transformer chaque projet en une expérience fluide, élégante et sereine.</p>
+        </div>
+    </div>
+
+    <div class="presentation_content jose">
+        <img src="{{ asset('/images/jose.png') }}" alt="" class="presentation_img">
+
+        <h3>José - Le coeur culinaire</h3>
+
+        <div class="presentation_text">
+            <p>José cuisine depuis toujours. Formé par la tradition et guidé par la passion, il puise son inspiration dans ses racines bordelaises et le respect des saisons.</p>
+            <p>Sa cuisine est sincère, généreuse et authentique. Il travaille des produits soigneusement sélectionnés, en privilégiant les circuits courts et les saveurs.</p>
+            <p>Derrière chaque plat, il y a une histoire : celle d’un produit, d’un savoir-faire et d’un plaisir à partager. José cuisine pour créer des moments uniques.</p>
+        </div>
+    </div>
+</section>
+
+<section class="chiffres">
+    <div class="chiffres_title">
+        <h2>VITE & Gourmand</h2>
+        <h2>EN QUELQUES CHIFFRES C'EST :</h2>
+    </div>
+
+    <div class="chiffres_content">
+        <div class="chiffres_text">
+            <h2>25</h2>
+            <h4>ANNES D'EXPERIENCE</h4>
+        </div>
+
+        <div class="chiffres_text">
+            <h2>+200</h2>
+            <h4>CLIENTS FIDELES</h4>
+        </div>
+
+        <div class="chiffres_text">
+            <h2>98%</h2>
+            <h4>DE CLIENTS SATISFAITS</h4>
+        </div>
+
+        <div class="chiffres_text">
+            <h2>8</h2>
+            <h4>MENUS DISPONIBLES</h4>
+        </div>
+    </div>
+
+    <a href="./nos_menus.html" class="btn1 nav_item">
+        <span>VOIR LES MENUS</span>
+    </a>
+</section>
+
+{% endblock %}
