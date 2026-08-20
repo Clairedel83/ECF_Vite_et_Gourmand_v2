@@ -1,0 +1,74 @@
+/* ================================= FOOTER ============================================*/
+
+footer{
+    background-color: #DAA481;
+    color:white;
+}
+
+.footer_top{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 150px;
+    padding: 8vh 0;
+}
+
+.logo_footer{
+    height: 150px;
+}
+
+.logos_social{
+    display: flex;
+    gap:20px;
+}
+
+.contact_footer, .contact_footer_text{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.contact_footer_text a {
+    color: white;
+    font-size:14px;
+    line-height:1.75;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+}
+
+.contact_footer{
+    gap:4vh;
+}
+
+.about{
+    display: flex;
+    flex-direction: column;
+    font-weight: 300;
+}
+
+.about a{
+    text-decoration: none;
+    color:white;
+    font-family: "Roboto";
+    letter-spacing: 0.3px;
+    font-size: 14px;
+    line-height:1.75;
+}
+
+.about a:hover{
+    text-decoration: underline;
+}
+
+.footer_bottom{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:2vh;
+    margin: 0 150px;
+    padding-bottom: 2vh;
+}
+
+.line{
+    border-top: 1px solid white;
+    width: 100%;
+}
+

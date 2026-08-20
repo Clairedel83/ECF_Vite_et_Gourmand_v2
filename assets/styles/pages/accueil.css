@@ -1,0 +1,296 @@
+/* PANEL ENGAGEMENTS */
+.engagements{
+    display:flex;
+    align-items:center;
+    gap:10%;
+    justify-content: center;
+    margin : 0 150px;
+}
+
+.flexbox_accueil{
+    display: flex;
+    position:relative;
+    justify-content: center;
+    align-items:center;
+    flex: 0 0 35%;
+    height:70%;
+    width:auto;
+}
+
+.flex{
+    display: flex;
+}
+
+.background_engagements{
+    background-color:#DAA481;
+    position:absolute;
+    width: 60%;
+    height:100%;
+    z-index:1;
+}
+
+.boxes{
+    position:relative;
+    display: flex;
+    justify-content: center;
+    width:100%;
+    gap:15%;
+}
+
+.box2, .box3{
+    z-index:2;
+    justify-content: center;
+    align-items:center;
+}
+
+.box2{
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    gap:10%;
+}
+
+.visuel{
+    width:175px;
+    height:auto;
+    border: 4px solid white;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.img{
+    object-fit:cover; /* pour que le ratio de l'image soit respecté */
+}
+
+
+.engagements_container{
+    flex: 0 0 55%;
+    display: flex;
+    flex-direction: column;
+    height:70%;
+}
+
+.engagements_container h2{
+    padding:0;
+}
+
+.engagements_content{
+    margin-top:4vh;
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    justify-content: space-between;
+    /* gap:4vh; */
+    height: 80%;
+}
+
+.content{
+    display: flex;
+    /* margin-bottom:3vh; */
+    text-align: justify;
+}
+
+.content_img{
+    flex:0 0 15%;
+    display: flex;
+    align-items: center;
+}
+
+.content_img img{
+    width:90%;
+    height:auto;
+}
+
+.content_text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:1vh;
+}
+
+.content_text h5{
+    padding:0;
+}
+
+/* =================================PANEL INCONTOURNABLES ============================================*/
+
+.incontournables{  
+    height:auto;
+    padding:5vh 0;
+    background-color:#DAA481;
+    margin:0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:6vh;
+}
+
+.incontournables h2{
+    color: white;
+    padding: 0;
+    /* margin-top: 2vh; */
+}
+
+.incontournables_content{
+    display: flex;
+    margin: 0 150px;
+    justify-content:center;
+    align-self: center;
+    gap:5%;
+    height:70%;
+}
+
+.visuel_menu{
+    height:175px;
+    width:100%;
+    z-index:1;
+}
+
+.theme{ 
+    position:absolute;
+    top:15px;
+    left:15px;
+    background-color: rgb(218, 164, 129, 0.50);
+    border:0.5px solid white;
+    -webkit-backdrop-filter: blur(5px); /* pour flouter le background*/
+    backdrop-filter: blur(5px); /* pour flouter le background*/
+    padding : 2px 20px;
+    border-radius: 20px;
+    color:white;
+    z-index:2;
+    text-transform: uppercase;
+
+}
+
+.theme p{
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.theme p, .price p, .menu_content_bottom p {
+    font-size:12px;
+}
+
+.menu{
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: space-between;
+    width:28%;
+    height:auto;
+    background-color: #F7E0C4;
+    border-radius: 20px;
+}
+
+.menu_content_top img{
+    border-radius: 25px 25px 0 0;
+}
+
+.menu_content_text{
+    display: flex;
+    flex-direction: column;
+    margin:0;
+    padding:20px;
+    text-align: justify;
+}
+
+.menu_content_bottom{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 0 20px;
+}
+
+.menu_content_bottom span{
+    text-decoration: underline;
+    text-decoration-color: #252424;
+    text-decoration-thickness: 0.5px;
+    text-underline-offset: 4px;
+}
+
+.menu_content_bottom a{
+    align-self:flex-end;
+}
+
+.menu_line{
+    width:100%;
+    height:0.5px;
+    background-color: #696968;
+    margin:10px 0;
+}
+
+.price{
+    display: flex;
+    flex-direction: column;
+}
+
+.price h5{
+    padding:0;
+}
+
+.min_pers{
+    display: flex;
+    color: #696968;
+    gap:5px;
+}
+
+.min_pers img{
+    width: 20px;
+    height:20px;
+}
+
+.conditions{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2vh;
+}
+
+.incontournables a {
+    text-decoration: none;;
+}
+
+
+/* =================================PANEL AVIS ============================================*/
+
+.panel_avis{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin:0 150px;
+}
+
+.title{
+    margin-top:10vh;
+}
+
+.title p{
+    text-align: center;
+}
+
+.avis_container{
+    display: flex;
+    justify-content: space-between;
+}
+
+.avis{
+    background-color: #F7E0C4;
+    width:30%;
+    height:90%;
+    margin-top:40px;
+    border-radius: 10px;
+    /* padding-bottom: 20px; */
+}
+
+.avis_top{
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 20px;
+    padding:10px 0;
+}
+
+.avis_bottom{
+    margin: 10px 20px;
+    text-align:justify;
+}
