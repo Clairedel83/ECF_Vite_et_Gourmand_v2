@@ -5,228 +5,228 @@
 {% block body %}
 
 <!-- PANEL ENGAGEMENTS -->
-        <section class="engagements">
-            <div class="flexbox_accueil">
-                <div class="background_engagements">
+    <section class="engagements">
+        <div class="flexbox_accueil">
+            <div class="background_engagements">
+            </div>
+
+            <div class="flex boxes">
+                <div class="flex box2">
+                    <img class ="visuel" src="{{ asset('/images/julie_jose.png') }}" alt="Les fondateurs de Vite & Gourmand : Julie et José" class="img img-julie-jose">
+                    <img class ="visuel" src="{{ asset('images/assiette.jpg') }}" alt="Assiette d’entrée élégante composée de salade fraîche, foie gras et pain, dressée sur une table de restaurant avec ambiance chaleureuse en arrière-plan." class="img img-assiettes">
+                </div>
+                
+                <div class="flex box3">
+                    <img class ="visuel" src="{{ asset('images/verrines.jpg') }}" alt="Verrines apéritives élégantes de crème salée garnies de crackers et d’herbes fraîches, présentées en série sur un plateau blanc." class="img img-verrines">
+                </div>
+            </div>
+        </div>
+
+        <div class="engagements_container">
+            <h2>NOS ENGAGEMENTS</h2>
+                
+            <div class="engagements_content">
+                <div class="content">
+                    <div class="content_img">
+                        <img class="icon" src="{{ asset('images/logos/handshake.svg') }}" title="Icône Poignée de main">
+                    </div>
+
+                    <div class="content_text">
+                        <h5>Un accompagnement dédié</h5>
+                        <p>Une interlocutrice unique pour vous guider, vous conseiller et assurer une organisation fluide et sereine.</p>
+                    </div>
                 </div>
 
-                <div class="flex boxes">
-                    <div class="flex box2">
-                        <img class ="visuel" src="{{ asset('/images/julie_jose.png') }}" alt="Les fondateurs de Vite & Gourmand : Julie et José" class="img img-julie-jose">
-                        <img class ="visuel" src="{{ asset('images/assiette.jpg') }}" alt="Assiette d’entrée élégante composée de salade fraîche, foie gras et pain, dressée sur une table de restaurant avec ambiance chaleureuse en arrière-plan." class="img img-assiettes">
+                <div class="content">
+                    <div class="content_img">
+                        <img class="icon" src="{{ asset('images/logos/hat.svg') }}" title="Icône toque de chef">
+                    </div>
+
+                    <div class="content_text">
+                        <h5>Prestations sur mesure</h5>
+                        <p>Chaque événement est imaginé comme une création unique, pensée selon vos envies et le sens du détail.</p>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="content_img">
+                        <img class="icon" src="{{ asset('images/logos/livraison.svg') }}" title="Icône livraison">
+                    </div>
+                    <div class="content_text">
+                        <h5>Livraison optimisée</h5>
+                        <p>Une logistique fiable, discrète et parfaitement synchronisée avec le rythme de votre événement.</p>                       
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="content_img">
+                        <img class="icon" src="{{ asset('images/logos/avocado.svg') }}" title="Icône d'avocat">
+                    </div>
+                    <div class="content_text">
+                        <h5>Qualité supérieure</h5>
+                        <p>Des produits locaux sélectionnés avec exigence pour une expérience gustative soignée et généreuse.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="incontournables">
+        <h2>NOS INCONTOURNABLES</h2>
+
+        <div class="incontournables_content">
+            <div class="menu" id="menu_classique">
+                    <div class="menu_content_top">
+                        <img class="visuel_menu" src="{{ asset('images/menu_classique.png') }}" alt="">
+
+                        <div class="theme">
+                            <p>Privé</p>
+                        </div>
+                    </div>
+
+                    <div class="menu_content_text">
+                        <h5>Menu Classique</h5>
+                        <p>Une cuisine traditionnelle, conviviale et de saison, adaptée à tous vos événements.</p>
+                    </div>
+
+                    <div class="menu_content_bottom">
+                        <p><span>Régime(s)</span> : Classique</p>
+                        <div class="menu_line"></div>
+
+                        <div class="conditions">
+                            <div class="price">
+                                <h5>280.00€</h5>
+                                <p><i>28.00€/pers</i></p>
+                            </div>
+
+                            <div class="min_pers">
+                                <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                                <p>Min : 10 pers.</p>
+                            </div>
+                        </div>
+
+                        <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
+                    </div>
+                </div>
+
+                <div class="menu" id="menu_mariage">
+                    <div class="menu_content_top">
+                        <img class="visuel_menu" src="{{ asset('images/menu_mariage.jpg') }}" alt="">
+
+                        <div class="theme">
+                            <p>Evènement</p>
+                        </div>
                     </div>
                     
-                    <div class="flex box3">
-                        <img class ="visuel" src="{{ asset('images/verrines.jpg') }}" alt="Verrines apéritives élégantes de crème salée garnies de crackers et d’herbes fraîches, présentées en série sur un plateau blanc." class="img img-verrines">
-                    </div>
-                </div>
-            </div>
-
-            <div class="engagements_container">
-                <h2>NOS ENGAGEMENTS</h2>
-                 
-                <div class="engagements_content">
-                    <div class="content">
-                        <div class="content_img">
-                            <img class="icon" src="{{ asset('images/logos/handshake.svg') }}" title="Icône Poignée de main">
-                        </div>
-
-                        <div class="content_text">
-                            <h5>Un accompagnement dédié</h5>
-                            <p>Une interlocutrice unique pour vous guider, vous conseiller et assurer une organisation fluide et sereine.</p>
-                        </div>
+                    
+                    <div class="menu_content_text">
+                        <h5>Mariage</h5>
+                        <p>Une cuisine raffinée et sur mesure, pour sublimer chaque moment de votre journée d’exception.</p>
                     </div>
 
-                    <div class="content">
-                        <div class="content_img">
-                            <img class="icon" src="{{ asset('images/logos/hat.svg') }}" title="Icône toque de chef">
-                        </div>
+                    <div class="menu_content_bottom">
+                        <p><span>Régime(s)</span> : Classique, Vegan, Sans porc</p>
+                        <div class="menu_line"></div>
 
-                        <div class="content_text">
-                            <h5>Prestations sur mesure</h5>
-                            <p>Chaque événement est imaginé comme une création unique, pensée selon vos envies et le sens du détail.</p>
-                        </div>
-                    </div>
+                        <div class="conditions">
+                            <div class="price">
+                                <h5>3000.00€</h5>
+                                <p><i>75.00€/pers</i></p>
+                            </div>
 
-                    <div class="content">
-                        <div class="content_img">
-                            <img class="icon" src="{{ asset('images/logos/livraison.svg') }}" title="Icône livraison">
-                        </div>
-                        <div class="content_text">
-                            <h5>Livraison optimisée</h5>
-                            <p>Une logistique fiable, discrète et parfaitement synchronisée avec le rythme de votre événement.</p>                       
-                        </div>
-                    </div>
-
-                    <div class="content">
-                        <div class="content_img">
-                            <img class="icon" src="{{ asset('images/logos/avocado.svg') }}" title="Icône d'avocat">
-                        </div>
-                        <div class="content_text">
-                            <h5>Qualité supérieure</h5>
-                            <p>Des produits locaux sélectionnés avec exigence pour une expérience gustative soignée et généreuse.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="incontournables">
-            <h2>NOS INCONTOURNABLES</h2>
-
-            <div class="incontournables_content">
-                <div class="menu" id="menu_classique">
-                        <div class="menu_content_top">
-                            <img class="visuel_menu" src="{{ asset('images/menu_classique.png') }}" alt="">
-
-                            <div class="theme">
-                                <p>Privé</p>
+                            <div class="min_pers">
+                                <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                                <p>Min : 40 pers.</p>
                             </div>
                         </div>
 
-                        <div class="menu_content_text">
-                            <h5>Menu Classique</h5>
-                            <p>Une cuisine traditionnelle, conviviale et de saison, adaptée à tous vos événements.</p>
-                        </div>
-
-                        <div class="menu_content_bottom">
-                            <p><span>Régime(s)</span> : Classique</p>
-                            <div class="menu_line"></div>
-
-                            <div class="conditions">
-                                <div class="price">
-                                    <h5>280.00€</h5>
-                                    <p><i>28.00€/pers</i></p>
-                                </div>
-
-                                <div class="min_pers">
-                                    <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                    <p>Min : 10 pers.</p>
-                                </div>
-                            </div>
-
-                            <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
-                        </div>
-                    </div>
-
-                 <div class="menu" id="menu_mariage">
-                        <div class="menu_content_top">
-                            <img class="visuel_menu" src="{{ asset('images/menu_mariage.jpg') }}" alt="">
-
-                            <div class="theme">
-                                <p>Evènement</p>
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="menu_content_text">
-                            <h5>Mariage</h5>
-                            <p>Une cuisine raffinée et sur mesure, pour sublimer chaque moment de votre journée d’exception.</p>
-                        </div>
-
-                        <div class="menu_content_bottom">
-                            <p><span>Régime(s)</span> : Classique, Vegan, Sans porc</p>
-                            <div class="menu_line"></div>
-
-                            <div class="conditions">
-                                <div class="price">
-                                    <h5>3000.00€</h5>
-                                    <p><i>75.00€/pers</i></p>
-                                </div>
-
-                                <div class="min_pers">
-                                    <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                    <p>Min : 40 pers.</p>
-                                </div>
-                            </div>
-
-                            <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
-                        </div>
-                    </div>
-
-                <div class="menu" id="menu_cocktail">
-                        <div class="menu_content_top">
-                            <img class="visuel_menu" src="{{ asset('images/menu_cocktail.png') }}" alt="">
-
-                            <div class="theme">
-                                <p>Entreprise</p>
-                            </div>
-                        </div>
-                        
-                        <div class="menu_content_text">
-                            <h5>Cocktail d'entreprise</h5>
-                            <p>Des créations élégantes et conviviales, idéales pour vos événements professionnels.</p>
-                        </div>
-
-                        <div class="menu_content_bottom">
-                            <p><span>Régime(s)</span> : Végétarien, Vegan</p>
-                            <div class="menu_line"></div>
-
-                            <div class="conditions">
-                                <div class="price">
-                                    <h5>600.00€</h5>
-                                    <p><i>30.00€/pers</i></p>
-                                </div>
-
-                                <div class="min_pers">
-                                    <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                    <p>Min : 20 pers.</p>
-                                </div>
-                            </div>
-
-                            <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
-                        </div>
-                    </div>
-            </div>
-
-            <a href="./nos_menus.html" class="btn1 nav_item">
-                <span>VOIR LES MENUS</span>
-            </a>
-
-        </section>
-
-        <section class="panel panel_avis">
-            <div class="title">
-                <h2>ILS ONT GOUTE A VITE & GOURMAND</h2>
-                <p>Chaque événement est une expérience unique, voici ce qu’ils en ont pensé.</p>
-            </div>
-
-            <div class="avis_container">
-                <div class="avis">
-                    <div class="avis_top">
-                        <h5>Bruno A.</h5>
-                        <p>10/10</p>
-                    </div>
-
-                    <div class="avis_bottom">
-                        <p>“Service impeccable et cuisine raffinée, tout était savoureux et parfaitement présenté. L’équipe a su s’adapter à nos besoins avec professionnalisme. Une prestation au-delà de nos attentes.”</p>
+                        <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
                     </div>
                 </div>
 
-                <div class="avis">
-                    <div class="avis_top">
-                        <h5>Johanna B.</h5>
-                        <p>10/10</p>
+            <div class="menu" id="menu_cocktail">
+                    <div class="menu_content_top">
+                        <img class="visuel_menu" src="{{ asset('images/menu_cocktail.png') }}" alt="">
+
+                        <div class="theme">
+                            <p>Entreprise</p>
+                        </div>
+                    </div>
+                    
+                    <div class="menu_content_text">
+                        <h5>Cocktail d'entreprise</h5>
+                        <p>Des créations élégantes et conviviales, idéales pour vos événements professionnels.</p>
                     </div>
 
-                    <div class="avis_bottom">
-                        <p>“Une expérience parfaite du début à la fin, des plats délicieux et une organisation irréprochable. Nous avons été conquis, tout comme nos invités. Vite & Gourmand porte vraiment bien son nom.”</p>
+                    <div class="menu_content_bottom">
+                        <p><span>Régime(s)</span> : Végétarien, Vegan</p>
+                        <div class="menu_line"></div>
+
+                        <div class="conditions">
+                            <div class="price">
+                                <h5>600.00€</h5>
+                                <p><i>30.00€/pers</i></p>
+                            </div>
+
+                            <div class="min_pers">
+                                <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                                <p>Min : 20 pers.</p>
+                            </div>
+                        </div>
+
+                        <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
                     </div>
                 </div>
+        </div>
 
-                <div class="avis">
-                    <div class="avis_top">
-                        <h5>Laurie T.</h5>
-                        <p>9.5/10</p>
-                    </div>
-  
-                    <div class="avis_bottom">
-                        <p>“Nous avons fait appel à ce traiteur pour un baptême et tout était absolument réussi. Qualité des produits, ponctualité et gentillesse étaient au rendez-vous. Nous recommandons sans hésiter.”</p>
-                    </div>
+        <a href="./nos_menus.html" class="btn1 nav_item">
+            <span>VOIR LES MENUS</span>
+        </a>
+
+    </section>
+
+    <section class="panel panel_avis">
+        <div class="title">
+            <h2>ILS ONT GOUTE A VITE & GOURMAND</h2>
+            <p>Chaque événement est une expérience unique, voici ce qu’ils en ont pensé.</p>
+        </div>
+
+        <div class="avis_container">
+            <div class="avis">
+                <div class="avis_top">
+                    <h5>Bruno A.</h5>
+                    <p>10/10</p>
+                </div>
+
+                <div class="avis_bottom">
+                    <p>“Service impeccable et cuisine raffinée, tout était savoureux et parfaitement présenté. L’équipe a su s’adapter à nos besoins avec professionnalisme. Une prestation au-delà de nos attentes.”</p>
                 </div>
             </div>
 
-        </section>
+            <div class="avis">
+                <div class="avis_top">
+                    <h5>Johanna B.</h5>
+                    <p>10/10</p>
+                </div>
+
+                <div class="avis_bottom">
+                    <p>“Une expérience parfaite du début à la fin, des plats délicieux et une organisation irréprochable. Nous avons été conquis, tout comme nos invités. Vite & Gourmand porte vraiment bien son nom.”</p>
+                </div>
+            </div>
+
+            <div class="avis">
+                <div class="avis_top">
+                    <h5>Laurie T.</h5>
+                    <p>9.5/10</p>
+                </div>
+
+                <div class="avis_bottom">
+                    <p>“Nous avons fait appel à ce traiteur pour un baptême et tout était absolument réussi. Qualité des produits, ponctualité et gentillesse étaient au rendez-vous. Nous recommandons sans hésiter.”</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
     </div>
 
 {% endblock %}

@@ -1,0 +1,30 @@
+.hero_title_legal{
+    margin-top: 25vh;
+}
+
+.legal{
+    margin:50px 100px;
+}
+
+.legal_text{
+    margin-bottom: 30px;
+}
+
+.legal_text h4{
+    text-shadow: none;
+    font-weight: 500;
+}
+
+.legal_text li{
+    font-family: "Roboto";
+    font-weight: 300;
+    letter-spacing: 0.3px;
+    font-size:14px;
+    line-height:1.75;
+    margin-left:40px;
+}
+
+.legal_text p{
+    text-align: justify;
+}
+
