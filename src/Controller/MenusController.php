@@ -15,4 +15,13 @@ final class MenusController extends AbstractController
             'controller_name' => 'MenusController',
         ]);
     }
+
+    #[Route('/nos_menus_details', name: 'app_details')]
+    public function details(): Response
+    {
+        return $this->render('menus/details.html.twig', [
+            'controller_name' => 'MenusController',
+        ]);
+    }
+
 }
