@@ -37,8 +37,8 @@ class UserCrudController extends AbstractCrudController
             AssociationField::new('Role')->setLabel('Rôle')->setQueryBuilder(
                 // fonction pour filtrer les rôles et ne proposer que 'Utilisateur' et 'Employé'
                 fn (QueryBuilder $qb) => $qb
-                        ->andWhere('entity.code != :admin')
-                        ->setParameter('admin', 'ROLE_ADMIN')
+                    ->andWhere('entity.code != :admin')
+                    ->setParameter('admin', 'ROLE_ADMIN')
             )
         ];
     }

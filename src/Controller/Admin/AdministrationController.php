@@ -33,7 +33,7 @@ class AdministrationController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list');
     }
 }
