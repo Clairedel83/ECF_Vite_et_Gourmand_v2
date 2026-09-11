@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_compte"></div>
+    {% endblock %}
+
+    {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>MON COMPTE</h1>
+        </div>
+    {% endblock %}
+
+
+    {% block main %}
+        <section class="account">
+            <h2>Espace membre</h2>
+            <a href="">Modifier le mot de passe</a>
+            <a href="{{ path('_logout_main') }}">Me déconnecter</a>
+
+        </section>
+
+    {% endblock %}
+{% endblock %}

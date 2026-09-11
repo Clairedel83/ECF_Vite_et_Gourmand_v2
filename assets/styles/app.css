@@ -26,7 +26,7 @@ body{
     flex-direction: column;
 }
 
-html, body {
+html, body{
   height: 100%; /*la page entière (html) + body doivent occuper 100% de la hauteur de l’écran sinon le navigateur laisse le body avoir la taille du contenu et non de l'écran*/
 }
 
@@ -265,6 +265,11 @@ label{
 #hero_politique{
     background-image: url(/images/politique_confidentialite.jpg) ;
     background-position: center;
+}
+
+#hero_compte{
+    background-image: url(/images/compte.png) ;
+    background-position:70%;
 }
 
 #logo_pages{

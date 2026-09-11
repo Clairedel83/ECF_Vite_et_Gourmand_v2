@@ -40,7 +40,14 @@
                     </ul>
                 </nav>
 
-                <a href="{{ path('app_connexion') }}" class="btn2 nav_item">CONNEXION</a>
+                {% if (app.user) %}
+                    <a href="{{ path('app_compte') }}">
+                        <img src="{{ asset('images/logos/account2.svg') }}" alt="Logo de redirection vers le compte utilisateur">
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_connexion') }}" class="btn2 nav_item">CONNEXION</a>
+                {% endif %}
+                
             </div>
 
             {% block hero_img %}{% endblock %}
