@@ -47,6 +47,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $adresse_postale = null;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $Role = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,11 +83,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        // $roles = $this->roles;
+        // // guarantee every user at least has ROLE_USER
+        // $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        // return array_unique($roles);
+
+        if ($this->Role === null) {
+            return ['ROLE_USER'];
+        }
+
+        return [$this->Role->getCode()];
     }
 
     /**
@@ -178,6 +188,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdressePostale(string $adresse_postale): static
     {
         $this->adresse_postale = $adresse_postale;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->Role;
+    }
+
+    public function setRole(?Role $Role): static
+    {
+        $this->Role = $Role;
 
         return $this;
     }

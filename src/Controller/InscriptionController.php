@@ -9,11 +9,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\RoleRepository;
 
 final class InscriptionController extends AbstractController
 {
     #[Route('/inscription', name: 'app_inscription')]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, RoleRepository $roleRepository): Response
     {
         // permet de créer un nouvel utilisateur
         $user = new User();
@@ -24,8 +25,18 @@ final class InscriptionController extends AbstractController
         // récupère les données saisies par l'utilisateur et les associe au formulaire
         $form->handleRequest($request);
 
+        
+
         // met à jour la BDD
         if($form->isSubmitted() && $form->isValid()){
+
+            // attribut par défaut le rôle Utilisateur
+            $roleUtilisateur = $roleRepository->findOneBy([
+                'nom' => 'Utilisateur'
+            ]);
+
+            $user->setRole($roleUtilisateur);
+
             $entityManager->persist($user);
             $entityManager->flush();
 
