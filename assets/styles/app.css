@@ -8,6 +8,9 @@
 @import url('./pages/cgv.css');
 @import url('./pages/mentions_legales.css');
 @import url('./pages/menus.css');
+@import url('./pages/connexion.css');
+@import url('./pages/inscription.css');
+@import url('./pages/contact.css');
 
 /* =========================== BASE ======================================== */
 *{
@@ -86,7 +89,7 @@ p, .nav_item, label{
 
 p, label{
     font-family: "Roboto";
-    font-weight: 300;
+    font-weight: 350;
     letter-spacing: 0.3px;
 }
 

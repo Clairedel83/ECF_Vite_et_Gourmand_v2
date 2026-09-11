@@ -1,0 +1,54 @@
+.inscription{
+    display: flex;
+    justify-content: center;
+    margin:50px 0;
+}
+
+.data p{
+    font-size: 12px;
+    color:#565553;
+}
+
+.checkbox{
+    display: flex;
+    align-items: center;
+    gap:10px;
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.checkbox a{
+    text-decoration: none;
+    color:#252424;
+    font-family: "Roboto";
+    font-weight: 300;
+    letter-spacing: 0.3px;
+}
+
+.formulaire h5{
+    text-align: center;
+}
+
+.formulaire-flex{
+    display: flex;
+    justify-content: space-between;
+    gap:10%;
+}
+
+.formulaire-flex .data {
+    flex: 1;
+}
+
+.inscription .formulaire{
+    width:40%;
+}
+
+.formulaire-link, .formulaire-link a {
+    text-align: center;
+    padding-top:3vh;
+    font-family: "Roboto";
+    font-weight: 350;
+    letter-spacing: 0.3px;
+    font-size: 0.90rem;
+    color :#252424;
+}

@@ -1,0 +1,127 @@
+.contact{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:4vw;
+    margin:100px 0;
+}
+
+.contact_visuel{
+    position: relative;
+    width:30vw;
+
+    box-shadow: 
+        1px 6px 10px rgba(0, 0, 0, 0.10),
+        -1px -2px 10px rgba(0, 0, 0, 0.25);
+    /* background-image: url(../images/contact_visuel.png);
+    background-size : cover;
+    background-repeat:no-repeat; */
+    color:white;
+}
+
+.beige_container{
+    position:absolute;
+    background-color: rgb(218, 164, 129, 0.8);
+    top: 5%;
+    bottom:5%;
+    left:10%;
+    width: 80%;
+    border-radius: 15px;
+    padding : 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.contact_visuel_content_top h2{
+    padding : 0 0 10px;
+}
+
+.contact_visuel_content_top p{
+    padding-top:10px;
+    font-weight: 400;
+}
+
+.contact_visuel, .formulaire{
+    height:100vh;
+    border-radius: 15px;
+}
+.contact_visuel_content_bottom{
+    display: flex;
+    flex-direction: column;
+    gap:0.5rem;
+}
+
+.icon{
+    display: flex;
+    align-items: center;
+    gap:1rem;
+}
+
+.icon p{
+    font-weight: 400;
+}
+
+.formulaire{
+    border:1px solid transparent;
+    box-shadow: 
+        1px 6px 10px rgba(0, 0, 0, 0.10),
+        -1px -2px 10px rgba(0, 0, 0, 0.25);
+    background-color: #F7E0C4;
+    align-items: center;
+    padding:30px;
+    width:30%;
+    height:auto;
+}
+
+.form_contact{
+        width:35vw;
+}
+
+.formulaire h5{
+    margin-bottom: 20px;
+}
+
+.data{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input{
+    height:2.5rem;
+}
+
+textarea{
+    resize: none;
+    height:10rem;
+}
+
+.input, input, textarea{
+    border-radius: 8px;
+    border: 1px solid rgba(37, 36, 36, 0.5);
+    padding-left: 0.5rem;
+}
+
+.input:focus, input:focus{
+  outline: none;
+  border-color: rgb(37, 36, 36);
+  box-shadow: 0 0 0 3px rgba(37, 36, 36, 0.2);
+}
+
+.input:focus::placeholder, input:focus::placeholder{
+    color:transparent;
+}
+
+.icon:focus {
+  outline: none;
+  border-color: rgb(37, 36, 36);
+  box-shadow: 0 0 0 3px rgba(37, 36, 36, 0.2);
+  padding-left: 10px;
+  color:rgb(37, 36, 36);
+}
+
+
+textarea ::placeholder{
+    padding-top:1rem;
+}

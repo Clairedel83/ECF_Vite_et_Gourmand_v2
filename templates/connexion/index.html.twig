@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="contact">
+        <form action="{{ path('app_connexion') }}" method="post" class="formulaire form_connexion">
+                <div class="data">
+                    <label for="username">ADRESSE EMAIL :</label>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" required autocomplete="email">
+                </div>
+
+                <div class="data">
+                    <label for="password">MOT DE PASSE :</label>
+                    <input type="password" id="password" name="_password" required autocomplete="current-password">
+                    <a href=""><u>Mot de passe oublié ?</u></a>
+                </div>              
+
+                {# If you want to control the URL the user is redirected to on success
+                <input type="hidden" name="_target_path" value="/account"> #}
+
+                <button type="submit" class="btn2 btn-menu">CONNEXION</button>
+                <div class="formulaire-link">
+                    <p>Pas encore de compte ? <a href="{{ path('app_inscription') }}">Inscrivez-vous</a></p>
+                </div>
+        </form>
+    </section>
+
+{% endblock %}
