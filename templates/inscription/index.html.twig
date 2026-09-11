@@ -3,77 +3,92 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-    <section class="inscription">
-        <div class="formulaire">
-            <h5>CREER UN COMPTE</h5>
+<!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_connexion"></div>
+    {% endblock %}
 
-            
-            {{ form_start(inscriptionForm) }}
-                <div class="formulaire-flex">
-                    <div class="data">
-                        {{ form_label(inscriptionForm.nom) }}
-                        {{ form_widget(inscriptionForm.nom, {
-                            'attr': {'class': 'input'}
-                        }) }}
-                    </div>
-
-                    <div class="data">
-                        {{ form_label(inscriptionForm.prenom) }}
-                        {{ form_widget(inscriptionForm.prenom, {
-                            'attr': {'class': 'input'}
-                        }) }}
-                    </div>
-                </div>
-
-                <div class="data">
-                    {{ form_label(inscriptionForm.email) }}
-                    {{ form_widget(inscriptionForm.email, {
-                        'attr': {'class': 'input'}
-                    }) }}
-                </div>
-
-                <div class="formulaire-flex">
-                    <div class="data">
-                        {{ form_label(inscriptionForm.password.first) }}
-                        {{ form_widget(inscriptionForm.password.first, {
-                            'attr': {'class': 'input'}
-                        }) }}
-                    </div>
-
-                    <div class="data">
-                        {{ form_label(inscriptionForm.password.second) }}
-                        {{ form_widget(inscriptionForm.password.second, {
-                            'attr': {'class': 'input'}
-                        }) }}
-                    </div>
-                </div>
-
-                <div class="data">
-                    {{ form_label(inscriptionForm.telephone) }}
-                    {{ form_widget(inscriptionForm.telephone, {
-                        'attr': {'class': 'input'}
-                    }) }}
-                </div>
-
-                <div class="data">
-                    {{ form_label(inscriptionForm.ville) }}
-                    {{ form_widget(inscriptionForm.ville) }}
-                </div>
-
-                <div class="data">
-                    {{ form_label(inscriptionForm.adresse_postale) }}
-                    {{ form_widget(inscriptionForm.adresse_postale, {
-                        'attr': {'class': 'input'}
-                    }) }}
-                </div>
-                
-                {{ form_widget(inscriptionForm.submit) }}
-            {{ form_end(inscriptionForm) }}
-
-            <div class="formulaire-link">
-                Vous avez déjà un compte. <a href="{{ path('app_connexion') }}">Se connecter</a>
-            </div>
+    {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>INSCRIPTION</h1>
+            <h3>Créez votre espace personnel</h3>
+            <h4><i>Commandez facilement et profitez d’un accompagnement sur mesure.</i></h4>
         </div>
-    </section>
+    {% endblock %}
 
+
+    {% block main %}
+        <section class="inscription">
+            <div class="formulaire">
+                <h5>CREER UN COMPTE</h5>
+
+                
+                {{ form_start(inscriptionForm) }}
+                    <div class="formulaire-flex">
+                        <div class="data">
+                            {{ form_label(inscriptionForm.nom) }}
+                            {{ form_widget(inscriptionForm.nom, {
+                                'attr': {'class': 'input'}
+                            }) }}
+                        </div>
+
+                        <div class="data">
+                            {{ form_label(inscriptionForm.prenom) }}
+                            {{ form_widget(inscriptionForm.prenom, {
+                                'attr': {'class': 'input'}
+                            }) }}
+                        </div>
+                    </div>
+
+                    <div class="data">
+                        {{ form_label(inscriptionForm.email) }}
+                        {{ form_widget(inscriptionForm.email, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                    </div>
+
+                    <div class="formulaire-flex">
+                        <div class="data">
+                            {{ form_label(inscriptionForm.password.first) }}
+                            {{ form_widget(inscriptionForm.password.first, {
+                                'attr': {'class': 'input'}
+                            }) }}
+                        </div>
+
+                        <div class="data">
+                            {{ form_label(inscriptionForm.password.second) }}
+                            {{ form_widget(inscriptionForm.password.second, {
+                                'attr': {'class': 'input'}
+                            }) }}
+                        </div>
+                    </div>
+
+                    <div class="data">
+                        {{ form_label(inscriptionForm.telephone) }}
+                        {{ form_widget(inscriptionForm.telephone, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                    </div>
+
+                    <div class="data">
+                        {{ form_label(inscriptionForm.ville) }}
+                        {{ form_widget(inscriptionForm.ville) }}
+                    </div>
+
+                    <div class="data">
+                        {{ form_label(inscriptionForm.adresse_postale) }}
+                        {{ form_widget(inscriptionForm.adresse_postale, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                    </div>
+                    
+                    {{ form_widget(inscriptionForm.submit) }}
+                {{ form_end(inscriptionForm) }}
+
+                <div class="formulaire-link">
+                    Vous avez déjà un compte. <a href="{{ path('app_connexion') }}">Se connecter</a>
+                </div>
+            </div>
+        </section>
+    {% endblock %}
 {% endblock %}

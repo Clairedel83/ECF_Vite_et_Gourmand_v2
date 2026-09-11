@@ -12,19 +12,97 @@
 
         {% set frankenphp_hot_reload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
         {% if frankenphp_hot_reload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphp_hot_reload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
+            <meta name="frankenphp-hot-reload:url" content="{{ frankenphp_hot_reload }}">
+            <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
+            <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
 
     <body>
-        {% include 'composants/_header.html.twig' %}
+        <header class="{% block header_class %}header_classic{% endblock %}">
+            <div class="header_top">
+                <img src="{{ asset('images/logos/logo/MainLogo2.png') }}" id="logo_header" title="Logo">
+
+                <nav class="navbar">
+                    <ul>
+                        <li><a href="{{ path('app_accueil') }}" class="nav_item"><span>ACCUEIL</span></a></li>
+                        <li><a href="{{ path('app_a_propos') }}" class="nav_item"><span>A PROPOS</span></a></li>
+                        <li><a href="{{ path('app_menus') }}" class="nav_item"><span>NOS MENUS</span></a></li>
+                    </ul>
+
+                    <ul>
+                        <li><a href="{{ path('app_contact') }}" class="nav_item"><span>CONTACT</span></a></li>
+                        <li class="header_line"></li>
+                        <li class="li_phone">
+                            <img src="{{ asset('images/logos/Phone_fill.svg') }}" class="logo_tel" alt="logo téléphone">
+                            <a href="tel:+33647821539" class="nav_item">06.47.82.15.39</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <a href="{{ path('app_connexion') }}" class="btn2 nav_item">CONNEXION</a>
+            </div>
+
+            {% block hero_img %}{% endblock %}
+            <div class = "hero_overlay"></div>
+
+            {% block hero_title %}{% endblock %}
+
+        </header>
+        
         
         <main>
-            {% block body %}{% endblock %}
+            {% block main %}{% endblock %}
         </main>
 
-        {% include 'composants/_footer.html.twig' %}
+        <footer>
+            <div class="footer_top">
+                <div>
+                    <img src="{{ asset('images/logos/logo/MainLogo2.png') }}" class="logo_footer" alt="Logo Vite et Gourmand">
+                </div>
+                
+                <div class="contact_footer">
+                    <div class="contact_footer_text">
+                        <h5>CONTACT</h5>
+                        <p>25 rue des Vignerons</p>
+                        <p> 33000 Bordeaux</p>
+                        <a href="tel:+33647821539">06.47.82.15.39</a>
+                        <a href="mailto:contact@vite&gourmand.fr">contact@vite&gourmand.fr</a>
+                    </div>
+
+                    <div class="logos_social">
+                        <img src="{{ asset('images/logos/icon_facebook.svg') }}" alt="">
+                        <img src="{{ asset('images/logos/icon_instagram.svg') }}"  alt="">
+                        <img src="{{ asset('images/logos/icon_gogle.svg') }}" alt="">
+                    </div>
+                </div>
+
+                <div class="horaires">
+                    <h5>HORAIRES</h5>
+                    <p>Lundi : 10h - 14h /  17h - 20h</p>
+                    <p>Mardi : 10h - 14h /  17h - 20h</p>
+                    <p>Mercredi : 10h - 14h /  17h - 20h</p>
+                    <p>Jeudi : 10h - 14h /  17h - 20h</p>
+                    <p>Vendredi : 10h - 14h /  17h - 20h</p>
+                    <p>Samedi : 10h - 14h</p>
+                    <p>Dimanche : Fermé</p>
+                </div>
+                
+                <div class="about">
+                    <h5>INFORMATIONS</h5>
+                    <a href="{{ path('app_a_propos') }}">A propos</a>
+                    <a href="{{ path('app_menus') }}">Nos menus</a> 
+                    <a href="{{ path('app_politique_confidentialite') }}">Politique de confidentialité</a>
+                    <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
+                    <a href="{{ path('app_cgv') }}">Conditions générales de vente</a>
+                    <a href="{{ path('app_contact') }}">Contact</a>
+                </div>
+            </div>
+
+            <div class="footer_bottom">
+                <div class="line"></div>
+                <p>©2026 VITE & Gourmand. Tous droits réservés.</p>
+            </div>
+        </footer>
     </body>
 </html>
