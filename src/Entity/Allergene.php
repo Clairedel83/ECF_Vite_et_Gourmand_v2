@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AllergeneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AllergeneRepository::class)]
@@ -15,8 +16,8 @@ class Allergene
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[ORM\Column(length: 50)]
+    private ?string $nom = null;
 
     /**
      * @var Collection<int, Plat>
@@ -43,19 +44,24 @@ class Allergene
         $this->desserts = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->nom;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): static
+    public function setNom(string $nom): static
     {
-        $this->name = $name;
+        $this->nom = $nom;
 
         return $this;
     }

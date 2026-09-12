@@ -39,9 +39,9 @@ class Menu
     private Collection $entree;
 
     /**
-     * @var Collection<int, PLat>
+     * @var Collection<int, Plat>
      */
-    #[ORM\ManyToMany(targetEntity: PLat::class, inversedBy: 'menus')]
+    #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'menus')]
     private Collection $plat;
 
     /**
@@ -50,8 +50,8 @@ class Menu
     #[ORM\ManyToMany(targetEntity: Dessert::class, inversedBy: 'menus')]
     private Collection $dessert;
 
-    #[ORM\ManyToOne(inversedBy: 'menus')]
-    private ?Regime $regime = null;
+    #[ORM\ManyToMany(targetEntity: Regime::class, inversedBy: 'menus')]
+    private Collection $regimes;
 
     #[ORM\ManyToOne(inversedBy: 'menus')]
     private ?Theme $theme = null;
@@ -67,6 +67,7 @@ class Menu
         $this->entree = new ArrayCollection();
         $this->plat = new ArrayCollection();
         $this->dessert = new ArrayCollection();
+        $this->regimes = new ArrayCollection();
         $this->condition_stockage = new ArrayCollection();
     }
 
@@ -99,7 +100,7 @@ class Menu
         return $this;
     }
 
-    public function getNbreMin(): ?Number
+    public function getNbreMin(): ?int
     {
         return $this->nbre_min;
     }
@@ -123,7 +124,7 @@ class Menu
         return $this;
     }
 
-    public function getStock(): ?Number
+    public function getStock(): ?int
     {
         return $this->stock;
     }
@@ -160,14 +161,14 @@ class Menu
     }
 
     /**
-     * @return Collection<int, PLat>
+     * @return Collection<int, Plat>
      */
     public function getPlat(): Collection
     {
         return $this->plat;
     }
 
-    public function addPlat(PLat $plat): static
+    public function addPlat(Plat $plat): static
     {
         if (!$this->plat->contains($plat)) {
             $this->plat->add($plat);
@@ -176,7 +177,7 @@ class Menu
         return $this;
     }
 
-    public function removePlat(PLat $plat): static
+    public function removePlat(Plat $plat): static
     {
         $this->plat->removeElement($plat);
 
@@ -207,14 +208,23 @@ class Menu
         return $this;
     }
 
-    public function getRegime(): ?Regime
+    public function getRegimes(): Collection
     {
-        return $this->regime;
+        return $this->regimes;
     }
 
-    public function setRegime(?Regime $regime): static
+    public function addRegime(Regime $regime): static
     {
-        $this->regime = $regime;
+        if (!$this->regimes->contains($regime)) {
+            $this->regimes->add($regime);
+        }
+
+        return $this;
+    }
+
+    public function removeRegime(Regime $regime): static
+    {
+        $this->regimes->removeElement($regime);
 
         return $this;
     }

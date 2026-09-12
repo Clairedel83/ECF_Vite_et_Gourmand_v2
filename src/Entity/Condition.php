@@ -31,6 +31,12 @@ class Condition
         $this->menus = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->description;
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;

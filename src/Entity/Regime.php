@@ -21,12 +21,17 @@ class Regime
     /**
      * @var Collection<int, Menu>
      */
-    #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'regime')]
+    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'regimes')]
     private Collection $menus;
 
     public function __construct()
     {
         $this->menus = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->nom;
     }
 
     public function getId(): ?int
@@ -58,7 +63,7 @@ class Regime
     {
         if (!$this->menus->contains($menu)) {
             $this->menus->add($menu);
-            $menu->setRegime($this);
+            $menu->addRegime($this);
         }
 
         return $this;
@@ -68,9 +73,8 @@ class Regime
     {
         if ($this->menus->removeElement($menu)) {
             // set the owning side to null (unless already changed)
-            if ($menu->getRegime() === $this) {
-                $menu->setRegime(null);
-            }
+            if ($menu->removeRegime($this));
+            
         }
 
         return $this;

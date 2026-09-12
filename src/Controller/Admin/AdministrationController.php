@@ -35,5 +35,13 @@ class AdministrationController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list');
+        yield MenuItem::linkTo(AllergeneCrudController::class, 'Allergènes', 'fas fa-list');
+        yield MenuItem::linkTo(ConditionCrudController::class,'Conditions', 'fas fa-list');
+        yield MenuItem::linkTo(EntreeCrudController::class,'Entrées', 'fas fa-list');
+        yield MenuItem::linkTo(DessertCrudController::class,'Desserts', 'fas fa-list');
+        yield MenuItem::linkTo(MenuCrudController::class,'Menus', 'fas fa-list');
+        yield MenuItem::linkTo(PlatCrudController::class,'Plats', 'fas fa-list');
+        yield MenuItem::linkTo(RegimeCrudController::class,'Régimes', 'fas fa-list');
+        yield MenuItem::linkTo(ThemeCrudController::class,'Thèmes', 'fas fa-list');
     }
 }
