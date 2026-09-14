@@ -32,23 +32,14 @@ class Menu
     #[ORM\Column]
     private ?int $stock = null;
 
-    /**
-     * @var Collection<int, Entree>
-     */
-    #[ORM\ManyToMany(targetEntity: Entree::class, inversedBy: 'menus')]
-    private Collection $entree;
+    #[ORM\ManyToOne(inversedBy: 'menus')]
+    private ?Entree $entree=null;
 
-    /**
-     * @var Collection<int, Plat>
-     */
-    #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'menus')]
-    private Collection $plat;
+    #[ORM\ManyToOne(inversedBy: 'menus')]
+    private ?Plat $plat=null;
 
-    /**
-     * @var Collection<int, Dessert>
-     */
-    #[ORM\ManyToMany(targetEntity: Dessert::class, inversedBy: 'menus')]
-    private Collection $dessert;
+    #[ORM\ManyToOne(inversedBy: 'menus')]
+    private ?Dessert $dessert=null;
 
     #[ORM\ManyToMany(targetEntity: Regime::class, inversedBy: 'menus')]
     private Collection $regimes;
@@ -64,9 +55,6 @@ class Menu
 
     public function __construct()
     {
-        $this->entree = new ArrayCollection();
-        $this->plat = new ArrayCollection();
-        $this->dessert = new ArrayCollection();
         $this->regimes = new ArrayCollection();
         $this->condition_stockage = new ArrayCollection();
     }
@@ -112,12 +100,12 @@ class Menu
         return $this;
     }
 
-    public function getPrixPerPers(): ?float
+    public function getPrixPerPers(): ?string
     {
         return $this->prix_per_pers;
     }
 
-    public function setPrixPerPers(float $prix_per_pers): static
+    public function setPrixPerPers(string $prix_per_pers): static
     {
         $this->prix_per_pers = $prix_per_pers;
 
@@ -136,74 +124,39 @@ class Menu
         return $this;
     }
 
-    /**
-     * @return Collection<int, Entree>
-     */
-    public function getEntree(): Collection
+    public function getEntree(): ?Entree
     {
         return $this->entree;
     }
 
-    public function addEntree(Entree $entree): static
+    public function setEntree(?Entree $entree): static
     {
-        if (!$this->entree->contains($entree)) {
-            $this->entree->add($entree);
-        }
+        $this->entree = $entree;
 
         return $this;
     }
 
-    public function removeEntree(Entree $entree): static
-    {
-        $this->entree->removeElement($entree);
 
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Plat>
-     */
-    public function getPlat(): Collection
+    public function getPlat(): ?Plat
     {
         return $this->plat;
     }
 
-    public function addPlat(Plat $plat): static
+    public function setPlat(?Plat $plat): static
     {
-        if (!$this->plat->contains($plat)) {
-            $this->plat->add($plat);
-        }
+        $this->plat = $plat;
 
         return $this;
     }
 
-    public function removePlat(Plat $plat): static
-    {
-        $this->plat->removeElement($plat);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Dessert>
-     */
-    public function getDessert(): Collection
+    public function getDessert(): ?Dessert
     {
         return $this->dessert;
     }
 
-    public function addDessert(Dessert $dessert): static
+    public function setDessert(?Dessert $dessert): static
     {
-        if (!$this->dessert->contains($dessert)) {
-            $this->dessert->add($dessert);
-        }
-
-        return $this;
-    }
-
-    public function removeDessert(Dessert $dessert): static
-    {
-        $this->dessert->removeElement($dessert);
+        $this->dessert = $dessert;
 
         return $this;
     }

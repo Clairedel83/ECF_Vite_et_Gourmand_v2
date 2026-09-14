@@ -28,7 +28,7 @@ class Entree
     /**
      * @var Collection<int, Menu>
      */
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'entree')]
+    #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'entree')]
     private Collection $menus;
 
     #[ORM\Column(type: Types::TEXT)]

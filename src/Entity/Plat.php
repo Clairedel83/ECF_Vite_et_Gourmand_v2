@@ -31,7 +31,7 @@ class Plat
     /**
      * @var Collection<int, Menu>
      */
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'plat')]
+    #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'plat')]
     private Collection $menus;
 
     public function __construct()
