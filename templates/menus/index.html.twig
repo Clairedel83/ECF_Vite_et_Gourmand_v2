@@ -25,7 +25,10 @@
         <div class="all_filtres">
             <div class="filtres">
                 <div class="filtres_content">
-                    <label for="theme">THEME</label>
+                    <label for="theme">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Pin2.svg') }}" alt="">
+                        THEME
+                        </label>
                     <select name="theme" id="theme">
                         <option value="" selected>Tous les thèmes</option>
                         <option value="prive">Privé</option>
@@ -36,7 +39,10 @@
                 </div>
 
                 <div class="filtres_content">
-                    <label for="price">PRIX</label>
+                    <label for="price">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Hangtag2.svg') }}" alt="">
+                        PRIX
+                        </label>
                     <div class="price_range">
                         <input type="number" id="price_min" name="price_min" placeholder="Min" min="0">
                         <span>-</span>
@@ -50,12 +56,18 @@
                 </div>
 
                 <div class="filtres_content">
-                    <label for="nbre">NOMBRE DE PERS.</label>
+                    <label for="nbre">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Account2.svg') }}" alt="">
+                        NOMBRE DE PERS.
+                        </label>
                     <input type="number" name="nbre" id="nbre" placeholder="10" min="0">
                 </div>
 
                 <div class="filtres_content">
-                    <label for="regime">REGIME</label>
+                    <label for="regime">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Eco2.svg') }}" alt="">
+                        REGIME
+                    </label>
                     <select name="regime" id="regime">
                         <option value="" selected>Tous les régimes</option>
                         <option value="classique">Classique</option>
@@ -75,40 +87,51 @@
     <!-- SECTION ALL MENUS -->
         <div class="all_menus_content">
     <!-- MENU CLASSIQUE -->
-        <div class="menu" id="menu_classique">
-            <div class="menu_content_top">
-                <img class="visuel_menu" src="../images/menu_classique.png" alt="">
+        {% for menu in menus %}
+            <div class="menu">
+                <div class="menu_content_top">
+                    <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="">
 
-                <div class="theme">
-                    <p>Privé</p>
-                </div>
-            </div>
-
-            <div class="menu_content_text">
-                <h5>Menu Classique</h5>
-                <p>Une cuisine traditionnelle, conviviale et de saison, adaptée à tous vos événements.</p>
-            </div>
-
-            <div class="menu_content_bottom">
-                <p><span>Régime(s)</span> : Classique</p>
-                <div class="menu_line"></div>
-
-                <div class="conditions">
-                    <div class="price">
-                        <h5>280.00€</h5>
-                        <p><i>28.00€/pers</i></p>
-                    </div>
-
-                    <div class="min_pers">
-                        <img src="../logos/Shopicons_Light_Account.svg" alt="">
-                        <p>Min : 10 pers.</p>
+                    <div class="theme">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Pin2.svg') }}" alt="">
+                        <p>{{ menu.theme }}</p>
                     </div>
                 </div>
 
-                <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
-            </div>
-        </div>
+                <div class="menu_content_text">
+                    <h5>{{ menu.nom }}</h5>
+                    <p>{{ menu.description }}</p>
+                </div>
 
+                <div class="menu_content_bottom">
+                    <div class="regime">
+                        <p>
+                            <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt=""> 
+                            {% for regime in menu.regimes %}
+                                {{ regime.nom }}
+                                {# pour mettre une virgule entre les régimes #}
+                                {% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                    </div>
+
+                    <div class="menu_line"></div>
+
+                    <div class="conditions">
+                        <div class="price">
+                            <h5>{{ menu.prixPerPers }}</h5>
+                        </div>
+
+                        <div class="min_pers">
+                            <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                            <p>Min : {{ menu.nbreMin }} pers.</p>
+                        </div>
+                    </div>
+
+                    <a href="" class="btn2 btn_menu">Voir le menu</a>
+                </div>
+            </div>
+        {% endfor %}
 
 </section>
 
