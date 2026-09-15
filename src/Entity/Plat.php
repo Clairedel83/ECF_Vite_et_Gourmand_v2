@@ -34,6 +34,9 @@ class Plat
     #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'plat')]
     private Collection $menus;
 
+    #[ORM\Column(length: 255)]
+    private ?string $illustration = null;
+
     public function __construct()
     {
         $this->allergene = new ArrayCollection();
@@ -110,7 +113,7 @@ class Plat
     {
         if (!$this->menus->contains($menu)) {
             $this->menus->add($menu);
-            $menu->addPlat($this);
+            $menu->setPlat($this);
         }
 
         return $this;
@@ -119,8 +122,22 @@ class Plat
     public function removeMenu(Menu $menu): static
     {
         if ($this->menus->removeElement($menu)) {
-            $menu->removePlat($this);
+            if ($menu->getPlat() === $this) {
+                $menu->setPlat(null);
+            }
         }
+
+        return $this;
+    }
+
+    public function getIllustration(): ?string
+    {
+        return $this->illustration;
+    }
+
+    public function setIllustration(string $illustration): static
+    {
+        $this->illustration = $illustration;
 
         return $this;
     }

@@ -53,6 +53,9 @@ class Menu
     #[ORM\ManyToMany(targetEntity: Condition::class, inversedBy: 'menus')]
     private Collection $condition_stockage;
 
+    #[ORM\Column(length: 255)]
+    private ?string $illustration = null;
+
     public function __construct()
     {
         $this->regimes = new ArrayCollection();
@@ -214,6 +217,18 @@ class Menu
     public function removeConditionStockage(Condition $conditionStockage): static
     {
         $this->condition_stockage->removeElement($conditionStockage);
+
+        return $this;
+    }
+
+    public function getIllustration(): ?string
+    {
+        return $this->illustration;
+    }
+
+    public function setIllustration(string $illustration): static
+    {
+        $this->illustration = $illustration;
 
         return $this;
     }

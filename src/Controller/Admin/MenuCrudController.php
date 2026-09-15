@@ -6,6 +6,7 @@ use App\Entity\Menu;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -40,6 +41,7 @@ class MenuCrudController extends AbstractCrudController
             AssociationField::new('regimes')->setLabel('Régime'),
             AssociationField::new('theme')->setLabel('Thème'),
             AssociationField::new('condition_stockage')->setLabel('Condition'),
+            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du menu')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')
         ];
     }
     

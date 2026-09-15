@@ -34,6 +34,9 @@ class Entree
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $illustration = null;
+
     public function __construct()
     {
         $this->allergene = new ArrayCollection();
@@ -98,7 +101,7 @@ class Entree
     {
         if (!$this->menus->contains($menu)) {
             $this->menus->add($menu);
-            $menu->addEntree($this);
+            $menu->setEntree($this);
         }
 
         return $this;
@@ -107,7 +110,9 @@ class Entree
     public function removeMenu(Menu $menu): static
     {
         if ($this->menus->removeElement($menu)) {
-            $menu->removeEntree($this);
+            if ($menu->getEntree() === $this) {
+                $menu->setEntree(null);
+            }
         }
 
         return $this;
@@ -121,6 +126,18 @@ class Entree
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getIllustration(): ?string
+    {
+        return $this->illustration;
+    }
+
+    public function setIllustration(string $illustration): static
+    {
+        $this->illustration = $illustration;
 
         return $this;
     }

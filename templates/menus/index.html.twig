@@ -19,5 +19,100 @@
 
     {% block main %}
     
+    <section class="all_menus">
+        
+        <!-- FILTRES -->
+        <div class="all_filtres">
+            <div class="filtres">
+                <div class="filtres_content">
+                    <label for="theme">THEME</label>
+                    <select name="theme" id="theme">
+                        <option value="" selected>Tous les thèmes</option>
+                        <option value="prive">Privé</option>
+                        <option value="evenement">Evènement</option>
+                        <option value="saison">Saison</option>
+                        <option value="entreprise">Entreprise</option>
+                    </select>
+                </div>
+
+                <div class="filtres_content">
+                    <label for="price">PRIX</label>
+                    <div class="price_range">
+                        <input type="number" id="price_min" name="price_min" placeholder="Min" min="0">
+                        <span>-</span>
+                        <input type="number" name="price_max" id="price_max" placeholder="Max" min="0">
+                    </div>
+                </div>
+
+                <div class="filtres_content">
+                    <label for="price">PRIX / PERSONNE</label>
+                    <div class="price_lvl"></div>
+                </div>
+
+                <div class="filtres_content">
+                    <label for="nbre">NOMBRE DE PERS.</label>
+                    <input type="number" name="nbre" id="nbre" placeholder="10" min="0">
+                </div>
+
+                <div class="filtres_content">
+                    <label for="regime">REGIME</label>
+                    <select name="regime" id="regime">
+                        <option value="" selected>Tous les régimes</option>
+                        <option value="classique">Classique</option>
+                        <option value="vegetarien">Végétarien</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="sans_porc">Sans porc</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn_filtres">
+                <button class="btn3 btn3_apply">APPLIQUER</button>
+                <button class="btn3 btn3_reset">Réinitialiser</button>
+            </div>
+        </div>
+
+    <!-- SECTION ALL MENUS -->
+        <div class="all_menus_content">
+    <!-- MENU CLASSIQUE -->
+        <div class="menu" id="menu_classique">
+            <div class="menu_content_top">
+                <img class="visuel_menu" src="../images/menu_classique.png" alt="">
+
+                <div class="theme">
+                    <p>Privé</p>
+                </div>
+            </div>
+
+            <div class="menu_content_text">
+                <h5>Menu Classique</h5>
+                <p>Une cuisine traditionnelle, conviviale et de saison, adaptée à tous vos événements.</p>
+            </div>
+
+            <div class="menu_content_bottom">
+                <p><span>Régime(s)</span> : Classique</p>
+                <div class="menu_line"></div>
+
+                <div class="conditions">
+                    <div class="price">
+                        <h5>280.00€</h5>
+                        <p><i>28.00€/pers</i></p>
+                    </div>
+
+                    <div class="min_pers">
+                        <img src="../logos/Shopicons_Light_Account.svg" alt="">
+                        <p>Min : 10 pers.</p>
+                    </div>
+                </div>
+
+                <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
+            </div>
+        </div>
+
+
+</section>
+
+
+
     {% endblock %}
 {% endblock %}
