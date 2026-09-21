@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\MenuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,10 +10,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PagesController extends AbstractController
 {
     #[Route('/', name: 'app_accueil')]
-    public function accueil(): Response
+    public function accueil(MenuRepository $menuRepository): Response
     {
+        $menus = $menuRepository->findAll();
+
         return $this->render('pages/accueil.html.twig', [
-            'controller_name' => 'PagesController',
+            'menus' => $menus,
         ]);
     }
 

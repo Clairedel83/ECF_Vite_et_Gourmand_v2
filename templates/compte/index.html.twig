@@ -15,10 +15,21 @@
 
     {% block main %}
         <section class="account">
-            <h2>Espace membre</h2>
-            <a href="">Modifier le mot de passe</a>
-            <a href="{{ path('_logout_main') }}">Me déconnecter</a>
+            <div class="account_left">
+                <h3>Espace membre</h3>
+                <div class="account_link">
+                    <a href="">Modifier mes informations</a>
+                    <a href="">Modifier mon mot de passe</a>
 
+                    <a href="">Mes commandes</a>
+                    <a href="{{ path('_logout_main') }}">Me déconnecter</a>
+                </div>
+                
+            </div>
+
+            <div class="account_right">
+
+            </div>
         </section>
 
     {% endblock %}

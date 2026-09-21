@@ -111,7 +111,7 @@
     padding:0;
 }
 
-/* =================================PANEL INCONTOURNABLES ============================================*/
+/* ===================PANEL INCONTOURNABLES =======================*/
 
 .incontournables{  
     height:auto;
@@ -132,18 +132,13 @@
 }
 
 .incontournables_content{
-    display: flex;
     margin: 0 150px;
-    justify-content:center;
-    align-self: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    justify-content: center;
     gap:5%;
     height:70%;
-}
-
-.visuel_menu{
-    height:175px;
-    width:100%;
-    z-index:1;
 }
 
 .incontournables a {

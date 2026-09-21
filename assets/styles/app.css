@@ -11,6 +11,7 @@
 @import url('./pages/connexion.css');
 @import url('./pages/inscription.css');
 @import url('./pages/contact.css');
+@import url('./pages/compte_user.css');
 
 /* =========================== BASE ======================================== */
 *{
@@ -65,7 +66,6 @@ h3{
     letter-spacing: 1px;;
     font-size:20px;
     padding-bottom:0;
-
 }
 
 h4{
@@ -104,6 +104,10 @@ label{
 }
 
 /* ======================================= COMPONENTS ========================================= */
+.btn1, .btn2, .btn3, .btn_menu, .btn_fermer{
+    cursor:pointer;
+}
+
 .btn1{
     display: flex;
     flex-direction: column; /* pour empiler les span*/
@@ -157,7 +161,7 @@ label{
     width: 110px;
 }
 
-.menu_content_bottom a{    /*correspond à btn_menu*/
+.menu_content_bottom button{    /*correspond à btn_menu*/
     text-decoration: none;
     font-size: 14px;
     color:white;
@@ -228,47 +232,47 @@ label{
 }
 
 #hero_accueil{
-    background-image: url(/images/accueil.png);
+    background-image: url(/images/accueil.webp);
     background-position:center;
 }
 
 #hero_nos_menus{
-    background-image: url(/images/nos_menus.jpg);
+    background-image: url(/images/nos_menus.webp);
     background-position: center;
 }
 
 #hero_a_propos{
-    background-image: url(/images/a_propos.jpg);
+    background-image: url(/images/a_propos.webp);
     background-position: center;
 }
 
 #hero_contact{
-    background-image: url(/images/contact.png);
+    background-image: url(/images/contact.webp);
     background-position: center 10%;
 }
 
 #hero_connexion{
-    background-image: url(/images/connexion.png);
+    background-image: url(/images/connexion.webp);
     background-position: center 65%;
 }
 
 #hero_mentions_legales{
-    background-image: url(/images/mentions_legales.jpg);
+    background-image: url(/images/mentions_legales.webp);
     background-position: center 55%;
 }
 
 #hero_cgv{
-    background-image: url(/images/cgv.jpg);
+    background-image: url(/images/cgv.webp);
     background-position: center;
 }
 
 #hero_politique{
-    background-image: url(/images/politique_confidentialite.jpg) ;
+    background-image: url(/images/politique_confidentialite.webp) ;
     background-position: center;
 }
 
 #hero_compte{
-    background-image: url(/images/compte.png) ;
+    background-image: url(/images/compte.webp) ;
     background-position:70%;
 }
 

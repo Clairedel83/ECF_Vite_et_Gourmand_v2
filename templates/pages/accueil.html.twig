@@ -6,17 +6,17 @@
     <!-- HEADER & HERO-->
     {% block header_class %}header_home{% endblock %}
     {% block hero_img %}
-        <div class = "hero_img" id="hero_accueil"></div>
+        <div class="hero_img" id="hero_accueil"></div>
     {% endblock %}
 
     {% block hero_title %}
-        <div class = "header_bottom header_bottom_home">
+        <div class="header_bottom header_bottom_home">
             <img src="{{ asset('images/logos/MainLogo.png') }}" alt="Logo Vite & Gourmand" id="logo_index">
         </div>
     {% endblock %}
 
     {% block main %}
-    <!-- PANEL ENGAGEMENTS -->
+        <!-- PANEL ENGAGEMENTS -->
         <section class="engagements">
             <div class="flexbox_accueil">
                 <div class="background_engagements">
@@ -24,12 +24,12 @@
 
                 <div class="flex boxes">
                     <div class="flex box2">
-                        <img class ="visuel" src="{{ asset('/images/julie_jose.png') }}" alt="Les fondateurs de Vite & Gourmand : Julie et José" class="img img-julie-jose">
-                        <img class ="visuel" src="{{ asset('images/assiette.jpg') }}" alt="Assiette d’entrée élégante composée de salade fraîche, foie gras et pain, dressée sur une table de restaurant avec ambiance chaleureuse en arrière-plan." class="img img-assiettes">
+                        <img class="visuel" src="{{ asset('/images/julie_jose.png') }}" alt="Les fondateurs de Vite & Gourmand : Julie et José" class="img img-julie-jose">
+                        <img class="visuel" src="{{ asset('images/assiette.jpg') }}" alt="Assiette d’entrée élégante composée de salade fraîche, foie gras et pain, dressée sur une table de restaurant avec ambiance chaleureuse en arrière-plan." class="img img-assiettes">
                     </div>
                     
                     <div class="flex box3">
-                        <img class ="visuel" src="{{ asset('images/verrines.jpg') }}" alt="Verrines apéritives élégantes de crème salée garnies de crackers et d’herbes fraîches, présentées en série sur un plateau blanc." class="img img-verrines">
+                        <img class="visuel" src="{{ asset('images/verrines.jpg') }}" alt="Verrines apéritives élégantes de crème salée garnies de crackers et d’herbes fraîches, présentées en série sur un plateau blanc." class="img img-verrines">
                     </div>
                 </div>
             </div>
@@ -87,111 +87,59 @@
             <h2>NOS INCONTOURNABLES</h2>
 
             <div class="incontournables_content">
-                <div class="menu" id="menu_classique">
-                        <div class="menu_content_top">
-                            <img class="visuel_menu" src="{{ asset('images/menu_classique.png') }}" alt="">
+                {% for menu in menus %}
+                    {% if menu.id < 4 %}
+                        <div class="menu">
+                            <div class="menu_content_top">
+                                <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="">
 
-                            <div class="theme">
-                                <p>Privé</p>
-                            </div>
-                        </div>
-
-                        <div class="menu_content_text">
-                            <h5>Menu Classique</h5>
-                            <p>Une cuisine traditionnelle, conviviale et de saison, adaptée à tous vos événements.</p>
-                        </div>
-
-                        <div class="menu_content_bottom">
-                            <p><span>Régime(s)</span> : Classique</p>
-                            <div class="menu_line"></div>
-
-                            <div class="conditions">
-                                <div class="price">
-                                    <h5>280.00€</h5>
-                                    <p><i>28.00€/pers</i></p>
-                                </div>
-
-                                <div class="min_pers">
-                                    <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                    <p>Min : 10 pers.</p>
+                                <div class="theme">
+                                    <img src="{{ asset('images/logos/Shopicons_Light_Pin2.svg') }}" alt="">
+                                    <p>{{ menu.theme }}</p>
                                 </div>
                             </div>
 
-                            <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
-                        </div>
-                    </div>
-
-                    <div class="menu" id="menu_mariage">
-                        <div class="menu_content_top">
-                            <img class="visuel_menu" src="{{ asset('images/menu_mariage.jpg') }}" alt="">
-
-                            <div class="theme">
-                                <p>Evènement</p>
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="menu_content_text">
-                            <h5>Mariage</h5>
-                            <p>Une cuisine raffinée et sur mesure, pour sublimer chaque moment de votre journée d’exception.</p>
-                        </div>
-
-                        <div class="menu_content_bottom">
-                            <p><span>Régime(s)</span> : Classique, Vegan, Sans porc</p>
-                            <div class="menu_line"></div>
-
-                            <div class="conditions">
-                                <div class="price">
-                                    <h5>3000.00€</h5>
-                                    <p><i>75.00€/pers</i></p>
-                                </div>
-
-                                <div class="min_pers">
-                                    <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                    <p>Min : 40 pers.</p>
-                                </div>
+                            <div class="menu_content_text">
+                                <h5>{{ menu.nom }}</h5>
+                                <p>{{ menu.description }}</p>
                             </div>
 
-                            <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
-                        </div>
-                    </div>
-
-                <div class="menu" id="menu_cocktail">
-                        <div class="menu_content_top">
-                            <img class="visuel_menu" src="{{ asset('images/menu_cocktail.png') }}" alt="">
-
-                            <div class="theme">
-                                <p>Entreprise</p>
-                            </div>
-                        </div>
-                        
-                        <div class="menu_content_text">
-                            <h5>Cocktail d'entreprise</h5>
-                            <p>Des créations élégantes et conviviales, idéales pour vos événements professionnels.</p>
-                        </div>
-
-                        <div class="menu_content_bottom">
-                            <p><span>Régime(s)</span> : Végétarien, Vegan</p>
-                            <div class="menu_line"></div>
-
-                            <div class="conditions">
-                                <div class="price">
-                                    <h5>600.00€</h5>
-                                    <p><i>30.00€/pers</i></p>
+                            <div class="menu_content_bottom">
+                                <div class="regime">
+                                    <p>
+                                        <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt=""> 
+                                        {% for regime in menu.regimes %}
+                                            {{ regime.nom }}
+                                            {# pour mettre une virgule entre les régimes #}
+                                            {% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
                                 </div>
 
-                                <div class="min_pers">
-                                    <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                    <p>Min : 20 pers.</p>
-                                </div>
-                            </div>
+                                <div class="menu_line"></div>
 
-                            <a href="./menu_classique.html" class="btn2 btn_menu">Voir le menu</a>
+                                <div class="conditions">
+                                    <div class="price">
+                                        <h5>{{ menu.prixPerPers }}</h5>
+                                    </div>
+
+                                    <div class="min_pers">
+                                        <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                                        <p>Min : {{ menu.nbreMin }} pers.</p>
+                                    </div>
+                                </div>
+
+                                <a href="" class="btn2 btn_menu">Voir le menu</a>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
+                    
+                {% endfor %}
+                
+            </div>
             </div>
 
-            <a href="./nos_menus.html" class="btn1 nav_item">
+            <a href="{{ path('app_menus')}}" class="btn1 nav_item">
                 <span>VOIR LES MENUS</span>
             </a>
 
