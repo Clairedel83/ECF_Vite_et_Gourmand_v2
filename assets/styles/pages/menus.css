@@ -1,7 +1,7 @@
 /* ----- FILTRES ------- */
 .all_filtres{
     background-color: #DAA481;
-    margin: 20px 150px 0;
+    margin: 20px 150px 50px;
     border-radius: 25px;
     display: flex;
     flex-direction: column;
@@ -63,10 +63,10 @@
 /* ------ MENU --------- */
 
 .all_menus_content{
-    margin:0 150px;
+    margin:0 150px 50px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     gap: 50px;
 }
 

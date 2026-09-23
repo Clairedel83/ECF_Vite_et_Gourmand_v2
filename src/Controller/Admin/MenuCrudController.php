@@ -29,6 +29,12 @@ class MenuCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+
+        $required = true;
+        if ($pageName == 'edit'){
+            $required = false;
+        }
+
         return [
             TextField::new('nom')->setLabel('Nom'),
             TextField::new('description')->setLabel('Description'),
@@ -41,7 +47,7 @@ class MenuCrudController extends AbstractCrudController
             AssociationField::new('regimes')->setLabel('Régime'),
             AssociationField::new('theme')->setLabel('Thème'),
             AssociationField::new('condition_stockage')->setLabel('Condition'),
-            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du menu')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')
+            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du menu')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)
         ];
     }
     

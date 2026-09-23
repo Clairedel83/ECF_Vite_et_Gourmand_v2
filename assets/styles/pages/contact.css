@@ -98,10 +98,11 @@ textarea{
 }
 
 .input, input, textarea{
-    border-radius: 8px;
     border: 1px solid rgba(37, 36, 36, 0.5);
     padding-left: 0.5rem;
+    height: 1.75rem;
 }
+
 
 .input:focus, input:focus{
   outline: none;

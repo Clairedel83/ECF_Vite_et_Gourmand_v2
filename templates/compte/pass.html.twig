@@ -28,7 +28,19 @@
             </div>
 
             <div class="account_right">
+                <h3>Modifier mon mot de passe :</h3>
+                    <div class="form_user">
+                        {{ form(modifierPass) }}
+                    </div>
 
+                    {# design des flash messages #}
+                    <div class="">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
             </div>
         </section>
 

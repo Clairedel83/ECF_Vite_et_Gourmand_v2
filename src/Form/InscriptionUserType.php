@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class InscriptionUserType extends AbstractType
 {
@@ -26,8 +27,22 @@ class InscriptionUserType extends AbstractType
                     'placeholder' => "Adresse email"
                 ]
             ])
-            ->add('password', RepeatedType::class, [
+            ->add('plainpassword', RepeatedType::class, [
                 'type' => PasswordType::class, 
+
+                'invalid_message' => 'Les mots de passe saisis ne correspondent pas.',
+
+                'constraints' => [
+                    new Assert\Length(
+                        min:10,
+                        minMessage:'Le mot de passe doit contenir au moins 10 caractères.'
+                    ),
+
+                    new Assert\Regex(
+                        pattern: '/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[+!@#$%^&*])+$/',
+                        message:'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et caractère spécial.'
+                    ),
+                    ],
                 'first_options' => [
                     'label' => 'Mot de passe :', 
                     'hash_property_path' => 'password',
@@ -57,6 +72,7 @@ class InscriptionUserType extends AbstractType
                     'placeholder' => "Nom"
                 ]
             ])
+
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom :',
                 'constraints' => [
@@ -93,7 +109,7 @@ class InscriptionUserType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'S\'inscrire',
                 'attr' => [
-                    'class' => 'btn2 btn-menu'
+                    'class' => 'btn2 nav_item'
                 ]
             ])
         ;

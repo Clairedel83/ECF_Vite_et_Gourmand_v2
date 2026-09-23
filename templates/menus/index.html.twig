@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block importmap %}
+    {{ importmap(['app', 'menus']) }}
+{% endblock %}
+
 {% block title %}Vite et Gourmand - Traiteur{% endblock %}
 
 {% block body %}
@@ -94,7 +98,7 @@
                     <div class="menu_details" data-menu-id="{{ menu.id }}">
                         <div class="menu_details_top">
                             <h3>MENU {{ menu.nom }}</h3>
-                            <button class="btn_fermer" data-menu-id="{{ menu.id }}">
+                            <button class="btn_fermer" data-menu-id="{{ menu.id }}" aria-label="Fermer le détail du menu {{ menu.nom }}">
                                 <img src="{{ asset('images/logos/close_ring_light.svg') }}" alt="">
                             </button>
                             <p>{{ menu.description }}</p>
@@ -125,7 +129,7 @@
                                 <div class="legende_content">
                                     <img src="{{ asset('images/logos/Shopicons_Light_Hangtag.svg') }}" alt="">
                                     <span>Prix :</span>
-                                    <p>{{ menu.prixPerPers }} / pers</p>
+                                    <p>{{ menu.prixPerPers }} € / pers</p>
                                 </div>
 
                                 <div class="legende_content">
@@ -150,7 +154,7 @@
                                     {% endfor %}
                                 </span>
 
-                                <img src="/uploads/{{ menu.entree.illustration }}" alt="">
+                                <img src="/uploads/{{ menu.entree.illustration }}" alt="{{ menu.entree.description }}">
                             </div>
 
                             <div class="menu_details_element">
@@ -166,11 +170,11 @@
                                     {% endfor %}
                                 </span>
 
-                                <img src="/uploads/{{ menu.plat.illustration }}" alt="">
+                                <img src="/uploads/{{ menu.plat.illustration }}" alt="{{ menu.plat.description }}">
                             </div>
 
                             <div class="menu_details_element">
-                                <h5>ENTREE</h5>
+                                <h5>DESSERT</h5>
                                 <p>{{ menu.dessert.description }}</p>
                                 <span>
                                     Allergène(s) : 
@@ -182,7 +186,7 @@
                                     {% endfor %}
                                 </span>
 
-                                <img src="/uploads/{{ menu.dessert.illustration }}" alt="">
+                                <img src="/uploads/{{ menu.dessert.illustration }}" alt="{{ menu.dessert.description }}">
                             </div>
                         </div>
 
@@ -208,58 +212,58 @@
             <!-- GRILLE DE MENUS REPLIES -->
             <section class="small_menu">
                 {% for menu in menus %}
-                            <div class="menu"
-                            {#permet d'obtenir les informations de chaque menu pour être utilisables dans JS  #}
-                            data-menu-id="{{ menu.id }}"
-                            data-theme-id="{{ menu.theme.id }}" 
-                            data-prix-per-pers="{{ menu.prixPerPers }}" 
-                            data-nbre-min="{{ menu.nbreMin }}"
-                            {# relation ManyToMany #}
-                            data-regime-ids="{% for regime in menu.regimes %}{{ regime.id }}{% if not loop.last %},{% endif %}{% endfor %}">
+                    <div class="menu"
+                    {#permet d'obtenir les informations de chaque menu pour être utilisables dans JS  #}
+                    data-menu-id="{{ menu.id }}"
+                    data-theme-id="{{ menu.theme.id }}" 
+                    data-prix-per-pers="{{ menu.prixPerPers }}" 
+                    data-nbre-min="{{ menu.nbreMin }}"
+                    {# relation ManyToMany #}
+                    data-regime-ids="{% for regime in menu.regimes %}{{ regime.id }}{% if not loop.last %},{% endif %}{% endfor %}">
 
-                                <div class="menu_content_top">
-                                    <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="">
+                        <div class="menu_content_top">
+                            <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="">
 
-                                    <div class="theme">
-                                        <img src="{{ asset('images/logos/Shopicons_Light_Pin2.svg') }}" alt="">
-                                        <p>{{ menu.theme }}</p>
-                                    </div>
+                            <div class="theme">
+                                <img src="{{ asset('images/logos/Shopicons_Light_Pin2.svg') }}" alt="">
+                                <p>{{ menu.theme }}</p>
+                            </div>
+                        </div>
+
+                        <div class="menu_content_text">
+                            <h5>{{ menu.nom }}</h5>
+                            <p>{{ menu.description }}</p>
+                        </div>
+
+                        <div class="menu_content_bottom">
+                            <div class="regime">
+                                <p>
+                                    <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt=""> 
+                                    {% for regime in menu.regimes %}
+                                        {{ regime.nom }}
+                                        {# pour mettre une virgule entre les régimes #}
+                                        {% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </p>
+                            </div>
+
+                            <div class="menu_line"></div>
+
+                            <div class="conditions">
+                                <div class="price">
+                                    <h5>{{ menu.prixPerPers }} €</h5>
                                 </div>
 
-                                <div class="menu_content_text">
-                                    <h5>{{ menu.nom }}</h5>
-                                    <p>{{ menu.description }}</p>
-                                </div>
-
-                                <div class="menu_content_bottom">
-                                    <div class="regime">
-                                        <p>
-                                            <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt=""> 
-                                            {% for regime in menu.regimes %}
-                                                {{ regime.nom }}
-                                                {# pour mettre une virgule entre les régimes #}
-                                                {% if not loop.last %}, {% endif %}
-                                            {% endfor %}
-                                        </p>
-                                    </div>
-
-                                    <div class="menu_line"></div>
-
-                                    <div class="conditions">
-                                        <div class="price">
-                                            <h5>{{ menu.prixPerPers }}</h5>
-                                        </div>
-
-                                        <div class="min_pers">
-                                            <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                            <p>Min : {{ menu.nbreMin }} pers.</p>
-                                        </div>
-                                    </div>
-
-                                    <button href="" class="btn2 btn_menu" data-menu-id='{{ menu.id }}'>Voir le menu</button>
+                                <div class="min_pers">
+                                    <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                                    <p>Min : {{ menu.nbreMin }} pers.</p>
                                 </div>
                             </div>
-                        {% endfor %}
+
+                            <button href="" class="btn2 btn_menu" data-menu-id='{{ menu.id }}'>Voir le menu</button>
+                        </div>
+                    </div>
+                {% endfor %}
             </section>
 
             <!-- SI AUCUN MENU NE CORRESPOND AU(X) FILTRE(S) -->
@@ -267,7 +271,7 @@
                 <h5>Aucun menu ne correspond à ce(s) filtre(s).</h5>
             </section>
         
-</section>
+    </section>
     
 
     {% endblock %}

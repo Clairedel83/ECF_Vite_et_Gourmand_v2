@@ -97,13 +97,30 @@ label{
     font-weight: 350;
 }
 
+/* Flash alert */
+.alert{
+    font-family: "Roboto";
+    font-weight: 350;
+    letter-spacing: 0.3px;
+    font-size:14px;
+    line-height:1.75;
+}
+
+.alert-success{
+    color:green;
+}
+
+.alert-warning{
+    color:red;
+}
+
 .nav_item{
     font-weight: 500;
-    letter-spacing: 1.28px; /*8% sur figma*/
+    letter-spacing: 1.2px; /*8% sur figma*/
     color:white;
 }
 
-/* ======================================= COMPONENTS ========================================= */
+/* ====================== COMPONENTS ========================== */
 .btn1, .btn2, .btn3, .btn_menu, .btn_fermer{
     cursor:pointer;
 }
@@ -147,11 +164,11 @@ label{
     justify-content:center;
     align-items:center;
     background-color: #DAA481;
+    color:white;
     border:2px solid transparent; /*pour éviter qu'au hover un décalage apparaisse*/
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     transition: 0.2s ease;
-    width:130px;
-    height:50px;
+    padding: 10px 20px;
     text-decoration: none;
     border-radius: 10px;
 }

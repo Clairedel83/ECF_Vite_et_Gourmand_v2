@@ -26,11 +26,17 @@ class EntreeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+
+        $required = true;
+        if ($pageName == 'edit'){
+            $required = false;
+        }
+
         return [
             TextField::new('nom')->setLabel('Nom'),
             TextField::new('description')->setLabel('Description'),
             AssociationField::new('allergene')->setLabel('Allergène'),
-            ImageField::new('illustration')->setLabel('Image')->setHelp('Image de l\'entrée')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')
+            ImageField::new('illustration')->setLabel('Image')->setHelp('Image de l\'entrée')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)
         ];
     }
     
