@@ -4,61 +4,18 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints\PasswordStrength;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class InscriptionUserType extends AbstractType
+class InformationsUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class, [
-                'label' => 'Adresse email :',
-                'attr' => [
-                    'placeholder' => "Adresse email"
-                ]
-            ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class, 
-
-                'invalid_message' => 'Les mots de passe saisis ne correspondent pas.',
-
-                'constraints' => [
-                    new Assert\Length(
-                        min:10,
-                        minMessage:'Le mot de passe doit contenir au moins 10 caractères.'
-                    ),
-
-                    new Assert\Regex(
-                        pattern: '/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[+!@#$%^&*]).+$/',
-                        message:'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et caractère spécial.'
-                    ),
-                    ],
-                'first_options' => [
-                    'label' => 'Mot de passe :', 
-                    'hash_property_path' => 'password',
-                    'attr' => [
-                        'placeholder' => "**************"
-                    ]
-                ],
-                'second_options' => [
-                    'label' => 'Confirmez le mot de passe :',
-                    'attr' => [
-                        'placeholder' => "**************"
-                    ]
-                ], 
-                'mapped' => false,
-            ])
-
             ->add('nom', TextType::class, [
                 'label' => 'Nom :',
                 'constraints' => [
@@ -107,9 +64,9 @@ class InscriptionUserType extends AbstractType
             ])
 
             ->add('submit', SubmitType::class, [
-                'label' => 'S\'inscrire',
+                'label' => "Sauvegarder les modifications",
                 'attr' => [
-                    'class' => 'btn2 nav_item'
+                    'class' => 'btn2 nav_item form_footer'
                 ]
             ])
         ;
@@ -119,13 +76,11 @@ class InscriptionUserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'contraints' => [
-                new UniqueEntity([
-                    'entityClass' => User::class,
-                    'fields' => 'email'
-                    // l'email ne pourra pas être réutilisé lors d'une autre inscription
-                ])
-            ],
+
+            // Symfony ajoute un champ caché au formulaire pour vérifier qu'il vient bien de notre site (puisqu'il s'agit de données sensibles)
+            // Le réglage par défaut de ce champ empêchait la validation du formulaire (csrf.yaml)
+            // Ce nom propre au formulaire (modifier_informations_user) permet à Symfony de faire la vérification avec la session de l'utilisateur sinon il bloquait la modification des données
+            'csrf_token_id' => 'modifier_informations_user',
         ]);
     }
 }

@@ -5,11 +5,6 @@
     gap: 5%;
 }
 
-.account_left, .account_right{
-    /* border: solid, 1px, #696968aa;
-    border-radius: 20px;; */
-}
-
 .account_left{
     background-color:#F7E0C4;
     padding:5vh 0 0 100px;
@@ -56,14 +51,15 @@
     width:75%;
 }
 
-/* Modifier le mot de passe */
+/* -------------- Modifier le mot de passe --------- */
 .form_user, .form_user_content {
     display: flex;
     flex-direction: column;
 }
 
 .form_footer{
-    margin: 4vh 0;
+    margin: 10vh 0;
+    justify-self: flex-start;
 }
 
 .form_user {
@@ -88,4 +84,39 @@
     letter-spacing: 0.3px;
     color:red;
     list-style: none;
+}
+
+/* --------- Mes informations ---------- */
+.all_informations{
+    display: flex;
+    flex-direction: column;
+    gap:5vh;
+    font-size:14px;
+    line-height:1.75;
+    font-family: "Roboto";
+    font-weight: 350;
+    letter-spacing: 0.3px;
+    color:#252424;
+}
+
+.informations{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+}
+
+.informations_content{
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.informations_content input {
+    width: min(100%, 280px);
+    box-sizing: border-box;
+}
+
+.informations span{
+    font-weight: 600;
 }

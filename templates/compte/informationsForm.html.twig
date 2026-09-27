@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_compte"></div>
+    {% endblock %}
+
+    {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>MON COMPTE</h1>
+        </div>
+    {% endblock %}
+
+
+    {% block main %}
+        <section class="account">
+            <div class="account_left">
+                <h3>Espace membre</h3>
+                <div class="account_link">
+                    <a href="{{ path('app_compte_informations') }}">Mes informations</a>
+                    <a href="{{ path('app_compte_modifier_pass') }}">Modifier mon mot de passe</a>
+                    <a href="">Mes commandes</a>
+                    <a href="{{ path('_logout_main') }}">Me déconnecter</a>
+                </div>
+                
+            </div>
+
+            <div class="account_right">
+                <h3>Mes informations</h3>
+
+                {{ form_start(informationsForm) }}
+
+                <div class="all_informations">
+                    <div class="informations">
+                        <div class="informations_content">
+                            <span>Nom :</span>
+                            {{ form_widget(informationsForm.nom) }}
+                            {{ form_errors(informationsForm.nom) }}
+                        </div>
+                        <div class="informations_content">
+                            <span>Prénom :</span>
+                            {{ form_widget(informationsForm.prenom) }}
+                            {{ form_errors(informationsForm.prenom) }}
+                        </div>
+                    </div>
+
+                    <div class="informations">
+                        <div class="informations_content">
+                            <span>Téléphone :</span>
+                            {{ form_widget(informationsForm.telephone) }}
+                            {{ form_errors(informationsForm.telephone) }}
+                        </div>
+                        <div class="informations_content"></div>
+                    </div>
+
+                    <div class="informations">
+                        <div class="informations_content">
+                            <span>Adresse postale :</span>
+                            {{ form_widget(informationsForm.adresse_postale) }}
+                            {{ form_errors(informationsForm.adresse_postale) }}
+                        </div>
+                        <div class="informations_content">
+                            <span>Ville :</span>
+                            {{ form_widget(informationsForm.ville) }}
+                            {{ form_errors(informationsForm.ville) }}
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_widget(informationsForm.submit) }}
+                {{ form_end(informationsForm) }}
+            </div>
+        </section>
+
+    {% endblock %}
+{% endblock %}

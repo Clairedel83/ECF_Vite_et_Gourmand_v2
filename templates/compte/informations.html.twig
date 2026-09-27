@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_compte"></div>
+    {% endblock %}
+
+    {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>MON COMPTE</h1>
+        </div>
+    {% endblock %}
+
+
+    {% block main %}
+        <section class="account">
+            <div class="account_left">
+                <h3>Espace membre</h3>
+                <div class="account_link">
+                    <a href="{{ path('app_compte_informations') }}">Mes informations</a>
+                    <a href="{{ path('app_compte_modifier_pass') }}">Modifier mon mot de passe</a>
+                    <a href="">Mes commandes</a>
+                    <a href="{{ path('_logout_main') }}">Me déconnecter</a>
+                </div>
+                
+            </div>
+
+            <div class="account_right">
+                <h3>Mes informations</h3>
+                <div class="all_informations">
+                    <div class="informations">
+                        <div class="informations_content">
+                            <span>Nom :</span> {{ user.nom }}
+                        </div>
+                        <div class="informations_content">
+                            <span>Prénom :</span> {{ user.prenom }}
+                        </div>
+                    </div>
+
+                    <div class="informations">
+                        <div class="informations_content">
+                            <span>Téléphone :</span> {{ user.telephone }}
+                        </div>
+                        <div class="informations_content"></div>
+                    </div>
+
+                    <div class="informations">
+                        <div class="informations_content">
+                            <span>Adresse postale :</span> {{ user.adressePostale }}
+                        </div>
+
+                        <div class="informations_content">
+                            <span>Ville :</span> {{ user.ville }}
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ path('app_compte_informations_form') }}" class="btn2 nav_item form_footer">Modifier mes informations</a>
+
+            </div>
+        </section>
+
+    {% endblock %}
+{% endblock %}

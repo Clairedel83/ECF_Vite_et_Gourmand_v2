@@ -49,15 +49,15 @@
 
                     <div class="formulaire-flex">
                         <div class="data">
-                            {{ form_label(inscriptionForm.password.first) }}
-                            {{ form_widget(inscriptionForm.password.first, {
+                            {{ form_label(inscriptionForm.plainPassword.first) }}
+                            {{ form_widget(inscriptionForm.plainPassword.first, {
                                 'attr': {'class': 'input'}
                             }) }}
                         </div>
 
                         <div class="data">
-                            {{ form_label(inscriptionForm.password.second) }}
-                            {{ form_widget(inscriptionForm.password.second, {
+                            {{ form_label(inscriptionForm.plainPassword.second) }}
+                            {{ form_widget(inscriptionForm.plainPassword.second, {
                                 'attr': {'class': 'input'}
                             }) }}
                         </div>
