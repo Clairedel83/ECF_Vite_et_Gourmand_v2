@@ -46,6 +46,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $adresse_postale = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $code_postal = null;
+
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $Role = null;
@@ -199,6 +202,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRole(?Role $Role): static
     {
         $this->Role = $Role;
+
+        return $this;
+    }
+
+    public function getCodePostal(): ?string
+    {
+        return $this->code_postal;
+    }
+
+    public function setCodePostal(string $code_postal): static
+    {
+        $this->code_postal = $code_postal;
 
         return $this;
     }

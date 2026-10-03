@@ -99,6 +99,14 @@ class InscriptionUserType extends AbstractType
                     'class' => 'input'
                 ]
             ])
+
+            ->add('code_postal', TextType::class, [
+                'label' => 'Code postal :',
+                'attr' => [
+                    'placeholder' => "33000"
+                ]
+            ])
+
             ->add('adresse_postale', TextType::class, [
                 'label' => 'Adresse postale :',
                 'attr' => [
