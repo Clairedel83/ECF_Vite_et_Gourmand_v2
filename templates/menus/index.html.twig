@@ -198,7 +198,8 @@
                             </div>
 
                             <div class="bottom_cta">
-                                <a href="{{ path('app_panier') }}" class='btn3'>RESERVER CE MENU</a>
+                                {# l'id transite pour permettre au panier de reconnaître le menu ajouté #}
+                                <a href="{{ path('app_panier_ajouter', { id : menu.id }) }}" class='btn3'>COMMANDER</a>
                                 <span>Devis gratuit sur demande</span>
                             </div>
 

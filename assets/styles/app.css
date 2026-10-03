@@ -133,7 +133,7 @@ label{
     align-items:center;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     transition: 0.2s ease;
-    width:175px;
+    width: fit-content;
     height:50px;
     background-color:#F7E0C4;
     color:#252424;
@@ -172,11 +172,12 @@ label{
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 10px;
+    width: fit-content;
 }
 
 .btn_menu{
     height:40px;
-    width: 110px;
+    width: fit-content;
 }
 
 .menu_content_bottom button{    /*correspond à btn_menu*/

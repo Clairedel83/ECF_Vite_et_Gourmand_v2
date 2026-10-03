@@ -30,27 +30,48 @@
             <div class="commande_left_content">
                 <h3>1. Panier</h3>
                 <div class="panier">
-                    <div>
-                        <p><strong>MENU CLASSIQUE</strong>   (<a href="">Modifier</a>)</p>
-                        <p>Une cuisine traditionnelle, conviviale et de saison, adaptée à tous vos événements.</p>
-                        <span>Velouté de légumes, croûtons dorés | Poulet rôti aux herbes, gratin dauphinois | Mousse au chocolat maison</span>
-                    </div>
-                    <div class="panier_content">
-                        <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt="">
-                        <p>Régime(s) : Classique, Sans porc</p>
-                    </div>
-                    <div class="panier_content">
-                        <img src="{{ asset('images/logos/Shopicons_Light_Hangtag.svg') }}" alt="">
-                        <p>Prix par personne : 28,00€</p>
-                    </div>
-                    <div class="panier_content">
-                        <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                        <p>Nombre de convives : <input type="number" min="10" placeholder="10"></p>
-                    </div>
-                    <div class="panier_content">
-                        <img src="{{ asset('images/logos/Shopicons_Light_Lock.svg') }}" alt="">
-                        <p>Stock : <span>Disponible</span></p>
-                    </div>
+                    {% if menu %}
+                        <div class="panier_content_menu">
+                            <a href="{{ path('app_panier_retirer') }}" class="btn_remove" aria-label="Retirer le menu du panier">
+                                <img src="{{ asset('images/logos/trash.svg') }}" alt="">
+                            </a>
+                            <p id="menu_nom"><strong>Menu {{ menu.nom }}</strong></p>
+                            <p>{{ menu.description }}</p>
+                            <span>{{ menu.entree.description }} | {{ menu.plat.description}} | {{ menu.dessert.description }}</span>
+                        </div>
+                        <div class="panier_content">
+                            <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt="">
+                            <p>Régime(s) : 
+                                {% for regime in menu.regimes %}
+                                        {{ regime.nom }}
+                                        {# pour mettre une virgule entre les régimes #}
+                                        {% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <div class="panier_content">
+                            <img src="{{ asset('images/logos/Shopicons_Light_Hangtag.svg') }}" alt="">
+                            <p>Prix par personne : {{ menu.prixPerPers }} €</p>
+                        </div>
+                        <div class="panier_content">
+                            <img src="{{ asset('images/logos/Shopicons_Light_Lock.svg') }}" alt="">
+                            <p>Stock : </p><p id="stock">{{ menu.stock }}</p>
+                        </div>
+                        <div class="panier_content_nbre">
+                            <div class="panier_content">
+                               <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                                <p>Nombre de convives : <input type="number" min="10" placeholder="10"></p> 
+                            </div>
+                            <p>Le nombre minimum de convives pour cet évènement est de : {{ menu.nbreMin }} personnes.</p>
+                            <p id="nbre_min">Une réduction de 10% est appliquée pour toutes les commandes ayant 5 personnes de plus que le nombre de personnes minimum indiqué.</p>
+                        </div>
+
+                    {% else %}
+                        <div class="panier_else">
+                            <p>Veuillez choisir un menu.</p>
+                            <a href="{{ path('app_menus')}}" class="btn2 btn_menu">Voir les menus</a>
+                        </div>
+                    {% endif %}
                 </div>
                 <a href=""></a>
             </div>
@@ -82,7 +103,7 @@
 
                     <div class="livraison_prix">
                         <p>Forfait livraison : <strong>5€</strong></p>
-                        <p>*Majoré de 59 centimes par kilomètre parcouru si la livraison n’est pas dans la ville de bordeaux.</p>
+                        <p id="livraison">*Majoré de 59 centimes par kilomètre parcouru si la livraison n’est pas dans la ville de bordeaux.</p>
                     </div>
                 </div>
             </div>
@@ -161,7 +182,7 @@
                 </table>
             </div>
 
-            <button class="btn2 nav-item">Valider ma commande</button>
+            <a class="btn2 nav-item">Valider ma commande</a>
         </section>
 
     </section>
