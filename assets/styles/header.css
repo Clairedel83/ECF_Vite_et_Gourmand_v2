@@ -54,29 +54,28 @@ header{
 .navbar{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-self: center;
-    /* padding:1rem 2rem 0; */
-}
-
-.header_line{
-    height:1.5rem;
-    border-left: 1px solid white;
-    opacity: 1;
+    align-self:flex-end;
+    gap:2.5vh;
 }
 
 .navbar ul{
     display: flex;
-    align-items: center;
     list-style:none;
-    gap:1rem;
+    gap:2rem;
     line-height: 1;
     padding:0;
+    margin: 0;
 }
+
+.snd_line{
+    justify-content: center;
+    align-items: center;
+}
+
 
 .navbar ul li a{
     border:2px solid transparent;
-    padding:10px 15px;
+    /* padding:10px 15px; */
     transition: 0.2s ease;
 }
 
@@ -106,6 +105,7 @@ header{
 
 .li_phone{
     display: flex;
+    gap:0.5vw;
 }
 
 .logo_tel{
@@ -119,4 +119,14 @@ header{
 .header_bottom h3{
     color:white;
     font-size:16px;
+}
+
+.header_right{
+    display: flex;
+    align-self:flex-end;
+    gap:1vw;
+}
+
+.header_right img{
+    height: 3rem;
 }

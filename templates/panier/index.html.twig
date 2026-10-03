@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block importmap %}
+    {{ importmap(['app', 'menus']) }}
+{% endblock %}
+
+{% block title %}Vite et Gourmand - Traiteur{% endblock %}
+
+{% block body %}
+<!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_nos_menus"></div>
+    {% endblock %}
+
+    {# {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>PANIER</h1>
+            <h3>Choisissez votre menu</h3>
+            <h4><i>Et régalez-vous !</i></h4>
+        </div>
+    {% endblock %} #}
+
+
+    {% block main %}
+    <h1>RECAPITULATIF DE MA COMMANDE</h1>
+
+    <section class="recap_commande">
+
+        <section class="commande_left">
+            <div class="commande_left_content">
+                <h3>1. Panier</h3>
+                <div class="panier">
+                    <div>
+                        <p><strong>MENU CLASSIQUE</strong>   (<a href="">Modifier</a>)</p>
+                        <p>Une cuisine traditionnelle, conviviale et de saison, adaptée à tous vos événements.</p>
+                        <span>Velouté de légumes, croûtons dorés | Poulet rôti aux herbes, gratin dauphinois | Mousse au chocolat maison</span>
+                    </div>
+                    <div class="panier_content">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt="">
+                        <p>Régime(s) : Classique, Sans porc</p>
+                    </div>
+                    <div class="panier_content">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Hangtag.svg') }}" alt="">
+                        <p>Prix par personne : 28,00€</p>
+                    </div>
+                    <div class="panier_content">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                        <p>Nombre de convives : <input type="number" min="10" placeholder="10"></p>
+                    </div>
+                    <div class="panier_content">
+                        <img src="{{ asset('images/logos/Shopicons_Light_Lock.svg') }}" alt="">
+                        <p>Stock : <span>Disponible</span></p>
+                    </div>
+                </div>
+                <a href=""></a>
+            </div>
+
+            {# <button>Etape suivante</button> #}
+
+            <hr>
+
+            <div class="commande_left_content">
+                <h3>2. Livraison</h3>
+                <div class="livraison">
+                    <div class="livraison_adresse">
+                        <p><strong>Adresse de livraison :</strong>   (<a href="">Modifier</a>)</p>
+                        <p>Aline Pen</p>
+                        <p>3 rue des lilas</p>
+                        <p>Bordeaux</p>
+                        <p>01.02.03.04.05</p>
+                    </div>
+
+                    <div class="livraison_content">
+                        <p><strong>Date de livraison souhaitée :</strong></p>
+                        <input type="date">
+                    </div>
+
+                    <div class="livraison_content">
+                        <p><strong>Heure de livraison souhaitée:</strong></p>
+                        <input type="time">
+                    </div>
+
+                    <div class="livraison_prix">
+                        <p>Forfait livraison : <strong>5€</strong></p>
+                        <p>*Majoré de 59 centimes par kilomètre parcouru si la livraison n’est pas dans la ville de bordeaux.</p>
+                    </div>
+                </div>
+            </div>
+
+            {# <button>Etape suivante</button> #}
+
+            <hr>
+
+            <div class="commande_left_content">
+                <h3>3. Matériel</h3>
+                <div class="materiel">
+                    <div class="materiel_content">
+                        <p>Vite & Gourmand met à disposition de ses clients de la vaisselle, du matériel de présentation, nappage etc.</p>
+                        <p>Forfait prêt de matériel : <strong>20€</strong></p>
+                    </div>
+
+                    <div class="materiel_radio">
+                        <input type="radio" name="location">
+                        <p>J'ai besoin de louer du matériel</p>
+                    </div>
+                    <div class="materiel_radio">
+                        <input type="radio" name="location">
+                        <p>Je n'ai pas besoin de louer de matériel</p>
+                    </div>
+                    
+                </div>
+            </div>
+
+            {# <button>Etape suivante</button> #}
+
+            <hr>
+
+            <div class="commande_left_content">
+                <h3>4. Commander</h3>
+                <div class="commande">
+                    <div class="livraison_adresse">
+                            <p><strong>Adresse de facturation :</strong> (<a href="">Modifier</a>)</p>
+                            <p>Aline Pen</p>
+                            <p>3 rue des lilas</p>
+                            <p>Bordeaux</p>
+                            <p>01.02.03.04.05</p>
+                    </div>
+                    
+                    <div class="commande_checkbox">
+                        <input type="checkbox">
+                        <p>J'ai lu et accepte les <a href="{{ path('app_cgv') }}">conditions générales de vente</a> de Vite & Gourmand.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="commande_right">
+            <div class="commande_right_prix">
+                <h3>Prix</h3>
+
+                <table>
+                    <tr>
+                        <td class="td_left">Sous total :</td>
+                        <td class="td_right">280€</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="td_left">Livraison :</td>
+                        <td class="td_right">5€</td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left">Prêt de matériel :</td>
+                        <td class="td_right">20€</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="td_left">TOTAL :</td>
+                        <td class="td_right">305€</td>
+                    </tr>
+                </table>
+            </div>
+
+            <button class="btn2 nav-item">Valider ma commande</button>
+        </section>
+
+    </section>
+    {% endblock %}
+{% endblock %}

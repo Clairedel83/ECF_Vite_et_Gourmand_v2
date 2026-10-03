@@ -12,6 +12,7 @@
 @import url('./pages/inscription.css');
 @import url('./pages/contact.css');
 @import url('./pages/compte_user.css');
+@import url('./pages/commande.css');
 
 /* =========================== BASE ======================================== */
 *{
@@ -59,7 +60,7 @@ h1{
 
 h2{
     font-size: 30px;
-    padding: 1rem;;
+    padding: 1rem;
 }
 
 h3{
