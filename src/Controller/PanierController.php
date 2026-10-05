@@ -3,16 +3,19 @@
 namespace App\Controller;
 
 use App\Controller\Classe\Panier;
+use App\Form\AdresseLivraisonType;
 use App\Repository\MenuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class PanierController extends AbstractController
 {
     #[Route('/panier', name: 'app_panier')]
-    public function index(Panier $panier, MenuRepository $menuRepository): Response
+    public function index(Panier $panier, MenuRepository $menuRepository, Request $request): Response
     {
+        // AFFICHE LE MENU SELECTIONNE
         // récupère l'id du menu présent dans le panier
         $menuId = $panier->getPanier();
 
@@ -23,9 +26,19 @@ final class PanierController extends AbstractController
             $menu = $menuRepository->find($menuId);
         }
 
+        // AFFICHE LE FORMULAIRE DE MODIFICATION D'ADRESSE (livraison)
+        // crée le formulaire temporaire (non sauvegardé en BDD) de l'adresse de livraison
+        $form = $this->createForm(AdresseLivraisonType::class);
+
+        // Récupère les données envoyées par l'utilisateur et les associe au formulaire
+        $form->handleRequest($request);
+
         return $this->render('panier/index.html.twig', [
-            'menu' => $menu
+            'menu' => $menu,
+            'adresseLivraisonForm' => $form->createView(),
+            'user' => $this->getUser()
         ]);
+
     }
 
     // Ajoute un menu au panier

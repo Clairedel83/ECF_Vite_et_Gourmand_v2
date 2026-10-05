@@ -72,7 +72,7 @@ main h1{
 margin-top: 4vh;
 }
 
-#nbre_min, #livraison{
+#nbre_min{
     color:red;
 }
 
@@ -122,6 +122,35 @@ margin-top: 4vh;
     display: flex;
     align-items: center;
     gap: 0.5vw;
+}
+
+.livraison_adresse_modifiee, .livraison_nouvelle_adresse{
+    display: none;
+}
+.livraison_adresse_modifiee p{
+    margin-bottom: 2vh;
+}
+
+.livraison_adresse_modifiee form{
+    display: flex;
+    flex-direction: column;
+    gap:2vh;
+}
+.livraison_adresse_modifiee form, .livraison_prix li{
+    font-size:14px;
+    line-height:1.75;
+    font-family: "Roboto";
+    font-weight: 350;
+    letter-spacing: 0.3px;
+    color:#252424;
+}
+
+.livraison_prix li{
+    margin-left: 2vw;
+}
+
+.livraison_adresse_modifiee form button{
+    padding:5px 10px;
 }
 
 .commande_left hr{

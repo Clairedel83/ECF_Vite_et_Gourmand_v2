@@ -127,7 +127,7 @@ class InscriptionUserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'contraints' => [
+            'constraints' => [
                 new UniqueEntity([
                     'entityClass' => User::class,
                     'fields' => 'email'

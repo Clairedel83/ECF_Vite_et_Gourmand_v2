@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block importmap %}
-    {{ importmap(['app', 'menus']) }}
+    {{ importmap(['app', 'commande']) }}
 {% endblock %}
 
 {% block title %}Vite et Gourmand - Traiteur{% endblock %}
@@ -51,7 +51,7 @@
                         </div>
                         <div class="panier_content">
                             <img src="{{ asset('images/logos/Shopicons_Light_Hangtag.svg') }}" alt="">
-                            <p>Prix par personne : {{ menu.prixPerPers }} €</p>
+                            <p>Prix par personne : <span id ="prixPerPers">{{ menu.prixPerPers }}</span> €</p>
                         </div>
                         <div class="panier_content">
                             <img src="{{ asset('images/logos/Shopicons_Light_Lock.svg') }}" alt="">
@@ -60,7 +60,7 @@
                         <div class="panier_content_nbre">
                             <div class="panier_content">
                                <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                <p>Nombre de convives : <input type="number" min="10" placeholder="10"></p> 
+                                <p>Nombre de convives : <input type="number" id="nbre_convives" name="nbre_convives" min="{{ menu.nbreMin }}"     value="{{ menu.nbreMin }}"></p> 
                             </div>
                             <p>Le nombre minimum de convives pour cet évènement est de : {{ menu.nbreMin }} personnes.</p>
                             <p id="nbre_min">Une réduction de 10% est appliquée pour toutes les commandes ayant 5 personnes de plus que le nombre de personnes minimum indiqué.</p>
@@ -83,12 +83,57 @@
             <div class="commande_left_content">
                 <h3>2. Livraison</h3>
                 <div class="livraison">
+                    {# Récupération de l'adresse de l'utilisateur #}
                     <div class="livraison_adresse">
-                        <p><strong>Adresse de livraison :</strong>   (<a href="">Modifier</a>)</p>
-                        <p>Aline Pen</p>
-                        <p>3 rue des lilas</p>
-                        <p>Bordeaux</p>
-                        <p>01.02.03.04.05</p>
+                        <p><strong>Adresse de livraison :</strong>   (<a href="#" class="modifier_adresse">Modifier</a>)</p>
+                        <p>{{ user.nom }} {{ user.prenom }}</p>
+                        <p>{{ user.adressePostale }}</p>
+                        <p>{{ user.codePostal }} {{ user.ville }}</p>
+                    </div>
+
+                    {# Formulaire de modification d'adresse #}
+                    <div class="livraison_adresse_modifiee">
+                        <p><strong>Adresse de livraison :</strong></p>
+
+                        {{ form_start(adresseLivraisonForm, {
+                            'attr' : {'id' : 'adresse_livraison_form'}
+                        }) }}
+                            <div class="livraison_content">
+                                <span>Nom :</span>
+                                {{ form_widget(adresseLivraisonForm.nom) }}
+                                {{ form_errors(adresseLivraisonForm.nom) }}
+                            </div>
+                            <div class="livraison_content">
+                                <span>Prénom :</span>
+                                {{ form_widget(adresseLivraisonForm.prenom) }}
+                                {{ form_errors(adresseLivraisonForm.prenom) }}
+                            </div>
+                            <div class="livraison_content">
+                                <span>Adresse :</span>
+                                {{ form_widget(adresseLivraisonForm.adresse_postale) }}
+                                {{ form_errors(adresseLivraisonForm.adresse_postale) }}
+                            </div>
+                            <div class="livraison_content">
+                                <span>Code postal :</span>
+                                {{ form_widget(adresseLivraisonForm.code_postal) }}
+                                {{ form_errors(adresseLivraisonForm.code_postal) }}
+                            </div>
+                            <div class="livraison_content">
+                                <span>Ville :</span>
+                                {{ form_widget(adresseLivraisonForm.ville) }}
+                                {{ form_errors(adresseLivraisonForm.ville) }}
+                            </div>
+                        
+                        {{ form_widget(adresseLivraisonForm.submit) }}
+                        {{ form_end(adresseLivraisonForm) }}
+                    </div>
+
+                    {# Affichage de l'adresse modifiée #}
+                    <div class="livraison_nouvelle_adresse">
+                        <p><strong>Adresse de livraison :</strong>   (<a href="#" class="modifier_adresse">Modifier</a>)</p>
+                        <p id="nom_new"></p>
+                        <p id="adresse_new"></p>
+                        <p id="ville_new"></p>
                     </div>
 
                     <div class="livraison_content">
@@ -102,8 +147,13 @@
                     </div>
 
                     <div class="livraison_prix">
-                        <p>Forfait livraison : <strong>5€</strong></p>
-                        <p id="livraison">*Majoré de 59 centimes par kilomètre parcouru si la livraison n’est pas dans la ville de bordeaux.</p>
+                        <p><strong>Forfait livraison :</strong></p>
+                        <ul>
+                            <li>Si dans la ville de Bordeaux : Gratuit</li>
+                            <li>
+                                Si hors de la ville de Bordeaux : 5€ (majoré de 59 centimes par kilomètre parcouru)
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -117,15 +167,15 @@
                 <div class="materiel">
                     <div class="materiel_content">
                         <p>Vite & Gourmand met à disposition de ses clients de la vaisselle, du matériel de présentation, nappage etc.</p>
-                        <p>Forfait prêt de matériel : <strong>20€</strong></p>
+                        <p>Forfait prêt de matériel : <span class="prix_materiel"></span> €</p>
                     </div>
 
                     <div class="materiel_radio">
-                        <input type="radio" name="location">
+                        <input type="radio" name="materiel" value="oui">
                         <p>J'ai besoin de louer du matériel</p>
                     </div>
                     <div class="materiel_radio">
-                        <input type="radio" name="location">
+                        <input type="radio" name="materiel" value="non" checked>
                         <p>Je n'ai pas besoin de louer de matériel</p>
                     </div>
                     
@@ -140,15 +190,14 @@
                 <h3>4. Commander</h3>
                 <div class="commande">
                     <div class="livraison_adresse">
-                            <p><strong>Adresse de facturation :</strong> (<a href="">Modifier</a>)</p>
-                            <p>Aline Pen</p>
-                            <p>3 rue des lilas</p>
-                            <p>Bordeaux</p>
-                            <p>01.02.03.04.05</p>
+                        <p><strong>Adresse de facturation :</strong></p>
+                        <p>{{ user.nom }} {{ user.prenom }}</p>
+                        <p>{{ user.adressePostale }}</p>
+                        <p>{{ user.codePostal }} {{ user.ville }}</p>
                     </div>
                     
                     <div class="commande_checkbox">
-                        <input type="checkbox">
+                        <input type="checkbox" required>
                         <p>J'ai lu et accepte les <a href="{{ path('app_cgv') }}">conditions générales de vente</a> de Vite & Gourmand.</p>
                     </div>
                 </div>
@@ -162,22 +211,29 @@
                 <table>
                     <tr>
                         <td class="td_left">Sous total :</td>
-                        <td class="td_right">280€</td>
+                        <td class="td_right">
+                            <span id="sous_total">
+                                {# évite erreur en cas d'absence de menu choisi #}
+                                {% if menu %}
+                                    {{ menu.prixPerPers * menu.nbreMin }}
+                                {% endif %}
+                            </span> €
+                        </td>
                     </tr>
                     
                     <tr>
                         <td class="td_left">Livraison :</td>
-                        <td class="td_right">5€</td>
+                        <td class="td_right"><span id="prix_livraison"></span> €</td>
                     </tr>
 
                     <tr>
                         <td class="td_left">Prêt de matériel :</td>
-                        <td class="td_right">20€</td>
+                        <td class="td_right"><span class="prix_materiel"></span> €</td>
                     </tr>
                     
                     <tr>
                         <td class="td_left">TOTAL :</td>
-                        <td class="td_right">305€</td>
+                        <td class="td_right"><span id="prix_total"></span> €</td>
                     </tr>
                 </table>
             </div>
