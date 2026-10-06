@@ -239,12 +239,18 @@
             </div>
 
             <form method="POST" action="{{ path('app_commande') }}" id="form_commande">
+                {# sécurisation avec jeton CSRF #}
+                <input type="hidden" name="token" value="{{ csrf_token('valider_commande')}}">
                 {# nombre de convives #}
                 <input type="hidden" name="form_nbre_convives" id="form_nbre_convives">
                 {# date choisie #}
                 <input type="hidden" name="form_date" id="form_date">
                 {# heure choisie #}
                 <input type="hidden" name="form_heure" id="form_heure">
+                {# adresse au format google #}
+                <input type="hidden" name="form_adresse_google" id="form_adresse_google" value="{{ user.adresse }} , {{ user.codePostal }} {{ user.ville }}">
+                {# ville (pour calcul du prix de livraison) #}
+                <input type="hidden" name="form_ville_livraison" id="form_ville_livraison" value="{{ app.user.ville }}">
                 {# choix location matériel #}
                 <input type="hidden" name="form_materiel" id="form_materiel">
                 {# adresse par défaut = celle du user / si modifiée, récupérée via JS #}

@@ -58,6 +58,8 @@ const adresseNew = document.querySelector('#adresse_new');
 const villeNew = document.querySelector('#ville_new');
 
 const formAdresseChoisie = document.querySelector('#form_adresse_choisie');
+const formAdresseGoogle = document.querySelector('#form_adresse_google');
+const formVilleLivraison = document.querySelector('#form_ville_livraison');
 
 btnModifierAdresse.addEventListener('click', (event) => {
     // ne pas recharger la page
@@ -87,6 +89,15 @@ formAdresse.addEventListener('submit', (event) => {
         inputAdresse.value + ' - ' +
         inputPostal.value + ' ' +
         inputVille.value;
+
+    // enregistre la nouvelle adresse au format google (sans le nom et prénom)
+    formAdresseGoogle.value =
+        inputAdresse.value + ', ' +
+        inputPostal.value + ' ' +
+        inputVille.value;
+    
+    // enregistre la ville seule pour calculer le prix de livraison (0€ si Bordeaux)
+    formVilleLivraison.value = inputVille.value;
 
     // retire l'affichage du formulaire
     adresseModifiee.style.display = 'none';
@@ -176,3 +187,4 @@ formCommande.addEventListener('submit', () => {
     const materielChoisi = document.querySelector('input[name="materiel"]:checked');
     formMateriel.value = materielChoisi.value;
 });
+

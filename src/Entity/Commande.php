@@ -35,7 +35,7 @@ class Commande
     private ?string $adresse_livraison = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $prix_menu = null;
+    private ?string $prix_total = null;
 
     #[ORM\Column]
     private ?int $nbre_pers = null;
@@ -120,14 +120,14 @@ class Commande
         return $this;
     }
 
-    public function getPrixMenu(): ?string
+    public function getPrixTotal(): ?string
     {
-        return $this->prix_menu;
+        return $this->prix_total;
     }
 
-    public function setPrixMenu(string $prix_menu): static
+    public function setPrixTotal(string $prix_total): static
     {
-        $this->prix_menu = $prix_menu;
+        $this->prix_total = $prix_total;
 
         return $this;
     }

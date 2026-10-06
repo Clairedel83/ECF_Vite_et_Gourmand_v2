@@ -3,19 +3,23 @@
 namespace App\Controller;
 
 use App\Controller\Classe\Panier;
+use App\Controller\Services\DistanceService;
 use App\Entity\Commande;
 use App\Entity\CommandeHistorique;
 use App\Repository\MenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class CommandeController extends AbstractController
 {
+    // Sécurisation du formulaire avec utilisation d'un jeton CSRF
+    #[IsCsrfTokenValid('valider_commande', tokenKey: 'token', methods: ['POST'])]
     #[Route('/commande', name: 'app_commande')]
-    public function index(MenuRepository $menuRepository, Panier $panier, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(MenuRepository $menuRepository, Panier $panier, Request $request, EntityManagerInterface $entityManager, DistanceService $distanceService): Response
     {
         // La page ne peut être appelée que par l'envoi du formulaire
         // Si l'utilisateur essaie d'y accéder par l'URL (GET), il sera redirigé vers le panier
@@ -47,18 +51,18 @@ final class CommandeController extends AbstractController
         $nbreConvives = (int) $request->request->get('form_nbre_convives');
 
         // RECUPERE LA DATE DE LIVRAISON : et transforme en objet datetime pour enregistrer en format compatible en BDD
-        $date_livraison = new \DateTime(
-            $request->request->get('form_date'));
+        $date_livraison = new \DateTime($request->request->get('form_date'));
 
         // RECUPERE L'HEURE DE LIVRAISON : et transforme en objet datetime pour enregistrer en format compatible en BDD
-        $heure_livraison = new \DateTime(
-            $request->request->get('form_heure'));
+        $heure_livraison = new \DateTime($request->request->get('form_heure'));
 
         // RECUPERE LE CHOIX DU MATERIEL (avec ou sans location) : et transforme en booleen pour enregistrer en format compatible en BDD
         $pret_materiel = $request->request->get('form_materiel') === 'oui';
 
         // RECUPERE L'ADRESSE DE LIVRAISON (user OU adresse modifiée)
         $adresse_livraison = $request->request->get('form_adresse_choisie');
+
+        
         
     // CREATION DE LA COMMANDE
         $commande = new Commande();
@@ -90,18 +94,44 @@ final class CommandeController extends AbstractController
         $nbre_min = $menu->getNbreMin();
         $nbrePromo = $nbre_min + 5;
 
-        $totalPrix = $nbreConvives * $prixPerPers;
+        $prixMenu = $nbreConvives * $prixPerPers;
 
         if($nbreConvives >= $nbrePromo) {
-            $totalPrix = ($totalPrix) - (0.1 * $totalPrix);
+            $prixMenu = ($prixMenu) - (0.1 * $prixMenu);
         }
-
-        $commande->setPrixMenu($totalPrix);
 
         // attribue le nombre de convives
         $commande->setNbrePers($nbreConvives);
 
-        // attribue le prix de livraison
+        // sécurise le nombre de convives (doit être > au nombre min)
+        if ($nbreConvives < $nbre_min) {
+            return $this->redirectToRoute('app_panier');
+        }
+
+        // calcul du prix de livraison
+        $adresseGoogle = $request->request->get('form_adresse_google');
+        $villeLivraison = $request->request->get('form_ville_livraison');
+        $prixLivraison = 0;
+
+        // trim() supprime les espaces autour / strtolower() : convertis en minuscules
+        if(strtolower(trim($villeLivraison)) !== 'bordeaux'){
+            $distanceLivraison = $distanceService->calculDistance($adresseGoogle);
+            $distanceKm = $distanceLivraison / 1000;
+
+            $prixLivraison = 5 + (0.59 * $distanceKm);
+        }
+        $commande->setPrixLivraison($prixLivraison);
+
+        // attribue le prix du matériel si location
+        $prixMateriel = 0;
+
+        if ($pret_materiel === true) {
+            $prixMateriel = 20;
+        }
+
+        // calcul du prix total
+        $prixTotal = $prixMenu + $prixLivraison + $prixMateriel;
+        $commande->setPrixTotal($prixTotal);
 
         // attribue le statut
         $commande->setStatut(1);
