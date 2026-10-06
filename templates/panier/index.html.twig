@@ -62,7 +62,7 @@
                                <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
                                 <p>Nombre de convives : <input type="number" id="nbre_convives" name="nbre_convives" min="{{ menu.nbreMin }}"     value="{{ menu.nbreMin }}"></p> 
                             </div>
-                            <p>Le nombre minimum de convives pour cet évènement est de : {{ menu.nbreMin }} personnes.</p>
+                            <p>Le nombre minimum de convives pour cet évènement est de : <span id="nbre_min">{{ menu.nbreMin }}</span> personnes.</p>
                             <p id="nbre_min">Une réduction de 10% est appliquée pour toutes les commandes ayant 5 personnes de plus que le nombre de personnes minimum indiqué.</p>
                         </div>
 
@@ -138,12 +138,12 @@
 
                     <div class="livraison_content">
                         <p><strong>Date de livraison souhaitée :</strong></p>
-                        <input type="date">
+                        <input type="date" id="date_livraison" required>
                     </div>
 
                     <div class="livraison_content">
                         <p><strong>Heure de livraison souhaitée:</strong></p>
-                        <input type="time">
+                        <input type="time" id="heure_livraison" required>
                     </div>
 
                     <div class="livraison_prix">
@@ -238,7 +238,21 @@
                 </table>
             </div>
 
-            <a class="btn2 nav-item">Valider ma commande</a>
+            <form method="POST" action="{{ path('app_commande') }}" id="form_commande">
+                {# nombre de convives #}
+                <input type="hidden" name="form_nbre_convives" id="form_nbre_convives">
+                {# date choisie #}
+                <input type="hidden" name="form_date" id="form_date">
+                {# heure choisie #}
+                <input type="hidden" name="form_heure" id="form_heure">
+                {# choix location matériel #}
+                <input type="hidden" name="form_materiel" id="form_materiel">
+                {# adresse par défaut = celle du user / si modifiée, récupérée via JS #}
+                <input type="hidden" name="form_adresse_choisie" id="form_adresse_choisie" value="{{ user.nom }} {{ user.prenom }} - {{ user.adressePostale }} - {{ user.codePostal }} {{ user.ville }}">
+
+                <button type="submit" class="btn2 nav-item">Valider ma commande</button>
+            </form>
+            
         </section>
 
     </section>

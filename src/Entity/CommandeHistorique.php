@@ -14,14 +14,14 @@ class CommandeHistorique
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nom = null;
-
     #[ORM\Column]
     private ?\DateTime $date_modification = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTime $heure_modification = null;
+
+    #[ORM\Column]
+    private ?int $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandeHistorique')]
     #[ORM\JoinColumn(nullable: false)]
@@ -30,18 +30,6 @@ class CommandeHistorique
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-
-        return $this;
     }
 
     public function getDateModification(): ?\DateTime
@@ -76,6 +64,18 @@ class CommandeHistorique
     public function setCommande(?Commande $commande): static
     {
         $this->commande = $commande;
+
+        return $this;
+    }
+
+    public function getStatut(): ?int
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(int $statut): static
+    {
+        $this->statut = $statut;
 
         return $this;
     }

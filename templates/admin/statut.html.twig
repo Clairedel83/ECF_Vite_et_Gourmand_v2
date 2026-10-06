@@ -1,0 +1,13 @@
+{% if field.value == 1 %}
+    <span class="badge text-bg-primary">Commande reçue</span>
+{% elseif field.value == 2 %}
+    <span class="badge text-bg-success">Commande acceptée</span>
+{% elseif field.value == 3 %}
+    <span class="badge text-bg-secondary">En préparation</span>
+{% elseif field.value == 4 %}
+    <span class="badge text-bg-secondary">Commande livrée</span>
+{% elseif field.value == 5 %}
+    <span class="badge text-bg-secondary">En attente du retour de matériel</span>
+{% elseif field.value == 6 %}
+    <span class="badge text-bg-secondary">Commande terminée</span>
+{% endif %}

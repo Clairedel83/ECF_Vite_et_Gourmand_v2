@@ -5,6 +5,8 @@
 const inputNbreConvives = document.querySelector('#nbre_convives');
 const prixPerPers = document.querySelector('#prixPerPers');
 const sousTotal = document.querySelector('#sous_total');
+const nbre_min = document.querySelector('#nbre_min');
+const nbrePromo = Number(nbre_min.textContent) + 5;
 
 
 // Calcule et affiche le sous-total
@@ -16,15 +18,23 @@ function calculSousTotal() {
     const prix = Number(prixPerPers.textContent);
 
     // Calcule le sous-total
-    const total = nbreConvives * prix;
+    let total = nbreConvives * prix;
+
+    // Applique une réduction de 10 % à partir de 5 convives supplémentaires 
+    if(nbreConvives >= nbrePromo){
+        total = (nbreConvives * prix) - (0.1 * nbreConvives * prix);
+    };
 
     // Affiche le sous-total avec deux chiffres après la virgule
     sousTotal.textContent = total.toFixed(2);
-};
+}
 
 
 // Recalcule à chaque modification du nombre de convives
-inputNbreConvives.addEventListener('input', calculSousTotal);
+inputNbreConvives.addEventListener('input', () => {
+    calculSousTotal();
+    calculTotal();
+});
 
 
 // LIVRAISON
@@ -47,6 +57,8 @@ const nomNew = document.querySelector('#nom_new');
 const adresseNew = document.querySelector('#adresse_new');
 const villeNew = document.querySelector('#ville_new');
 
+const formAdresseChoisie = document.querySelector('#form_adresse_choisie');
+
 btnModifierAdresse.addEventListener('click', (event) => {
     // ne pas recharger la page
     event.preventDefault();
@@ -68,12 +80,20 @@ formAdresse.addEventListener('submit', (event) => {
     adresseNew.textContent = inputAdresse.value;
     villeNew.textContent = inputPostal.value + ' ' + inputVille.value;
 
+    // enregistre la nouvelle adresse qui sera envoyée lors de la commande
+    formAdresseChoisie.value = 
+        inputNom.value + ' ' +
+        inputPrenom.value + ' - ' +
+        inputAdresse.value + ' - ' +
+        inputPostal.value + ' ' +
+        inputVille.value;
+
     // retire l'affichage du formulaire
     adresseModifiee.style.display = 'none';
 
     // déplie l'affichage de la nouvelle adresse
     nouvelleAdresse.style.display = 'block';
-})
+});
 
 
 // Actualisation du prix de livraison en fonction de la ville de livraison
@@ -101,11 +121,12 @@ function calculMateriel() {
     }
 }
 
-
-
 // Recalcule le prix à chaque changement de choix
 choixMateriel.forEach((choix) => {
-    choix.addEventListener('change', calculMateriel);
+    choix.addEventListener('change', () => {
+        calculMateriel();
+        calculTotal();
+    });
 });
 
 
@@ -113,20 +134,45 @@ choixMateriel.forEach((choix) => {
 const prixTotal = document.querySelector('#prix_total');
 
 function calculTotal(){
-    const calculTotal = 
+    const total = 
         Number(sousTotal.textContent) + 
         Number(prixLivraison.textContent) + 
         // récupère le 1e élément car 2 élément ont cette classe
         // remplace la , d'affichage par . pour le calcul
         Number(prixMateriel[0].textContent.replace(',', '.'));
 
-    prixTotal.textContent = calculTotal.toFixed(2);
+    prixTotal.textContent = total.toFixed(2);
 }
 
 
-
 // Calculs au chargement de la page
-
 calculSousTotal();
 calculMateriel();
 calculTotal();
+
+
+
+
+// RECUPERATION DES DONNEES AVANT ENVOI DU FORMULAIRE
+const formCommande = document.querySelector('#form_commande');
+const formNbreConvives = document.querySelector('#form_nbre_convives');
+
+const dateLivraison = document.querySelector('#date_livraison');
+const heureLivraison = document.querySelector('#heure_livraison');
+
+const formDate = document.querySelector('#form_date');
+const formHeure = document.querySelector('#form_heure');
+
+const formMateriel = document.querySelector('#form_materiel');
+
+formCommande.addEventListener('submit', () => {
+    // récupère le nombre de convives
+    formNbreConvives.value = inputNbreConvives.value;
+    // récupère la date de livraison
+    formDate.value = dateLivraison.value;
+    // récupère l'heure de livraison
+    formHeure.value = heureLivraison.value;
+    // récupère le choix de location du matériel
+    const materielChoisi = document.querySelector('input[name="materiel"]:checked');
+    formMateriel.value = materielChoisi.value;
+});

@@ -16,17 +16,23 @@ class Commande
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $numero_commande = null;
+    #[ORM\Column(length: 30)]
+    private ?string $numero_commande = null;
 
     #[ORM\Column]
     private ?\DateTime $date_commande = null;
 
+    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    private ?\DateTime $heure_commande = null;
+
     #[ORM\Column]
-    private ?\DateTime $date_prestation = null;
+    private ?\DateTime $date_livraison = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTime $heure_livraison = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $adresse_livraison = null;
 
     #[ORM\Column(length: 255)]
     private ?string $prix_menu = null;
@@ -37,8 +43,8 @@ class Commande
     #[ORM\Column]
     private ?float $prix_livraison = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $statut = null;
+    #[ORM\Column]
+    private ?int $statut = null;
 
     #[ORM\Column]
     private ?bool $pret_materiel = null;
@@ -52,6 +58,10 @@ class Commande
     #[ORM\OneToMany(targetEntity: CommandeHistorique::class, mappedBy: 'commande')]
     private Collection $commandeHistorique;
 
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->commandeHistorique = new ArrayCollection();
@@ -62,12 +72,12 @@ class Commande
         return $this->id;
     }
 
-    public function getNumeroCommande(): ?int
+    public function getNumeroCommande(): ?string
     {
         return $this->numero_commande;
     }
 
-    public function setNumeroCommande(int $numero_commande): static
+    public function setNumeroCommande(string $numero_commande): static
     {
         $this->numero_commande = $numero_commande;
 
@@ -86,14 +96,14 @@ class Commande
         return $this;
     }
 
-    public function getDatePrestation(): ?\DateTime
+    public function getDateLivraison(): ?\DateTime
     {
-        return $this->date_prestation;
+        return $this->date_livraison;
     }
 
-    public function setDatePrestation(\DateTime $date_prestation): static
+    public function setDateLivraison(\DateTime $date_livraison): static
     {
-        $this->date_prestation = $date_prestation;
+        $this->date_livraison = $date_livraison;
 
         return $this;
     }
@@ -146,12 +156,12 @@ class Commande
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?int
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(int $statut): static
     {
         $this->statut = $statut;
 
@@ -175,7 +185,7 @@ class Commande
         return $this->restitution_materiel;
     }
 
-    public function setRestitutionMateriel(bool $restitution_materiel): static
+    public function setRestitutionMateriel(?bool $restitution_materiel): static
     {
         $this->restitution_materiel = $restitution_materiel;
 
@@ -208,6 +218,42 @@ class Commande
                 $commandeHistorique->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getAdresseLivraison(): ?string
+    {
+        return $this->adresse_livraison;
+    }
+
+    public function setAdresseLivraison(string $adresse_livraison): static
+    {
+        $this->adresse_livraison = $adresse_livraison;
+
+        return $this;
+    }
+
+    public function getHeureCommande(): ?\DateTime
+    {
+        return $this->heure_commande;
+    }
+
+    public function setHeureCommande(\DateTime $heure_commande): static
+    {
+        $this->heure_commande = $heure_commande;
 
         return $this;
     }

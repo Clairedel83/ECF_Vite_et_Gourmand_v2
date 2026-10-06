@@ -24,7 +24,7 @@ final class PanierController extends AbstractController
 
         if ($menuId) {
             $menu = $menuRepository->find($menuId);
-        }
+        };
 
         // AFFICHE LE FORMULAIRE DE MODIFICATION D'ADRESSE (livraison)
         // crée le formulaire temporaire (non sauvegardé en BDD) de l'adresse de livraison
