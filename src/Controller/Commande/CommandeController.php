@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Commande;
 
 use App\Controller\Classe\Panier;
 use App\Controller\Services\DistanceService;
+use App\Controller\Services\PrixLivraison;
 use App\Entity\Commande;
 use App\Entity\CommandeHistorique;
 use App\Repository\MenuRepository;
@@ -19,7 +20,7 @@ final class CommandeController extends AbstractController
     // Sécurisation du formulaire avec utilisation d'un jeton CSRF
     #[IsCsrfTokenValid('valider_commande', tokenKey: 'token', methods: ['POST'])]
     #[Route('/commande', name: 'app_commande')]
-    public function index(MenuRepository $menuRepository, Panier $panier, Request $request, EntityManagerInterface $entityManager, DistanceService $distanceService): Response
+    public function index(MenuRepository $menuRepository, Panier $panier, Request $request, EntityManagerInterface $entityManager, DistanceService $distanceService, PrixLivraison $prixLivraison): Response
     {
         // La page ne peut être appelée que par l'envoi du formulaire
         // Si l'utilisateur essaie d'y accéder par l'URL (GET), il sera redirigé vers le panier
@@ -108,19 +109,13 @@ final class CommandeController extends AbstractController
             return $this->redirectToRoute('app_panier');
         }
 
-        // calcul du prix de livraison
+        // // attribue le prix de livraison
+        // variables déclarées ici mais utilisées dans PrixLivraisonService
         $adresseGoogle = $request->request->get('form_adresse_google');
         $villeLivraison = $request->request->get('form_ville_livraison');
-        $prixLivraison = 0;
 
-        // trim() supprime les espaces autour / strtolower() : convertis en minuscules
-        if(strtolower(trim($villeLivraison)) !== 'bordeaux'){
-            $distanceLivraison = $distanceService->calculDistance($adresseGoogle);
-            $distanceKm = $distanceLivraison / 1000;
-
-            $prixLivraison = 5 + (0.59 * $distanceKm);
-        }
-        $commande->setPrixLivraison($prixLivraison);
+        $prixCalcule = $prixLivraison->calculPrixLivraison($villeLivraison, $adresseGoogle);
+        $commande->setPrixLivraison($prixCalcule);
 
         // attribue le prix du matériel si location
         $prixMateriel = 0;
@@ -130,7 +125,7 @@ final class CommandeController extends AbstractController
         }
 
         // calcul du prix total
-        $prixTotal = $prixMenu + $prixLivraison + $prixMateriel;
+        $prixTotal = $prixMenu + $prixCalcule + $prixMateriel;
         $commande->setPrixTotal($prixTotal);
 
         // attribue le statut
@@ -173,9 +168,7 @@ final class CommandeController extends AbstractController
         return $this->redirectToRoute('app_commande_success');
     }
 
-    #[Route('/commande/succes', name: 'app_commande_success')]
-    public function success(): Response
-    {
-        return $this->render('commande/success.html.twig');
-    }
+   
+
+    
 }

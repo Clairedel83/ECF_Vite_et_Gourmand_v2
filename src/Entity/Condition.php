@@ -20,6 +20,9 @@ class Condition
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[ORM\Column(nullable:true)]
+    private ?int $delai_min = null;
+
     /**
      * @var Collection<int, Menu>
      */
@@ -77,6 +80,18 @@ class Condition
         if ($this->menus->removeElement($menu)) {
             $menu->removeConditionStockage($this);
         }
+
+        return $this;
+    }
+
+    public function getDelaiMin(): ?int
+    {
+        return $this->delai_min;
+    }
+
+    public function setDelaiMin(int $delai_min): static
+    {
+        $this->delai_min = $delai_min;
 
         return $this;
     }

@@ -38,8 +38,12 @@ inputNbreConvives.addEventListener('input', () => {
 
 
 // LIVRAISON
-// Modification de l'adresse de livraison : déplie le formulaire après clic
-const btnModifierAdresse = document.querySelector('.modifier_adresse');
+// Modification de l'adresse de livraison : 
+    // déplie le formulaire après clic
+    // calcule les frais de livraison
+    // comportement en cas d'erreur
+
+const btnModifierAdresse = document.querySelectorAll('.modifier_adresse');
 const adresseUser = document.querySelector('.livraison_adresse');
 const adresseModifiee = document.querySelector('.livraison_adresse_modifiee');
 
@@ -61,15 +65,26 @@ const formAdresseChoisie = document.querySelector('#form_adresse_choisie');
 const formAdresseGoogle = document.querySelector('#form_adresse_google');
 const formVilleLivraison = document.querySelector('#form_ville_livraison');
 
-btnModifierAdresse.addEventListener('click', (event) => {
-    // ne pas recharger la page
-    event.preventDefault();
+const prixLivraison = document.querySelector('#prix_livraison');
+const erreurLivraison = document.querySelector('#erreur_livraison');
+const btnRetryLivraison = document.querySelector('#btn_retry_livraison');
+const btnValiderCommande = document.querySelector('#btn_valider_commande');
 
-    // retire l'adresse de l'utilisateur
-    adresseUser.style.display = 'none';
+// ajoute l'évènement aux deux boutons dont la class est modifier_adresse
+btnModifierAdresse.forEach(btn => {
+    btn.addEventListener('click', (event) => {
+        // ne pas recharger la page
+        event.preventDefault();
 
-    // déplie le formulaire de modification d'adresse
-    adresseModifiee.style.display = 'block';
+        // retire l'adresse de l'utilisateur
+        adresseUser.style.display = 'none';
+
+        // retire l'adresse précédemment modifiée
+        nouvelleAdresse.style.display = 'none';
+
+        // déplie le formulaire de modification d'adresse
+        adresseModifiee.style.display = 'block';
+    });
 });
 
 // Modification de l'adresse de livraison : 
@@ -99,6 +114,9 @@ formAdresse.addEventListener('submit', (event) => {
     // enregistre la ville seule pour calculer le prix de livraison (0€ si Bordeaux)
     formVilleLivraison.value = inputVille.value;
 
+    // calcule le prix de livraison
+    calculLivraison();
+
     // retire l'affichage du formulaire
     adresseModifiee.style.display = 'none';
 
@@ -108,7 +126,75 @@ formAdresse.addEventListener('submit', (event) => {
 
 
 // Actualisation du prix de livraison en fonction de la ville de livraison
-const prixLivraison = document.querySelector('#prix_livraison');
+async function calculLivraison() {
+    // Récupère l'adresse et la ville de livraison
+    const adresse = formAdresseGoogle.value;
+    const ville = formVilleLivraison.value;
+
+    // Désactive la validation pendant le calcul
+    btnValiderCommande.disabled = true;
+
+    // Efface l'ancien prix pour ne pas conserver un tarif incorrect
+    prixLivraison.textContent = '--';
+
+    // Actualise le total pendant le calcul
+    calculTotal();
+
+    // Masque le message et le bouton d'erreur
+    erreurLivraison.style.display = 'none';
+    btnRetryLivraison.style.display = 'none';
+
+    // Sécurité ajoutée en cas d'erreur de l'API Google Routes
+    try{
+        // prépare les données à envoyer à Symfony
+        // FormData permettra d'organiser les données comme un formulaire HTML
+        // append ajoute les données au formulaire
+        const donnees = new FormData();
+        donnees.append('adresse', adresse);
+        donnees.append('ville', ville);
+    
+        // effectue une requête HTTP à Symfony et permet d'accéder au controller CalculPrixLivraison
+        const response = await fetch('/calcul/prix/livraison', {
+            method: 'POST',
+            // append attribue la donnée dans le "formulaire"
+            body: donnees
+        });
+
+        // Vérifie que Symfony a répondu correctement (= erreur de l'API)
+        if (!response.ok) {
+            throw new Error('Erreur lors du calcul de livraison');
+        }
+
+        // Récupère les données JSON envoyées par Symfony (= prix calculé)
+        const data = await response.json();
+        console.log(data);
+
+        // Affiche le prix de livraison avec deux décimales
+        prixLivraison.textContent = data.prixLivraison.toFixed(2);
+
+        // Actualise le prix total de la commande
+        calculTotal();
+
+        // Autorise la validation de la commande
+        verifierCommande();
+
+    } catch(error) {
+        // Affiche l'erreur dans la console
+        console.error('Erreur lors du calcul de livraison :', error);
+
+        // Affiche le message d'erreur et le bouton Réessayer
+        erreurLivraison.style.display = 'block';
+        btnRetryLivraison.style.display = 'block';
+
+        // Empêche la validation de la commande
+        btnValiderCommande.disabled = true;
+    }
+}
+
+// Relance le calcul de livraison lorsque l'utilisateur clique sur Réessayer
+btnRetryLivraison.addEventListener('click', () => {
+    calculLivraison();
+});
 
 
 // MATERIEL
@@ -145,6 +231,12 @@ choixMateriel.forEach((choix) => {
 const prixTotal = document.querySelector('#prix_total');
 
 function calculTotal(){
+    // Ne calcule pas le total si le prix de livraison est inconnu
+    if (prixLivraison.textContent === '--') {
+        prixTotal.textContent = '--';
+        return;
+    }
+
     const total = 
         Number(sousTotal.textContent) + 
         Number(prixLivraison.textContent) + 
@@ -176,7 +268,47 @@ const formHeure = document.querySelector('#form_heure');
 
 const formMateriel = document.querySelector('#form_materiel');
 
-formCommande.addEventListener('submit', () => {
+const cgv = document.querySelector('#cgv');
+
+// Vérifie que toutes les conditions sont remplies pour valider la commande
+function verifierCommande() {
+    // Vérifie que le prix de livraison est disponible
+    const livraisonOK =
+        prixLivraison.textContent !== '--' &&
+        prixLivraison.textContent !== '';
+
+    // Vérifie que la date et l'heure sont renseignées
+    const dateOK = dateLivraison.value !== '';
+    const heureOK = heureLivraison.value !== '';
+
+    // Vérifie que les CGV sont acceptées
+    const cgvOK = cgv.checked;
+
+    // Active le bouton uniquement si toutes les conditions sont remplies
+    btnValiderCommande.disabled = !(livraisonOK && dateOK && heureOK && cgvOK);
+}
+
+// Vérifie la commande lorsque la date change
+dateLivraison.addEventListener('change', verifierCommande);
+
+// Vérifie la commande lorsque l'heure change
+heureLivraison.addEventListener('change', verifierCommande);
+
+// Vérifie la commande lorsque les CGV sont cochées ou décochées
+cgv.addEventListener('change', verifierCommande);
+
+// Formulaire d'envoi pour création de la commande
+formCommande.addEventListener('submit', (event) => {
+
+    // Vérifie les conditions avant d'envoyer la commande
+    verifierCommande();
+
+    // Empêche l'envoi si une condition n'est pas remplie
+    if (btnValiderCommande.disabled) {
+        event.preventDefault();
+        return;
+    }
+
     // récupère le nombre de convives
     formNbreConvives.value = inputNbreConvives.value;
     // récupère la date de livraison
@@ -188,3 +320,8 @@ formCommande.addEventListener('submit', () => {
     formMateriel.value = materielChoisi.value;
 });
 
+// Calcul du prix de livraison au chargement
+calculLivraison();
+
+// Vérifie les conditions de validation de la commande
+verifierCommande();

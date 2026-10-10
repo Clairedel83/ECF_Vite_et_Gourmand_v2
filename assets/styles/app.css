@@ -13,6 +13,7 @@
 @import url('./pages/contact.css');
 @import url('./pages/compte_user.css');
 @import url('./pages/commande.css');
+@import url('./pages/admin.css');
 
 /* =========================== BASE ======================================== */
 *{
@@ -299,3 +300,4 @@ label{
     width:18%;
     height:auto;
 }
+

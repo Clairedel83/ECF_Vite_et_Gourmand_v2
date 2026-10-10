@@ -63,7 +63,7 @@
                                 <p>Nombre de convives : <input type="number" id="nbre_convives" name="nbre_convives" min="{{ menu.nbreMin }}"     value="{{ menu.nbreMin }}"></p> 
                             </div>
                             <p>Le nombre minimum de convives pour cet évènement est de : <span id="nbre_min">{{ menu.nbreMin }}</span> personnes.</p>
-                            <p id="nbre_min">Une réduction de 10% est appliquée pour toutes les commandes ayant 5 personnes de plus que le nombre de personnes minimum indiqué.</p>
+                            <p id="nbre_min_p">Une réduction de 10% est appliquée pour toutes les commandes ayant 5 personnes de plus que le nombre de personnes minimum indiqué.</p>
                         </div>
 
                     {% else %}
@@ -136,15 +136,15 @@
                         <p id="ville_new"></p>
                     </div>
 
-                    <div class="livraison_content">
-                        <p><strong>Date de livraison souhaitée :</strong></p>
-                        <input type="date" id="date_livraison" required>
-                    </div>
+                    <!-- Message affiché uniquement si le calcul de livraison échoue -->
+                    <p id="erreur_livraison" style="display: none;">
+                        Impossible de calculer les frais de livraison. Vérifiez votre adresse ou réessayez.
+                    </p>
 
-                    <div class="livraison_content">
-                        <p><strong>Heure de livraison souhaitée:</strong></p>
-                        <input type="time" id="heure_livraison" required>
-                    </div>
+                    <!-- Bouton permettant de relancer le calcul -->
+                    <button type="button" id="btn_retry_livraison" style="display: none;">
+                        Réessayer le calcul
+                    </button>
 
                     <div class="livraison_prix">
                         <p><strong>Forfait livraison :</strong></p>
@@ -154,6 +154,19 @@
                                 Si hors de la ville de Bordeaux : 5€ (majoré de 59 centimes par kilomètre parcouru)
                             </li>
                         </ul>
+                    </div>
+                    <div class="date">
+                        <div class="livraison_content">
+                            <p><strong>Date de livraison souhaitée :</strong></p>
+                            <input type="date" id="date_livraison" required>
+                        </div>
+                        <p>Toute commande doit être effectuée au minimum 7 jours avant la date de prestation souhaitée.</p>
+                    </div>
+
+
+                    <div class="livraison_content">
+                        <p><strong>Heure de livraison souhaitée:</strong></p>
+                        <input type="time" id="heure_livraison" required>
                     </div>
                 </div>
             </div>
@@ -197,8 +210,10 @@
                     </div>
                     
                     <div class="commande_checkbox">
-                        <input type="checkbox" required>
-                        <p>J'ai lu et accepte les <a href="{{ path('app_cgv') }}">conditions générales de vente</a> de Vite & Gourmand.</p>
+                        <input type="checkbox" id ="cgv" name="cgv" required>
+                        <label for="cgv">
+                            J'ai lu et accepte les <a href="{{ path('app_cgv') }}">conditions générales de vente</a> de Vite & Gourmand.
+                        </label>
                     </div>
                 </div>
             </div>
@@ -248,7 +263,7 @@
                 {# heure choisie #}
                 <input type="hidden" name="form_heure" id="form_heure">
                 {# adresse au format google #}
-                <input type="hidden" name="form_adresse_google" id="form_adresse_google" value="{{ user.adresse }} , {{ user.codePostal }} {{ user.ville }}">
+                <input type="hidden" name="form_adresse_google" id="form_adresse_google" value="{{ user.adressePostale }} , {{ user.codePostal }} {{ user.ville }}">
                 {# ville (pour calcul du prix de livraison) #}
                 <input type="hidden" name="form_ville_livraison" id="form_ville_livraison" value="{{ app.user.ville }}">
                 {# choix location matériel #}
@@ -256,7 +271,7 @@
                 {# adresse par défaut = celle du user / si modifiée, récupérée via JS #}
                 <input type="hidden" name="form_adresse_choisie" id="form_adresse_choisie" value="{{ user.nom }} {{ user.prenom }} - {{ user.adressePostale }} - {{ user.codePostal }} {{ user.ville }}">
 
-                <button type="submit" class="btn2 nav-item">Valider ma commande</button>
+                <button type="submit" class="btn2 nav-item" id="btn_valider_commande">Valider ma commande</button>
             </form>
             
         </section>

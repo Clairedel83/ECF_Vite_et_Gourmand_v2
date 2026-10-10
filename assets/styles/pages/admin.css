@@ -1,0 +1,27 @@
+.badge{
+    padding:10px 15px;
+}
+
+.rouge{
+    background-color: red;
+}
+
+.orange{
+    background-color: orange;
+}
+
+.jaune{
+    background-color: yellow;
+}
+
+.vert_clair{
+    background-color: greenyellow;
+}
+
+.gris{
+    background-color: grey;
+}
+
+.vert_fonce{
+    background-color: green;
+}
