@@ -1,12 +1,14 @@
-// SOUS TOTAL
+// ----------------------------------------------------------SOUS TOTAL-------------------------------------------------------------
 // Actualisation du sous-total en fonction du nombre de convives
 
 // Récupère les éléments nécessaires au calcul
 const inputNbreConvives = document.querySelector('#nbre_convives');
 const prixPerPers = document.querySelector('#prixPerPers');
 const sousTotal = document.querySelector('#sous_total');
-const nbre_min = document.querySelector('#nbre_min');
-const nbrePromo = Number(nbre_min.textContent) + 5;
+const nbreMin = document.querySelector('#nbre_min');
+
+// Calcule le seuil de promotion uniquement si un menu est présent
+const nbrePromo = nbreMin ? Number(nbreMin.textContent) + 5 : 0;
 
 
 // Calcule et affiche le sous-total
@@ -30,14 +32,17 @@ function calculSousTotal() {
 }
 
 
-// Recalcule à chaque modification du nombre de convives
-inputNbreConvives.addEventListener('input', () => {
+// Recalcule à chaque modification du nombre de convives (si un menu a été sélectionné)
+if (inputNbreConvives) {
+    inputNbreConvives.addEventListener('input', () => {
     calculSousTotal();
     calculTotal();
-});
+    verifierCommande();
+    })
+};
 
 
-// LIVRAISON
+// ----------------------------------------------------LIVRAISON---------------------------------------------------------------------
 // Modification de l'adresse de livraison : 
     // déplie le formulaire après clic
     // calcule les frais de livraison
@@ -167,7 +172,6 @@ async function calculLivraison() {
 
         // Récupère les données JSON envoyées par Symfony (= prix calculé)
         const data = await response.json();
-        console.log(data);
 
         // Affiche le prix de livraison avec deux décimales
         prixLivraison.textContent = data.prixLivraison.toFixed(2);
@@ -197,7 +201,97 @@ btnRetryLivraison.addEventListener('click', () => {
 });
 
 
-// MATERIEL
+// ------------------------------------------------- DATE DE LIVRAISON -------------------------------------------------------------
+const dateLivraison = document.querySelector('#date_livraison');
+const erreurDate = document.querySelector('#erreur_date');
+const delaiMin = Number(dateLivraison.dataset.delai);
+
+// enregistre la date et l'heure actuelles
+const dateJour = new Date();
+
+// Met l'heure à minuit pour comparer uniquement les dates
+dateJour.setHours(0, 0, 0, 0);
+
+// Crée une copie de la date actuelle
+const dateMin = new Date(dateJour);
+
+// ajoute le délai minimum à la date actuelle
+dateMin.setDate(dateMin.getDate() + delaiMin);
+
+// Pour autoriser une date minimum de livraison : 
+    // récupère l'année de dateMin
+    const annee = dateMin.getFullYear();
+    // récupère le mois de dateMin (JS commence à compter à partir de 0)
+    const mois = dateMin.getMonth() + 1;
+    // récupère le jour de dateMin
+    const jour = dateMin.getDate();
+
+    // met la date au bon format (YEAR-MONTH-DAY)
+    // ajoute un 0 devant les chiffres < 10
+    const jourFormate = String(jour).padStart(2, '0');
+    const moisFormate = String(mois).padStart(2, '0');
+
+    const dateFormatee = `${annee}-${moisFormate}-${jourFormate}`;
+
+    // attribue la date minimum de livraison
+    dateLivraison.min = dateFormatee;
+
+
+// ---------------------------------------VERIFICATION DATE DISPONIBILITE DU MENU---------------------------------------------------
+const dispoDebut = dateLivraison.dataset.debut;
+const dispoFin = dateLivraison.dataset.fin;
+
+dateLivraison.addEventListener('change', function() {
+    // Récupère la date choisie par le client
+    const dateChoisie = dateLivraison.value;
+
+    // Vérifie que le user a sélectionné une date (retirer alors le message d'erreur)
+    if(!dateChoisie){
+        erreurDate.style.display = 'none';
+        dateLivraison.setCustomValidity('');
+        return;
+    }
+
+    // découpe la date choisie par le client en plusieurs parties (YYYY-MM-DD)
+    const dateChoisieExtraite = dateChoisie.split('-');
+    const moisChoisi = dateChoisieExtraite[1];
+    const jourChoisi = dateChoisieExtraite[2];
+
+    // S'il s'agit de menu saisonnier qui ont des dates de début et fin de disponibilité :
+    if(dispoDebut && dispoFin) {
+        // découpe les dates de disponibilités du menu
+        const debutExtrait = dispoDebut.split('-');
+        const finExtrait = dispoFin.split('-');
+
+        // Récupère le jour et le mois de début (JJ-MM)
+        const jourDebut = debutExtrait[0];
+        const moisDebut = debutExtrait[1];
+
+        // Récupère le jour et le mois de fin
+        const jourFin = finExtrait[0];
+        const moisFin = finExtrait[1];
+
+        // reconstitue les dates pour pouvoir les comparer
+        const dateDebut = `${moisDebut}-${jourDebut}`;
+        const dateFin = `${moisFin}-${jourFin}`;
+        const dateSelectionnee = `${moisChoisi}-${jourChoisi}`;
+
+        // comparaison des dates
+        const dateValide = (dateSelectionnee >= dateDebut) && (dateSelectionnee <= dateFin);
+
+        // affichage du message d'erreur
+        if (!dateValide){
+            erreurDate.style.display ='block';
+            dateLivraison.setCustomValidity('Date non disponible');
+        } else {
+            erreurDate.style.display ='none';
+            dateLivraison.setCustomValidity('');
+        }
+    }
+    
+} )
+
+// --------------------------------------------------------MATERIEL---------------------------------------------------------------
 // Actualisation du prix si location de matériel
 
 const choixMateriel = document.querySelectorAll('input[name="materiel"]');
@@ -227,12 +321,12 @@ choixMateriel.forEach((choix) => {
 });
 
 
-// PRIX TOTAL
+// -----------------------------------------------------------PRIX TOTAL---------------------------------------------------------
 const prixTotal = document.querySelector('#prix_total');
 
 function calculTotal(){
-    // Ne calcule pas le total si le prix de livraison est inconnu
-    if (prixLivraison.textContent === '--') {
+    // Ne calcule pas le total s'il n'y a pas de menu affiché OU si le prix de livraison est inconnu
+    if (!inputNbreConvives || prixLivraison.textContent === '--') {
         prixTotal.textContent = '--';
         return;
     }
@@ -249,20 +343,20 @@ function calculTotal(){
 
 
 // Calculs au chargement de la page
-calculSousTotal();
+if (inputNbreConvives) {
+    calculSousTotal();
+}
+
 calculMateriel();
 calculTotal();
 
 
 
 
-// RECUPERATION DES DONNEES AVANT ENVOI DU FORMULAIRE
+// ----------------------------------RECUPERATION DES DONNEES AVANT ENVOI DU FORMULAIRE---------------------------------------------
 const formCommande = document.querySelector('#form_commande');
 const formNbreConvives = document.querySelector('#form_nbre_convives');
-
-const dateLivraison = document.querySelector('#date_livraison');
 const heureLivraison = document.querySelector('#heure_livraison');
-
 const formDate = document.querySelector('#form_date');
 const formHeure = document.querySelector('#form_heure');
 
@@ -277,15 +371,25 @@ function verifierCommande() {
         prixLivraison.textContent !== '--' &&
         prixLivraison.textContent !== '';
 
-    // Vérifie que la date et l'heure sont renseignées
-    const dateOK = dateLivraison.value !== '';
+    // Vérifie que la date et l'heure sont renseignées et valides (période de disponibilité)
+    const dateOK = dateLivraison.validity.valid;
     const heureOK = heureLivraison.value !== '';
+
+    // Vérifie qu'un menu est sélectionné
+    const menuOK = inputNbreConvives !== null;
+
+    // Vérifie que le nombre de convives sélectionné est >= au nombre de convives min pour ce menu 
+    // et que le nombre est valide (non null et pas de ,)
+    let nbreOK = false;
+    if(menuOK){
+        nbreOK = Number(inputNbreConvives.value) >= Number(nbreMin.textContent) && inputNbreConvives.validity.valid;
+    }
 
     // Vérifie que les CGV sont acceptées
     const cgvOK = cgv.checked;
 
     // Active le bouton uniquement si toutes les conditions sont remplies
-    btnValiderCommande.disabled = !(livraisonOK && dateOK && heureOK && cgvOK);
+    btnValiderCommande.disabled = !(livraisonOK && menuOK && nbreOK && dateOK && heureOK && cgvOK);
 }
 
 // Vérifie la commande lorsque la date change

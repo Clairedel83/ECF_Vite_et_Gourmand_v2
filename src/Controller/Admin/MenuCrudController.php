@@ -41,12 +41,30 @@ class MenuCrudController extends AbstractCrudController
             IntegerField::new('nbre_min')->setLabel('Nombre de personnes minimum'),
             NumberField::new('prix_per_pers')->setLabel('Prix par personne'),
             IntegerField::new('stock')->setLabel('Stock'),
+            TextField::new('disponibilite_debut')
+                ->setLabel('Début de période')
+                ->setHelp('Format JJ-MM (exemple : 15-03). Laisser vide si disponible toute l’année.')
+                ->formatValue(function ($value) {
+                    if ($value === null) {
+                        return 'Toute l\'année';
+                    }
+                    return $value;
+                }),
+            TextField::new('disponibilite_fin')
+                ->setLabel('Fin de période')
+                ->setHelp('Format JJ-MM (exemple : 15-03). Laisser vide si disponible toute l’année.')
+                ->formatValue(function ($value) {
+                    if ($value === null) {
+                        return 'Toute l\'année';
+                    }
+                    return $value;
+                }),
             AssociationField::new('entree')->setLabel('Entrée'),
             AssociationField::new('plat')->setLabel('Plat'),
             AssociationField::new('dessert')->setLabel('Dessert'),
             AssociationField::new('regimes')->setLabel('Régime'),
             AssociationField::new('theme')->setLabel('Thème'),
-            AssociationField::new('condition_stockage')->setLabel('Condition'),
+            AssociationField::new('conditions')->setLabel('Condition'),
             ImageField::new('illustration')->setLabel('Image')->setHelp('Image du menu')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)
         ];
     }

@@ -60,7 +60,7 @@
                         <div class="panier_content_nbre">
                             <div class="panier_content">
                                <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                <p>Nombre de convives : <input type="number" id="nbre_convives" name="nbre_convives" min="{{ menu.nbreMin }}"     value="{{ menu.nbreMin }}"></p> 
+                                <p>Nombre de convives : <input type="number" id="nbre_convives" name="nbre_convives" min="{{ menu.nbreMin }}" value="{{ menu.nbreMin }}" required></p> 
                             </div>
                             <p>Le nombre minimum de convives pour cet évènement est de : <span id="nbre_min">{{ menu.nbreMin }}</span> personnes.</p>
                             <p id="nbre_min_p">Une réduction de 10% est appliquée pour toutes les commandes ayant 5 personnes de plus que le nombre de personnes minimum indiqué.</p>
@@ -157,17 +157,42 @@
                     </div>
                     <div class="date">
                         <div class="livraison_content">
+                            {# Récupère le délai minimum du menu #}
+                            {% set delaiMin = null %}
+                            {% if menu is not null %}
+                                {% for condition in menu.conditions %}
+                                    {% if condition.delaiMin is not null %}
+                                        {% set delaiMin = condition.delaiMin %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                             <p><strong>Date de livraison souhaitée :</strong></p>
-                            <input type="date" id="date_livraison" required>
+                            <input type="date" id="date_livraison" data-debut="{{ menu ? menu.disponibiliteDebut : '' }}"
+                            data-fin="{{ menu ? menu.disponibiliteFin : '' }}" data-delai="{{ delaiMin }}" required>
                         </div>
-                        <p>Toute commande doit être effectuée au minimum 7 jours avant la date de prestation souhaitée.</p>
+                        {% if menu %}
+                            <p>Toute commande doit être effectuée au minimum {{ delaiMin }} jours avant la date de prestation souhaitée.</p>
+                        {% endif %}
+                        <p id="erreur_date" style="display:none;">La date choisie ne correspond pas à la période de disponibilité du menu.</p>
                     </div>
 
-
+                    <div class="heure">
                     <div class="livraison_content">
                         <p><strong>Heure de livraison souhaitée:</strong></p>
-                        <input type="time" id="heure_livraison" required>
+                        <select id="heure_livraison" required>
+                            <option value="">Choisissez une heure</option>
+                            <option value="10:00">10h00</option>
+                            <option value="10:30">10h30</option>
+                            <option value="11:00">11h00</option>
+                            <option value="11:30">11h30</option>
+                            <option value="17:00">17h00</option>
+                            <option value="17:30">17h30</option>
+                            <option value="18:00">18h00</option>
+                        </select>
                     </div>
+                    <p>Les livraisons sont effectuées de 10h à 11h30 et de 17h à 18h.</p>                     
+                    </div>
+
                 </div>
             </div>
 

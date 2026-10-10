@@ -69,7 +69,7 @@ class Condition
     {
         if (!$this->menus->contains($menu)) {
             $this->menus->add($menu);
-            $menu->addConditionStockage($this);
+            $menu->addConditions($this);
         }
 
         return $this;
@@ -78,7 +78,7 @@ class Condition
     public function removeMenu(Menu $menu): static
     {
         if ($this->menus->removeElement($menu)) {
-            $menu->removeConditionStockage($this);
+            $menu->removeConditions($this);
         }
 
         return $this;

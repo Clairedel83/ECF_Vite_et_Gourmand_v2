@@ -192,8 +192,8 @@
 
                         <div class="menu_details_bottom">
                             <div class="bottom_conditions">
-                                {% for conditionStockage in menu.conditionStockage %}
-                                    <li>{{ conditionStockage.description }}</li>
+                                {% for conditions in menu.conditions %}
+                                    <li>{{ conditions.description }}</li>
                                 {% endfor %}
                             </div>
 

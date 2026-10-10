@@ -21,10 +21,12 @@ class AdresseLivraisonType extends AbstractType
                         min:2,
                         max:30,
                         minMessage:"Le nom doit contenir au moins {{ limit }} caractères.",
-                        maxMessage:"Le nom doit contenir au moins {{ limit }} caractères."
+                        maxMessage:"Le nom doit contenir au maximum {{ limit }} caractères."
                     )],
                 'attr' => [
-                    'placeholder' => "Nom"
+                    'placeholder' => "Nom",
+                    'minlength' => 2,
+                    'maxlength' => 30
                 ]
             ])
 
@@ -38,7 +40,9 @@ class AdresseLivraisonType extends AbstractType
                         maxMessage:"Le prénom doit contenir au moins {{ limit }} caractères."
                     )],
                 'attr' => [
-                    'placeholder' => "Prénom"
+                    'placeholder' => "Prénom",
+                    'minlength' => 2,
+                    'maxlength' => 30
                 ]
             ])
 
@@ -53,7 +57,15 @@ class AdresseLivraisonType extends AbstractType
             ->add('code_postal', TextType::class, [
                 'label' => 'Code postal :',
                 'attr' => [
-                    'placeholder' => "33000"
+                    'placeholder' => "33000",
+                    'pattern' => '[0-9]{5}',
+                    'maxlength' => 5
+                ],
+                'constraints' => [
+                    new Assert\Regex(
+                        pattern: '/^[0-9]{5}$/',
+                        message: 'Le code postal doit contenir 5 chiffres.'
+                    )
                 ]
             ])
             

@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\MenuRepository;
-use BcMath\Number;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 class Menu
@@ -51,15 +52,73 @@ class Menu
      * @var Collection<int, Condition>
      */
     #[ORM\ManyToMany(targetEntity: Condition::class, inversedBy: 'menus')]
-    private Collection $condition_stockage;
+    private Collection $conditions;
 
     #[ORM\Column(length: 255)]
     private ?string $illustration = null;
 
+    #[ORM\Column(length: 5, nullable: true)]
+    #[Assert\Regex(
+    pattern: '/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])$/',
+    message: 'La date doit respecter le format JJ-MM.'
+    )]
+    private ?string $disponibilite_debut = null;
+
+    #[ORM\Column(length: 5, nullable: true)]
+    #[Assert\Regex(
+    pattern: '/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])$/',
+    message: 'La date doit respecter le format JJ-MM.'
+    )]
+    private ?string $disponibilite_fin = null;
+
+    // ajoute des contraintes lors des choix de date de disponibilite
+    #[Assert\Callback]
+    public function validateDisponibilite(ExecutionContextInterface $context): void
+    {
+        // oblige l'employé à compléter la date de début ET date de fin de disponibilité du menu
+        if (
+            ($this->disponibilite_debut === null && $this->disponibilite_fin !== null)
+            ||
+            ($this->disponibilite_debut !== null && $this->disponibilite_fin === null)
+        ) {
+            $context->buildViolation('Les deux dates de disponibilité doivent être renseignées.')
+                ->atPath('disponibilite_debut')
+                ->addViolation();
+        }
+
+        // vérifie que la date existe
+        foreach (['disponibilite_debut', 'disponibilite_fin'] as $champ) {
+
+        $date = $this->$champ;
+
+        // Si le champ est vide, on ne vérifie pas la date
+        if ($date === null) {
+            continue;
+        }
+
+        // Vérifie d'abord le format JJ-MM
+        if (!preg_match('/^\d{2}-\d{2}$/', $date)) {
+            continue;
+        }
+
+        // Sépare le jour et le mois
+        [$jour, $mois] = explode('-', $date);
+
+        // Vérifie si la date existe
+        // année 2024 choisie car bissextile : 29 février existe
+        if (!checkdate((int) $mois, (int) $jour, 2024)) {
+            $context->buildViolation('Cette date n’existe pas.')
+                ->atPath($champ)
+                ->addViolation();
+        }
+    }
+    }
+
+
     public function __construct()
     {
         $this->regimes = new ArrayCollection();
-        $this->condition_stockage = new ArrayCollection();
+        $this->conditions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,23 +259,23 @@ class Menu
     /**
      * @return Collection<int, Condition>
      */
-    public function getConditionStockage(): Collection
+    public function getConditions(): Collection
     {
-        return $this->condition_stockage;
+        return $this->conditions;
     }
 
-    public function addConditionStockage(Condition $conditionStockage): static
+    public function addConditions(Condition $conditions): static
     {
-        if (!$this->condition_stockage->contains($conditionStockage)) {
-            $this->condition_stockage->add($conditionStockage);
+        if (!$this->conditions->contains($conditions)) {
+            $this->conditions->add($conditions);
         }
 
         return $this;
     }
 
-    public function removeConditionStockage(Condition $conditionStockage): static
+    public function removeConditions(Condition $conditions): static
     {
-        $this->condition_stockage->removeElement($conditionStockage);
+        $this->conditions->removeElement($conditions);
 
         return $this;
     }
@@ -229,6 +288,30 @@ class Menu
     public function setIllustration(string $illustration): static
     {
         $this->illustration = $illustration;
+
+        return $this;
+    }
+
+    public function getDisponibiliteDebut(): ?string
+    {
+        return $this->disponibilite_debut;
+    }
+
+    public function setDisponibiliteDebut(?string $disponibilite_debut): static
+    {
+        $this->disponibilite_debut = $disponibilite_debut;
+
+        return $this;
+    }
+
+    public function getDisponibiliteFin(): ?string
+    {
+        return $this->disponibilite_fin;
+    }
+
+    public function setDisponibiliteFin(?string $disponibilite_fin): static
+    {
+        $this->disponibilite_fin = $disponibilite_fin;
 
         return $this;
     }

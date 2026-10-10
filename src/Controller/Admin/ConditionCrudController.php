@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Condition;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ConditionCrudController extends AbstractCrudController
@@ -27,6 +28,7 @@ class ConditionCrudController extends AbstractCrudController
     {
         return [
             TextField::new('description')->setLabel('Description'),
+            NumberField::new('delai_min')->setLabel('Délai minimum')->setHelp('Nombre de jours minimum avant commande'),
         ];
     }
     
