@@ -71,6 +71,12 @@ class Menu
     )]
     private ?string $disponibilite_fin = null;
 
+    /**
+     * @var Collection<int, Commande>
+     */
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'menu')]
+    private Collection $commandes;
+
     // ajoute des contraintes lors des choix de date de disponibilite
     #[Assert\Callback]
     public function validateDisponibilite(ExecutionContextInterface $context): void
@@ -119,6 +125,7 @@ class Menu
     {
         $this->regimes = new ArrayCollection();
         $this->conditions = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -312,6 +319,36 @@ class Menu
     public function setDisponibiliteFin(?string $disponibilite_fin): static
     {
         $this->disponibilite_fin = $disponibilite_fin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): static
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): static
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getMenu() === $this) {
+                $commande->setMenu(null);
+            }
+        }
 
         return $this;
     }

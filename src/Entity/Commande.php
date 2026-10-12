@@ -62,6 +62,27 @@ class Commande
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    private ?Menu $menu = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $menu_nom = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $menu_composition = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $prix_per_pers = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $montant_reduction = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $prix_sous_total = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $prix_materiel = null;
+
     public function __construct()
     {
         $this->commandeHistorique = new ArrayCollection();
@@ -254,6 +275,90 @@ class Commande
     public function setHeureCommande(\DateTime $heure_commande): static
     {
         $this->heure_commande = $heure_commande;
+
+        return $this;
+    }
+
+    public function getMenu(): ?Menu
+    {
+        return $this->menu;
+    }
+
+    public function setMenu(?Menu $menu): static
+    {
+        $this->menu = $menu;
+
+        return $this;
+    }
+
+    public function getMenuNom(): ?string
+    {
+        return $this->menu_nom;
+    }
+
+    public function setMenuNom(string $menu_nom): static
+    {
+        $this->menu_nom = $menu_nom;
+
+        return $this;
+    }
+
+    public function getMenuComposition(): ?string
+    {
+        return $this->menu_composition;
+    }
+
+    public function setMenuComposition(string $menu_composition): static
+    {
+        $this->menu_composition = $menu_composition;
+
+        return $this;
+    }
+
+    public function getPrixPerPers(): ?string
+    {
+        return $this->prix_per_pers;
+    }
+
+    public function setPrixPerPers(string $prix_per_pers): static
+    {
+        $this->prix_per_pers = $prix_per_pers;
+
+        return $this;
+    }
+
+    public function getMontantReduction(): ?string
+    {
+        return $this->montant_reduction;
+    }
+
+    public function setMontantReduction(string $montant_reduction): static
+    {
+        $this->montant_reduction = $montant_reduction;
+
+        return $this;
+    }
+
+    public function getPrixSousTotal(): ?string
+    {
+        return $this->prix_sous_total;
+    }
+
+    public function setPrixSousTotal(string $prix_sous_total): static
+    {
+        $this->prix_sous_total = $prix_sous_total;
+
+        return $this;
+    }
+
+    public function getPrixMateriel(): ?string
+    {
+        return $this->prix_materiel;
+    }
+
+    public function setPrixMateriel(string $prix_materiel): static
+    {
+        $this->prix_materiel = $prix_materiel;
 
         return $this;
     }
