@@ -55,7 +55,7 @@
                         </div>
                         <div class="panier_content">
                             <img src="{{ asset('images/logos/Shopicons_Light_Lock.svg') }}" alt="">
-                            <p>Stock : </p><p id="stock">{{ menu.stock }}</p>
+                            <p>Stock : </p><p id="stock" data-stock = {{ menu.stock }}></p>
                         </div>
                         <div class="panier_content_nbre">
                             <div class="panier_content">
@@ -143,7 +143,7 @@
 
                     <!-- Bouton permettant de relancer le calcul -->
                     <button type="button" id="btn_retry_livraison" style="display: none;">
-                        Réessayer le calcul
+                        Réessayer le calcul des frais de livraison
                     </button>
 
                     <div class="livraison_prix">
@@ -235,7 +235,7 @@
                     </div>
                     
                     <div class="commande_checkbox">
-                        <input type="checkbox" id ="cgv" name="cgv" required>
+                        <input type="checkbox" form="form_commande" id ="cgv" name="cgv" required>
                         <label for="cgv">
                             J'ai lu et accepte les <a href="{{ path('app_cgv') }}">conditions générales de vente</a> de Vite & Gourmand.
                         </label>

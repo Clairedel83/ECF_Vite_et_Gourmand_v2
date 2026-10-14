@@ -1,3 +1,20 @@
+// ---------------------------------------------------------- STOCK-------------------------------------------------------------
+const stock = document.querySelector('#stock');
+
+// si le menu est présent dans le panier
+if(stock){
+    const stockMenu = Number(stock.dataset.stock);
+
+    if(stockMenu <= 0){
+        stock.textContent = 'Indisponible';
+        stock.classList.add('stock_indisponible');
+    } else{
+        stock.textContent = 'Disponible';
+        stock.classList.add('stock_disponible');
+    }
+}
+
+
 // ----------------------------------------------------------SOUS TOTAL-------------------------------------------------------------
 // Actualisation du sous-total en fonction du nombre de convives
 
@@ -68,7 +85,6 @@ const villeNew = document.querySelector('#ville_new');
 
 const formAdresseChoisie = document.querySelector('#form_adresse_choisie');
 const formAdresseGoogle = document.querySelector('#form_adresse_google');
-const formVilleLivraison = document.querySelector('#form_ville_livraison');
 
 const prixLivraison = document.querySelector('#prix_livraison');
 const erreurLivraison = document.querySelector('#erreur_livraison');
@@ -92,49 +108,51 @@ btnModifierAdresse.forEach(btn => {
     });
 });
 
-// Modification de l'adresse de livraison : 
-formAdresse.addEventListener('submit', (event) => {
-    // ne pas recharger la page
+// Modification de l'adresse de livraison
+formAdresse.addEventListener('submit', async (event) => {
+
+    // Ne pas recharger la page
     event.preventDefault();
 
-    // récupère les données saisies par l'utilisateur dans le formulaire et les affiche dans la nouvelle adresse
-    nomNew.textContent = inputNom.value + ' ' + inputPrenom.value;
-    adresseNew.textContent = inputAdresse.value;
-    villeNew.textContent = inputPostal.value + ' ' + inputVille.value;
-
-    // enregistre la nouvelle adresse qui sera envoyée lors de la commande
-    formAdresseChoisie.value = 
-        inputNom.value + ' ' +
-        inputPrenom.value + ' - ' +
-        inputAdresse.value + ' - ' +
-        inputPostal.value + ' ' +
-        inputVille.value;
-
-    // enregistre la nouvelle adresse au format google (sans le nom et prénom)
-    formAdresseGoogle.value =
+    // Récupère l'adresse saisie pour la faire vérifier par Symfony
+    const adresseAVerifier =
         inputAdresse.value + ', ' +
         inputPostal.value + ' ' +
         inputVille.value;
-    
-    // enregistre la ville seule pour calculer le prix de livraison (0€ si Bordeaux)
-    formVilleLivraison.value = inputVille.value;
 
-    // calcule le prix de livraison
-    calculLivraison();
+    // Attend la vérification de l'adresse et le calcul des frais de livraison
+    const resultat = await calculLivraison(adresseAVerifier);
 
-    // retire l'affichage du formulaire
-    adresseModifiee.style.display = 'none';
+    // Si la vérification a réussi
+    if (resultat === true) {
 
-    // déplie l'affichage de la nouvelle adresse
-    nouvelleAdresse.style.display = 'block';
+        // Enregistre l'adresse validée pour la commande
+        formAdresseChoisie.value =
+            inputNom.value + ' ' +
+            inputPrenom.value + ' - ' +
+            inputAdresse.value + ' - ' +
+            inputPostal.value + ' ' +
+            inputVille.value;
+
+        // Enregistre l'adresse utilisée pour le calcul de livraison
+        formAdresseGoogle.value = adresseAVerifier;
+
+        // Actualise l'affichage de la nouvelle adresse
+        nomNew.textContent = inputNom.value + ' ' + inputPrenom.value;
+        adresseNew.textContent = inputAdresse.value;
+        villeNew.textContent = inputPostal.value + ' ' + inputVille.value;
+
+        // Ferme le formulaire de modification
+        adresseModifiee.style.display = 'none';
+
+        // Affiche la nouvelle adresse
+        nouvelleAdresse.style.display = 'block';
+    }
 });
 
 
 // Actualisation du prix de livraison en fonction de la ville de livraison
-async function calculLivraison() {
-    // Récupère l'adresse et la ville de livraison
-    const adresse = formAdresseGoogle.value;
-    const ville = formVilleLivraison.value;
+async function calculLivraison(adresse = formAdresseGoogle.value) {
 
     // Désactive la validation pendant le calcul
     btnValiderCommande.disabled = true;
@@ -149,14 +167,13 @@ async function calculLivraison() {
     erreurLivraison.style.display = 'none';
     btnRetryLivraison.style.display = 'none';
 
-    // Sécurité ajoutée en cas d'erreur de l'API Google Routes
+    // ---------------------------Sécurité ajoutée en cas d'erreur de l'API Google Routes------------------------------------------------
     try{
         // prépare les données à envoyer à Symfony
         // FormData permettra d'organiser les données comme un formulaire HTML
         // append ajoute les données au formulaire
         const donnees = new FormData();
         donnees.append('adresse', adresse);
-        donnees.append('ville', ville);
     
         // effectue une requête HTTP à Symfony et permet d'accéder au controller CalculPrixLivraison
         const response = await fetch('/calcul/prix/livraison', {
@@ -167,7 +184,22 @@ async function calculLivraison() {
 
         // Vérifie que Symfony a répondu correctement (= erreur de l'API)
         if (!response.ok) {
-            throw new Error('Erreur lors du calcul de livraison');
+            // récupère l'erreur envoyée par le controller
+            const erreur = await response.json();
+
+            // Crée une erreur avec le message reçu
+            const messageErreur = new Error(erreur.erreur);
+
+            // si l'erreur correspond à une adresse invalide :
+            if(response.status === 400){
+                // affiche le message créé dans AdresseService
+                messageErreur.type = 'adresse_invalide';
+            } else {
+                messageErreur.type = 'probleme_api';
+            }
+
+            // Transmet l'erreur au catch
+            throw messageErreur;
         }
 
         // Récupère les données JSON envoyées par Symfony (= prix calculé)
@@ -182,16 +214,32 @@ async function calculLivraison() {
         // Autorise la validation de la commande
         verifierCommande();
 
+        // permet de return que le calcul a réussi
+        return true;
+
     } catch(error) {
         // Affiche l'erreur dans la console
         console.error('Erreur lors du calcul de livraison :', error);
 
-        // Affiche le message d'erreur et le bouton Réessayer
+        // Affiche le paragraphe d'erreur
         erreurLivraison.style.display = 'block';
-        btnRetryLivraison.style.display = 'block';
+
+        // adapte le message en fonction de l'erreur
+        if (error.type === 'adresse_invalide') {
+            // adresse invalide : message de Symfony
+            erreurLivraison.textContent = error.message;
+             btnRetryLivraison.style.display = 'none';
+        } else {
+            // Erreur technique : affiche un message technique et permet de réessayer
+            erreurLivraison.textContent = 'Impossible de calculer les frais de livraison. Veuillez réessayer.'
+            btnRetryLivraison.style.display = 'block';
+        }
 
         // Empêche la validation de la commande
         btnValiderCommande.disabled = true;
+
+        // permet de retourner que le calcul a échoué
+        return false;
     }
 }
 
@@ -366,6 +414,9 @@ const cgv = document.querySelector('#cgv');
 
 // Vérifie que toutes les conditions sont remplies pour valider la commande
 function verifierCommande() {
+    // vérifie que le menu est disponible (stock)
+    const stockOK = stock != null && Number(stock.dataset.stock) > 0;
+
     // Vérifie que le prix de livraison est disponible
     const livraisonOK =
         prixLivraison.textContent !== '--' &&
@@ -389,7 +440,7 @@ function verifierCommande() {
     const cgvOK = cgv.checked;
 
     // Active le bouton uniquement si toutes les conditions sont remplies
-    btnValiderCommande.disabled = !(livraisonOK && menuOK && nbreOK && dateOK && heureOK && cgvOK);
+    btnValiderCommande.disabled = !(stockOK && livraisonOK && menuOK && nbreOK && dateOK && heureOK && cgvOK);
 }
 
 // Vérifie la commande lorsque la date change

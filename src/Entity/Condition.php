@@ -26,7 +26,7 @@ class Condition
     /**
      * @var Collection<int, Menu>
      */
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'condition_stockage')]
+    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'conditions')]
     private Collection $menus;
 
     public function __construct()

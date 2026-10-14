@@ -34,17 +34,17 @@ class Commande
     #[ORM\Column(length: 255)]
     private ?string $adresse_livraison = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $prix_total = null;
 
     #[ORM\Column]
     private ?int $nbre_pers = null;
 
-    #[ORM\Column]
-    private ?float $prix_livraison = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $prix_livraison = null;
 
     #[ORM\Column]
-    private ?int $statut = null;
+    private int $statut = 1;
 
     #[ORM\Column]
     private ?bool $pret_materiel = null;
@@ -63,6 +63,8 @@ class Commande
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
+    // ne modifie pas la commande en cas de suppression de menu
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Menu $menu = null;
 
     #[ORM\Column(length: 255)]
@@ -165,12 +167,12 @@ class Commande
         return $this;
     }
 
-    public function getPrixLivraison(): ?float
+    public function getPrixLivraison(): ?string
     {
         return $this->prix_livraison;
     }
 
-    public function setPrixLivraison(float $prix_livraison): static
+    public function setPrixLivraison(string $prix_livraison): static
     {
         $this->prix_livraison = $prix_livraison;
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Commande;
 
+use App\Controller\Services\AdresseService;
 use App\Controller\Services\PrixLivraison;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,13 +13,26 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CalculPrixLivraisonController extends AbstractController
 {
     #[Route('/calcul/prix/livraison', name: 'app_calcul_prix_livraison', methods: ['POST'])]
-    public function index(Request $request, PrixLivraison $prixLivraison): JsonResponse
+    public function index(Request $request, PrixLivraison $prixLivraison, AdresseService $adresseService): JsonResponse
     {
-        // Récupère l'adresse et la ville de livraison depuis JS
+        // Récupère l'adresse de livraison donnée par l'utilisateur depuis JS
         $adresseGoogle = $request->request->get('adresse');
-        $villeLivraison = $request->request->get('ville');
 
-        $prixCalcule = $prixLivraison->calculPrixLivraison($villeLivraison, $adresseGoogle);
+        // appelle verifierAdresse de AdresseService pour vérifier cette adresse par géocodage
+        try{
+            $resultatAdresse = $adresseService->verifierAdresse($adresseGoogle);
+        // en cas d'erreur (400 = données invalides : renvoie message)
+        } catch (\InvalidArgumentException $e){
+            return $this ->json([
+                'erreur'=> $e->getMessage()
+             ], 400);
+        }
+
+        
+        $villeVerifiee = $resultatAdresse['ville'];
+        $adresseCompleteVerifiee = $resultatAdresse['adresse'];
+
+        $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseCompleteVerifiee);
 
         return $this->json([
             'prixLivraison' => $prixCalcule
