@@ -3,6 +3,7 @@
 namespace App\Controller\Commande;
 
 use App\Controller\Classe\Panier;
+use App\Controller\Services\AdresseService;
 use App\Controller\Services\DistanceService;
 use App\Controller\Services\PrixLivraison;
 use App\Entity\Commande;
@@ -16,13 +17,14 @@ use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 
 final class CommandeController extends AbstractController
 {
     // Sécurisation du formulaire avec utilisation d'un jeton CSRF
     #[IsCsrfTokenValid('valider_commande', tokenKey: 'token', methods: ['POST'])]
     #[Route('/commande', name: 'app_commande')]
-    public function index(MenuRepository $menuRepository, Panier $panier, Request $request, EntityManagerInterface $entityManager, DistanceService $distanceService, PrixLivraison $prixLivraison): Response
+    public function index(MenuRepository $menuRepository, Panier $panier, Request $request, EntityManagerInterface $entityManager, DistanceService $distanceService, PrixLivraison $prixLivraison, AdresseService $adresseService): Response
     {
         // La page ne peut être appelée que par l'envoi du formulaire
         // Si l'utilisateur essaie d'y accéder par l'URL (GET), il sera redirigé vers le panier
@@ -75,8 +77,21 @@ final class CommandeController extends AbstractController
             return $this->redirectToRoute('app_panier');
         }
 
+        // obtenir le délai des menus POUR CEUX qui ont un délai
+        $delai_min = null;
 
-        $delai_min = $menu->getConditions()->getDelaiMin();
+        // pour toutes les conditions du menu
+            // si le delai_min de la condition n'est pas null
+        foreach($menu->getConditions() as $condition){
+            if ($condition->getDelaiMin() !== null &&  $condition->getDelaiMin() > 0){
+                $delai_min = $condition->getDelaiMin();
+            }
+        }
+
+        if ($delai_min === null) {
+            return $this->redirectToRoute('app_panier');
+        }
+
         $dateJour = new DateTime(('today'));
         $date_min = $dateJour->modify('+'.$delai_min.' days');
 
@@ -104,6 +119,8 @@ final class CommandeController extends AbstractController
             }
         }
 
+
+
         // RECUPERE L'HEURE DE LIVRAISON : et transforme en objet datetime pour enregistrer en format compatible en BDD
         $heure_choisie = $request->request->get('form_heure');
         $heure_dispo = ['10:00', '10:30', '11:00', '11:30', '17:00', '17:30', '18:00'];
@@ -120,14 +137,56 @@ final class CommandeController extends AbstractController
         // RECUPERE LE CHOIX DU MATERIEL (avec ou sans location) : et transforme en booleen pour enregistrer en format compatible en BDD
         $pret_materiel = $request->request->get('form_materiel') === 'oui';
 
+        // RECUPERE LE NOM FOURNI POUR LIVRAISON (user ou modifié)
+        $nom = $request->request->get('form_nom');
+
+        // RECUPERE LE PRENOM FOURNI POUR LIVRAISON (user ou modifié)
+        $prenom = $request->request->get('form_prenom');
+
         // RECUPERE L'ADRESSE DE LIVRAISON (user OU adresse modifiée)
         $adresse_livraison = $request->request->get('form_adresse_choisie');
 
         // RECUPERE L'ADRESSE FORMAT GOOGLE
         $adresseGoogle = $request->request->get('form_adresse_google');
 
+        // RECUPERE LE CODE POSTAL DE LIVRAISON
+        $codePostal = $request->request->get('form_code_postal');
+
         // RECUPERE LA VILLE DE LIVRAISON
-        $villeLivraison = $request->request->get('form_ville_livraison');
+        $ville = $request->request->get('form_ville');
+
+        // VERIFICATION DE L'ADRESSE
+        // les adresses, code postal et villes doivent être des chaînes de caractères et non vides
+        if(
+            (!is_string($adresseGoogle) || trim($adresseGoogle) === '') || 
+            (!is_string($codePostal) || trim($codePostal)=== '')  || 
+            (!is_string($ville) || trim($ville) === '') ||
+            (!is_string($nom) || trim($nom) === '') ||
+            (!is_string($prenom) || trim($prenom) === '')
+        )
+        {
+            return $this->redirectToRoute('app_panier'); 
+        }
+
+        // Appel à AdresseService pour vérifier
+        try{
+            $resultatVerification = $adresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
+
+            $adresseVerifiee = $resultatVerification['adresse'];
+            $codePostalVerifie = $resultatVerification['codePostal'];
+            $villeVerifiee = $resultatVerification['ville'];
+
+        } catch(\InvalidArgumentException $e){
+            return $this->redirectToRoute('app_panier');
+        } catch(HttpExceptionInterface $e){
+            $this->addFlash(
+                'error',
+                'Le service de vérification des adresses est temporairement indisponible.'
+            );
+            return $this->redirectToRoute('app_panier');
+        }
+
+
 
         // RECUPERE L'ACCEPTATION DES CGV
         $cgv = $request->request->get('cgv');
@@ -173,7 +232,7 @@ final class CommandeController extends AbstractController
         $commande->setHeureLivraison($heure_livraison);
 
         // attribue l'adresse de livraison
-        $commande->setAdresseLivraison($adresse_livraison);
+        $commande->setAdresseLivraison($nom.' '.$prenom.' - '.$adresseVerifiee);
 
         // attribue le prix de la commande 
         // calcul du prix et possibilité de promo
@@ -199,7 +258,7 @@ final class CommandeController extends AbstractController
         }
 
         // // attribue le prix de livraison
-        $prixCalcule = $prixLivraison->calculPrixLivraison($villeLivraison, $adresseGoogle);
+        $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
         $commande->setPrixLivraison(number_format($prixCalcule, 2, '.', ''));
 
         // attribue le prix du matériel si location

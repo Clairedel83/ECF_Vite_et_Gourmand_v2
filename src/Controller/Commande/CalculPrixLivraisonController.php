@@ -15,12 +15,14 @@ final class CalculPrixLivraisonController extends AbstractController
     #[Route('/calcul/prix/livraison', name: 'app_calcul_prix_livraison', methods: ['POST'])]
     public function index(Request $request, PrixLivraison $prixLivraison, AdresseService $adresseService): JsonResponse
     {
-        // Récupère l'adresse de livraison donnée par l'utilisateur depuis JS
+        // Récupère l'adresse de livraison et le code postal donnés par l'utilisateur depuis JS
         $adresseGoogle = $request->request->get('adresse');
+        $codePostal = $request->request->get('codePostal');
+        $ville = $request->request->get('ville');
 
         // appelle verifierAdresse de AdresseService pour vérifier cette adresse par géocodage
         try{
-            $resultatAdresse = $adresseService->verifierAdresse($adresseGoogle);
+            $resultatAdresse = $adresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
         // en cas d'erreur (400 = données invalides : renvoie message)
         } catch (\InvalidArgumentException $e){
             return $this ->json([

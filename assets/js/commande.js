@@ -63,7 +63,6 @@ if (inputNbreConvives) {
 // Modification de l'adresse de livraison : 
     // déplie le formulaire après clic
     // calcule les frais de livraison
-    // comportement en cas d'erreur
 
 const btnModifierAdresse = document.querySelectorAll('.modifier_adresse');
 const adresseUser = document.querySelector('.livraison_adresse');
@@ -71,6 +70,8 @@ const adresseModifiee = document.querySelector('.livraison_adresse_modifiee');
 
 const nouvelleAdresse = document.querySelector('.livraison_nouvelle_adresse');
 const formAdresse = document.querySelector('#adresse_livraison_form');
+const formCodePostal = document.querySelector('#form_code_postal');
+const formVille = document.querySelector('#form_ville');
 
 const inputNom = document.querySelector('#adresse_livraison_nom');
 const inputPrenom = document.querySelector('#adresse_livraison_prenom');
@@ -78,13 +79,14 @@ const inputAdresse = document.querySelector('#adresse_livraison_adresse_postale'
 const inputPostal = document.querySelector('#adresse_livraison_code_postal');
 const inputVille = document.querySelector('#adresse_livraison_ville');
 
-
 const nomNew = document.querySelector('#nom_new');
 const adresseNew = document.querySelector('#adresse_new');
 const villeNew = document.querySelector('#ville_new');
 
 const formAdresseChoisie = document.querySelector('#form_adresse_choisie');
 const formAdresseGoogle = document.querySelector('#form_adresse_google');
+const formNom = document.querySelector('#form_nom');
+const formPrenom = document.querySelector('#form_prenom');
 
 const prixLivraison = document.querySelector('#prix_livraison');
 const erreurLivraison = document.querySelector('#erreur_livraison');
@@ -120,8 +122,8 @@ formAdresse.addEventListener('submit', async (event) => {
         inputPostal.value + ' ' +
         inputVille.value;
 
-    // Attend la vérification de l'adresse et le calcul des frais de livraison
-    const resultat = await calculLivraison(adresseAVerifier);
+    // Attend la vérification de l'adresse, du code postalet de la ville pour effectuer le calcul des frais de livraison
+    const resultat = await calculLivraison(adresseAVerifier, inputPostal.value, inputVille.value);
 
     // Si la vérification a réussi
     if (resultat === true) {
@@ -134,8 +136,12 @@ formAdresse.addEventListener('submit', async (event) => {
             inputPostal.value + ' ' +
             inputVille.value;
 
-        // Enregistre l'adresse utilisée pour le calcul de livraison
+        // Enregistre l'adresse utilisée et le code postal pour le calcul de livraison et la vérification d'adresse
         formAdresseGoogle.value = adresseAVerifier;
+        formCodePostal.value = inputPostal.value;
+        formVille.value = inputVille.value;
+        formNom.value = inputNom.value;
+        formPrenom.value = inputPrenom.value;
 
         // Actualise l'affichage de la nouvelle adresse
         nomNew.textContent = inputNom.value + ' ' + inputPrenom.value;
@@ -152,7 +158,8 @@ formAdresse.addEventListener('submit', async (event) => {
 
 
 // Actualisation du prix de livraison en fonction de la ville de livraison
-async function calculLivraison(adresse = formAdresseGoogle.value) {
+// fonction qui utilise en paramètre l'adresse de base de l'utilisateur et le code postal de l'adresse modifiée
+async function calculLivraison(adresse = formAdresseGoogle.value, codePostal = formCodePostal.value, ville = formVille.value) {
 
     // Désactive la validation pendant le calcul
     btnValiderCommande.disabled = true;
@@ -174,6 +181,8 @@ async function calculLivraison(adresse = formAdresseGoogle.value) {
         // append ajoute les données au formulaire
         const donnees = new FormData();
         donnees.append('adresse', adresse);
+        donnees.append('codePostal', codePostal);
+        donnees.append('ville', ville);
     
         // effectue une requête HTTP à Symfony et permet d'accéder au controller CalculPrixLivraison
         const response = await fetch('/calcul/prix/livraison', {

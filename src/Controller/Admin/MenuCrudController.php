@@ -64,7 +64,7 @@ class MenuCrudController extends AbstractCrudController
             AssociationField::new('dessert')->setLabel('Dessert'),
             AssociationField::new('regimes')->setLabel('Régime'),
             AssociationField::new('theme')->setLabel('Thème'),
-            AssociationField::new('conditions')->setLabel('Condition'),
+            AssociationField::new('conditions')->setLabel('Condition')->setHelp('Sélectionnez obligatoirement une condition de délai de commande.'),
             ImageField::new('illustration')->setLabel('Image')->setHelp('Image du menu')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)
         ];
     }

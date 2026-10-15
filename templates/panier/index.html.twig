@@ -287,11 +287,17 @@
                 <input type="hidden" name="form_date" id="form_date">
                 {# heure choisie #}
                 <input type="hidden" name="form_heure" id="form_heure">
+                {# nom si modifié #}
+                <input type="hidden" name="form_nom" id="form_nom" value="{{ user.nom }}">
+                {# prénom si modifié #}
+                <input type="hidden" name="form_prenom" id="form_prenom" value="{{ user.prenom }}">
                 {# adresse au format google #}
                 <input type="hidden" name="form_adresse_google" id="form_adresse_google" value="{{ user.adressePostale }} , {{ user.codePostal }} {{ user.ville }}">
-                {# ville (pour calcul du prix de livraison) #}
-                <input type="hidden" name="form_ville_livraison" id="form_ville_livraison" value="{{ app.user.ville }}">
-                {# choix location matériel #}
+                {# code postal (pour vérification) #}
+                <input type="hidden" name="form_code_postal" id="form_code_postal" value="{{ user.codePostal }}">
+                {# Commune de l'adresse sélectionnée, pour vérification #}
+                <input type="hidden" name="form_ville" id="form_ville" value="{{ user.ville }}">
+                {# choix du matériel #}
                 <input type="hidden" name="form_materiel" id="form_materiel">
                 {# adresse par défaut = celle du user / si modifiée, récupérée via JS #}
                 <input type="hidden" name="form_adresse_choisie" id="form_adresse_choisie" value="{{ user.nom }} {{ user.prenom }} - {{ user.adressePostale }} - {{ user.codePostal }} {{ user.ville }}">
