@@ -120,3 +120,40 @@
 .informations span{
     font-weight: 600;
 }
+
+/* ---------------- Mes commandes ------------------------- */
+
+.commandes table, .commandes_details table{
+    text-align: left;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 10vh;
+}
+
+.commandes th, .commandes td, .commandes_details th, .commandes_details td, .commandes a{
+    padding: 10px;
+    font-size:14px;
+    line-height:1.75;
+    font-family: "Roboto";
+    letter-spacing: 0.3px;
+}
+
+.commandes th, .commandes_details th{
+    font-weight: 450;
+}
+
+.commandes th, .commandes td, .commandes_details th, .commandes_details td{
+    border: 1px solid #25242451;
+}
+
+.commandes_details table th{
+    width: 30%;
+}
+
+.commandes_details table td{
+    width: 70%;
+}
+
+.commandes a{
+    color:#252424;
+}

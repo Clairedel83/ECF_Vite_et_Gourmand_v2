@@ -246,3 +246,16 @@ margin-top: 4vh;
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+
+/* ------------------CONFIRMATION --------------------------- */
+.success{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40vh;
+}
+
+.success_content{
+    text-align: center;
+}

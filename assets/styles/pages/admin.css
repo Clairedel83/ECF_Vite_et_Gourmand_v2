@@ -1,9 +1,14 @@
 .badge{
-    padding:10px 15px;
+    padding:5px 10px;
+    border-radius: 10px;
+    font-size:14px;
+    line-height:1.75;
+    font-family: "Roboto";
+    letter-spacing: 0.3px;
 }
 
 .badge.rouge{
-    background-color: red;
+    background-color: rgba(248, 89, 89, 0.788);
 }
 
 .badge.orange{

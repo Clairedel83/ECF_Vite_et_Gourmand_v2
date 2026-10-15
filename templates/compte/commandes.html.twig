@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_compte"></div>
+    {% endblock %}
+
+    {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>MON COMPTE</h1>
+        </div>
+    {% endblock %}
+
+
+    {% block main %}
+        <section class="account">
+            <div class="account_left">
+                <h3>Espace membre</h3>
+                <div class="account_link">
+                    <a href="{{ path('app_compte_informations') }}">Mes informations</a>
+                    <a href="{{ path('app_compte_modifier_pass') }}">Modifier mon mot de passe</a>
+
+                    <a href="">Mes commandes</a>
+                    <a href="{{ path('_logout_main') }}">Me déconnecter</a>
+                </div>
+                
+            </div>
+
+            <div class="account_right">
+                <h3>Mes commandes</h3>
+                <div class="commandes">
+                    {% for commande in commandes %}
+                        <table>
+                            <tr>
+                                <th>N° commande</th>
+                                <th>Date de la commande</th>
+                                <th>Statut</th>
+                                <th>Prix TTC</th>
+                                <th>Détails</th>
+                            </tr>
+
+                            <tr>
+                                <td>{{ commande.numeroCommande }}</td>
+                                <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
+                                <td>    
+                                    {{ include('admin/statut.html.twig', { field: { value: commande.statut }}) }}
+                                </td>
+                                <td>{{ commande.prixTotal }}€</td>
+                                <td><a href="{{ path('app_commandes_details', {'id': commande.id}) }}">Voir plus</a></td>
+                            </tr>   
+                        </table>
+                    {% else %}
+                        <p>Vous n'avez pas encore passé de commande.</p>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </section>
+
+    {% endblock %}
+{% endblock %}

@@ -355,13 +355,15 @@ final class CommandeController extends AbstractController
             // return $this->redirectToRoute('app_panier');
             
         }
+        // enregistre le numéro de commande
+        $request->getSession()->set(
+            'numero_commande',
+            $commande->getNumeroCommande()
+        );
 
         // Vide le panier pour éviter un rechargement de page et une seconde commande créée (si transaction effectuée)
         $panier->remove();
-        return $this->redirectToRoute('app_commande_success');
+        return $this->redirectToRoute('app_confirmation');
     }
 
-   
-
-    
 }

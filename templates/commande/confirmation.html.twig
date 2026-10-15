@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block importmap %}
+    {{ importmap(['app', 'commande']) }}
+{% endblock %}
+
+{% block title %}Vite et Gourmand - Traiteur{% endblock %}
+
+{% block body %}
+<!-- HERO-->
+    {% block hero_img %}
+        <div class ="hero_img" id="hero_nos_menus"></div>
+    {% endblock %}
+
+
+    {% block main %}
+        {% if numero_commande %}
+            <h1>COMMANDE EFFECTUEE !</h1>
+            <div class="success">
+                <div class="success_content">
+                    <p>Votre commande N°{{ numero_commande }} a bien été transmise à notre équipe.</p>
+                    <p>Vous pouvez la retrouver dans votre espace "<a href="{{ path('app_commandes') }}">Mes commandes</a>"".</p>
+                </div>
+        {% else %}
+            <h1>En attente de commande</h1>
+            <div class="success">
+                <div class="success_content">
+                    <p>Une fois votre commande effectuée, vous pourrez la retrouver dans votre espace "<a href="{{ path('app_commandes') }}">Mes commandes</a>"".</p>
+        
+        </div>
+        {% endif %}
+
+    </div>
+
+
+    {% endblock %}
+{% endblock %}

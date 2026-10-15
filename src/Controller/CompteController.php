@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\InformationsUserType;
 use App\Form\PassUserType;
+use App\Repository\CommandeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,9 +20,7 @@ final class CompteController extends AbstractController
     #[Route('/compte', name: 'app_compte')]
     public function index(): Response
     {
-        return $this->render('compte/index.html.twig', [
-            'controller_name' => 'CompteController',
-        ]);
+        return $this->render('compte/index.html.twig');
     }
 
     // MODIFIER LE MOT DE PASSE
@@ -94,6 +93,37 @@ final class CompteController extends AbstractController
         ]);
     }
 
+    // PAGE MES COMMANDES
+    #[Route('/compte/commandes', name: 'app_commandes')]
+    public function show(CommandeRepository $commandeRepository): Response
+    {
+        // récupère toutes les commandes de l'utilisateur, classées de la plus récente à la plus ancienne
+        $commandes = $commandeRepository->findBy(
+            ['user' => $this->getUser()],
+            ['date_commande' => 'DESC']
+        );
+
+
+        return $this->render('compte/commandes.html.twig', [
+            'commandes' => $commandes
+        ]);
+    }
+
+    // DETAIL DE MES COMMANDES
+    #[Route('/compte/commandes/details/{id}', name: 'app_commandes_details')]
+    public function details(CommandeRepository $commandeRepository, int $id): Response
+    {
+        // récupère la commande de l'utilisateur et la retrouve en fonction de son id
+        $commande = $commandeRepository->findOneBy([
+            'id' => $id,
+            'user' => $this->getUser()]
+        );
+
+
+        return $this->render('compte/details.html.twig', [
+            'commande' => $commande
+        ]);
+    }
 
 }
     
