@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Override;
@@ -23,8 +24,8 @@ class CommandeHistoriqueCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Commande')
-            ->setEntityLabelInPlural('Commandes')
+            ->setEntityLabelInSingular('Historique de commande')
+            ->setEntityLabelInPlural('Historiques de commande')
         ;
     }
 
@@ -41,10 +42,9 @@ class CommandeHistoriqueCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('numero_commande')->setLabel('N° de commande'),
-            DateTimeField::new('date_modification')->setLabel('Date de modification'),
-            DateTimeField::new('heure_modification')->setLabel('Heure de modification'),
-            TextField::new('statut')->setLabel('Statut de commande')->setTemplatePath('admin/statut.html.twig')
+            TextField::new('commande.numeroCommande')->setLabel('N° de commande')->onlyOnIndex(),
+            DateTimeField::new('date_modification')->setLabel('Date de modification')->setFormat('dd/MM/yyyy HH:mm'),
+            IntegerField::new('statut')->setLabel('Statut de commande')->setTemplatePath('admin/statut.html.twig')
         ];
     }
 }

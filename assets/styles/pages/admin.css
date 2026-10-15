@@ -2,26 +2,26 @@
     padding:10px 15px;
 }
 
-.rouge{
+.badge.rouge{
     background-color: red;
 }
 
-.orange{
+.badge.orange{
     background-color: orange;
 }
 
-.jaune{
+.badge.jaune{
     background-color: yellow;
 }
 
-.vert_clair{
+.badge.vert_clair{
     background-color: greenyellow;
 }
 
-.gris{
+.badge.gris{
     background-color: grey;
 }
 
-.vert_fonce{
+.badge.vert_fonce{
     background-color: green;
 }
