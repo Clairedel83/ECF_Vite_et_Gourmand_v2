@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -27,13 +29,25 @@ class UserCrudController extends AbstractCrudController
         ;
     }
 
+    #[Override]
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+        // ajoute la possibilité de consulter les détails du compte utilisateur
+        ->add(Crud::PAGE_INDEX, Action::DETAIL);
+    }
+
     
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('nom')->setLabel('Nom'),
-            TextField::new('prenom')->setLabel('Prénom'),
-            EmailField::new('email')->setLabel('Email'),
+            TextField::new('nom')->setLabel('Nom')->hideOnForm(),
+            TextField::new('prenom')->setLabel('Prénom')->hideOnForm(),
+            EmailField::new('email')->setLabel('Email')->hideOnForm(),
+            TextField::new('telephone')->setLabel('Téléphone')->onlyOnDetail(),
+            TextField::new('adresse_postale')->setLabel('Adresse')->onlyOnDetail(),
+            TextField::new('code_postal')->setLabel('Code postal')->onlyOnDetail(),
+            TextField::new('ville')->setLabel('Ville')->onlyOnDetail(),
             AssociationField::new('Role')->setLabel('Rôle')->setQueryBuilder(
                 // fonction pour filtrer les rôles et ne proposer que 'Utilisateur' et 'Employé'
                 fn (QueryBuilder $qb) => $qb

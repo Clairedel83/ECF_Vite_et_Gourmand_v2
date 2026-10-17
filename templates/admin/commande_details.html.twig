@@ -1,0 +1,145 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block main %}
+    <div class="details_title">
+        <h3>Commande N°{{ commande.numeroCommande }}</h3>
+        <p>Date de création : {{ commande.dateCommande|date('d/m/Y') }}</p>
+        <p>{{ include('admin/statut.html.twig', { field : { 'value' : commande.statut}}) }}</p>
+    </div>
+
+    <div class="details_content">
+        <table>
+            <thead>
+                <th colspan="2" class="titre">Informations du client</th>
+            </thead>
+            <tr>
+                <th>Nom et prénom :</th>
+                <td>{{ commande.user.nom }} {{ commande.user.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Email :</th>
+                <td>{{ commande.user.email }}</td>
+            </tr>
+            <tr>
+                <th>Téléphone :</th>
+                <td>{{ commande.user.telephone }}</td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class ="details_content">
+        <table>
+            <thead>
+                <th colspan="2" class="titre">Livraison</th>
+            </thead>
+
+            <tr>
+                <th>Date de livraison :</th>
+                <td>{{ commande.dateLivraison|date('d/m/Y') }}</td>
+            </tr>
+
+            <tr>
+                <th>Heure de livraison :</th>
+                <td>{{ commande.heureLivraison|date('H:i') }}</td>
+            </tr>
+
+            <tr>
+                <th>Adresse de livraison :</th>
+                <td>{{ commande.adresseLivraison }}</td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <div class="details_content">
+        <table>
+            <thead>
+                <th colspan="2" class="titre">Menu</th>
+            </thead>
+
+            <tr>
+                <th>Nom :</th>
+                <td>{{ commande.menuNom }}</td>
+            </tr>
+
+            {% set composition = commande.menuComposition|split(',') %}
+
+            {% for element in composition %}
+                <tr>
+                    <td colspan="2">{{ element|trim }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+    <div class="details_content">
+        <table>
+            <thead>
+                <th colspan="2" class="titre">Matériel</th>
+            </thead>
+
+            <tr>
+                <th>Prêt de matériel :</th>
+                <td>{{ commande.pretMateriel }}</td>
+            </tr>
+
+            <tr>
+                <th>Restitution de matériel :</th>
+                <td>{{ commande.restitutionMateriel }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="details_content">
+        <table>
+            <thead>
+                <th colspan="2" class="titre">Facturation</th>
+            </thead>
+            <tr>
+                <th>Prix par personne :</th>
+                <td>{{ commande.prixPerPers }} €</td>
+            </tr>
+            <tr>
+                <th>Nombre de convives :</th>
+                <td>{{ commande.nbrePers }}</td>
+            </tr>
+            <tr>
+                <th>Sous-total :</th>
+                <td>{{ commande.prixSousTotal }} €</td>
+            </tr>
+            <tr>
+                <th>Réduction :</th>
+                <td>{{ commande.montantReduction }} €</td>
+            </tr>
+            <tr>
+                <th>Livraison :</th>
+                <td>{{ commande.prixLivraison }} €</td>
+            </tr>
+            <tr>
+                <th>Location de matériel :</th>
+                <td>{{ commande.prixMateriel }}</td>
+            </tr>
+            <tr>
+                <th class="total"><b>Total TTC :</b></th>
+                <td class="total"><b>{{ commande.prixTotal }} €</b></td>
+            </tr>
+        </table>
+
+        <div class="details_content">
+            <table>
+                <thead>
+                    <th colspan="2" class="titre">Evolution de commande</th>
+                </thead>
+                <tr>
+                    <th>Date de modification</th>
+                    <td>Statut</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+{%  endblock %}

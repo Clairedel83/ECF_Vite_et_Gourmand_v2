@@ -33,10 +33,15 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+            
+    # employé a les autorisations de user, admin a les autorisations de employé
+    role_hierarchy:
+        ROLE_EMPLOYE: ROLE_USER
+        ROLE_ADMIN: ROLE_EMPLOYE
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/compte, roles: ROLE_USER }
         - { path: ^/commande, roles: ROLE_USER }
         - { path: ^/panier, roles: ROLE_USER }

@@ -1,9 +1,9 @@
 .badge{
     padding:5px 10px;
     border-radius: 10px;
-    font-size:14px;
+    /* font-size:14px; */
     line-height:1.75;
-    font-family: "Roboto";
+    /* font-family: "Roboto"; */
     letter-spacing: 0.3px;
 }
 
@@ -19,6 +19,10 @@
     background-color: yellow;
 }
 
+.badge.bleu{
+    background-color: rgba(46, 157, 248, 0.699);
+}
+
 .badge.vert_clair{
     background-color: greenyellow;
 }
@@ -29,4 +33,51 @@
 
 .badge.vert_fonce{
     background-color: green;
+}
+
+
+/* ------------------------------------------------ DETAILS DE COMMANDE ----------------------------------------------- */
+.details_title{
+    margin-bottom: 6vh;
+}
+
+.details_title p{
+    margin-bottom: 1vh;
+}
+
+.details_content{
+    margin: 5vh 0;
+}
+
+.details_content p{
+    margin-bottom: 0;
+    line-height:1.75;
+}
+
+.details_content table{
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.titre{
+    color:#252424a4;
+    font-weight: 400 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.details_content th{
+    width: 25%;
+    font-weight: 500;
+}
+
+.details_content th, .details_content td{
+    border: 1px solid #25242433;
+    padding: 10px;
+}
+
+.total{
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 600;
 }

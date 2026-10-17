@@ -213,7 +213,7 @@ final class CommandeController extends AbstractController
         $menu_entree = $menu->getEntree()->getNom();
         $menu_plat = $menu->getPlat()->getNom();
         $menu_dessert = $menu->getDessert()->getNom();
-        $menu_composition = 'Entrée :'.$menu_entree.', '.'Plat :'.$menu_plat.', '.'Dessert :'.$menu_dessert.'.';
+        $menu_composition = 'Entrée : '.$menu_entree.', '.'Plat : '.$menu_plat.', '.'Dessert : '.$menu_dessert.'.';
         $commande->setMenuComposition($menu_composition);
 
         // attribut un numéro de commande

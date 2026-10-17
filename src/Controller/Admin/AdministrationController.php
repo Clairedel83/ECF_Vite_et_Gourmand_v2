@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -31,20 +32,37 @@ class AdministrationController extends AbstractDashboardController
             ->setTitle('Vite Et Gourmand');
     }
 
+    // Ajoute un fichier CSS personnalisé à EasyAdmin
+    public function configureAssets(): Assets
+    {
+        return Assets::new()
+             ->addAssetMapperEntry('admin');
+    }
+
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
-        yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list');
+
+        yield MenuItem::section('COMMANDES');
+        yield MenuItem::linkTo(CommandeCrudController::class,'Commandes', 'fas fa-list');         
+        yield MenuItem::linkTo(CommandeHistoriqueCrudController::class,'Historique de Commandes', 'fas fa-list');
+
+
+        yield MenuItem::section(('CARTE & MENUS'));
+        yield MenuItem::linkTo(MenuCrudController::class,'Menus', 'fas fa-list');
+        yield MenuItem::linkTo(EntreeCrudController::class,'Entrées', 'fas fa-list');
+        yield MenuItem::linkTo(PlatCrudController::class,'Plats', 'fas fa-list');        
+        yield MenuItem::linkTo(DessertCrudController::class,'Desserts', 'fas fa-list');
+
+        yield MenuItem::section(('PARAMETRES DES MENUS'));
         yield MenuItem::linkTo(AllergeneCrudController::class, 'Allergènes', 'fas fa-list');
         yield MenuItem::linkTo(ConditionCrudController::class,'Conditions', 'fas fa-list');
-        yield MenuItem::linkTo(EntreeCrudController::class,'Entrées', 'fas fa-list');
-        yield MenuItem::linkTo(DessertCrudController::class,'Desserts', 'fas fa-list');
-        yield MenuItem::linkTo(MenuCrudController::class,'Menus', 'fas fa-list');
-        yield MenuItem::linkTo(PlatCrudController::class,'Plats', 'fas fa-list');
         yield MenuItem::linkTo(RegimeCrudController::class,'Régimes', 'fas fa-list');
         yield MenuItem::linkTo(ThemeCrudController::class,'Thèmes', 'fas fa-list');
-        yield MenuItem::linkTo(CommandeCrudController::class,'Commandes', 'fas fa-list');
-        yield MenuItem::linkTo(CommandeHistoriqueCrudController::class,'Historique de Commandes', 'fas fa-list');
+
+        yield MenuItem::section(('UTILISATEURS'));
+        yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list');
+
 
     }
 }

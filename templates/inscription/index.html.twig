@@ -70,9 +70,20 @@
                         }) }}
                     </div>
 
+                    <div class="formulaire-flex">
+                        <div class="data">
+                        {{ form_label(inscriptionForm.code_postal) }}
+                        {{ form_widget(inscriptionForm.code_postal, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                    </div>
+
                     <div class="data">
                         {{ form_label(inscriptionForm.ville) }}
-                        {{ form_widget(inscriptionForm.ville) }}
+                        {{ form_widget(inscriptionForm.ville, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                    </div>
                     </div>
 
                     <div class="data">

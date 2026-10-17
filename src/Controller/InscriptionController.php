@@ -40,6 +40,11 @@ final class InscriptionController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            $this->addFlash(
+                'success',
+                'Votre compte a bien été créé ! Vous pouvez maintenant vous connecter.'
+            );
+
             // redirige vers la page de connexion
             return $this->redirectToRoute('app_connexion');
         }
