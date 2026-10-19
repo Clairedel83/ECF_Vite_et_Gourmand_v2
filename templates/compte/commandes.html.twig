@@ -21,7 +21,7 @@
                     <a href="{{ path('app_compte_informations') }}">Mes informations</a>
                     <a href="{{ path('app_compte_modifier_pass') }}">Modifier mon mot de passe</a>
 
-                    <a href="">Mes commandes</a>
+                    <a href="{{ path('app_commandes') }}">Mes commandes</a>
                     <a href="{{ path('_logout_main') }}">Me déconnecter</a>
                 </div>
                 
@@ -47,7 +47,15 @@
                                     {{ include('admin/statut.html.twig', { field: { value: commande.statut }}) }}
                                 </td>
                                 <td>{{ commande.prixTotal }}€</td>
-                                <td><a href="{{ path('app_commandes_details', {'id': commande.id}) }}">Voir plus</a></td>
+                                <td>
+                                    <a href="{{ path('app_commandes_details', {'id': commande.id}) }}">
+                                        {% if commande.statut == 1 %}
+                                            Modifier
+                                        {% else %}
+                                            Voir plus
+                                        {% endif %}
+                                    </a>
+                                </td>
                             </tr>   
                         </table>
                     {% else %}

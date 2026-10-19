@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Utilisateurs;
 
-use App\Entity\User;
 use App\Form\InformationsUserType;
+use App\Form\ModifierCommandeType;
 use App\Form\PassUserType;
 use App\Repository\CommandeRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,9 +17,17 @@ final class CompteController extends AbstractController
 {
     // PAGE COMPTE
     #[Route('/compte', name: 'app_compte')]
-    public function index(): Response
+    public function index(CommandeRepository $commandeRepository): Response
     {
-        return $this->render('compte/index.html.twig');
+        // permet d'afficher la dernière commande effectuée
+        $derniereCommande = $commandeRepository->findOneBy(
+            ['user' => $this->getUser()],
+            ['date_commande' => 'DESC']
+        );
+
+        return $this->render('compte/index.html.twig', [
+            'derniereCommande' => $derniereCommande
+        ]);
     }
 
     // MODIFIER LE MOT DE PASSE
@@ -124,6 +131,8 @@ final class CompteController extends AbstractController
             'commande' => $commande
         ]);
     }
+
+
 
 }
     

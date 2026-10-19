@@ -122,12 +122,27 @@
 }
 
 /* ---------------- Mes commandes ------------------------- */
+.commandes_title{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 6vh;
+}
+
+.commandes_title h3{
+    margin: 0;
+    padding-bottom: 2vh;
+}
+
 
 .commandes table, .commandes_details table{
     text-align: left;
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 10vh;
+}
+
+.commandes th, .commandes td{
+    text-align: center;
 }
 
 .commandes th, .commandes td, .commandes_details th, .commandes_details td, .commandes a{

@@ -28,7 +28,37 @@
             </div>
 
             <div class="account_right">
-                
+                <h3>Ma dernière commande</h3>
+
+                <div class="commandes">
+                    <table>
+                        <tr>
+                            <th>N° commande</th>
+                            <th>Date de la commande</th>
+                            <th>Statut</th>
+                            <th>Prix TTC</th>
+                            <th>Détails</th>
+                        </tr>
+
+                        <tr>
+                            <td>{{ derniereCommande.numeroCommande }}</td>
+                            <td>{{ derniereCommande.dateCommande|date('d/m/Y') }}</td>
+                            <td>    
+                                {{ include('admin/statut.html.twig', { field: { value: derniereCommande.statut }}) }}
+                            </td>
+                            <td>{{ derniereCommande.prixTotal }}€</td>
+                            <td>
+                                <a href="{{ path('app_commandes_details', {'id': derniereCommande.id}) }}">
+                                    {% if derniereCommande.statut == 1 %}
+                                        Modifier
+                                    {% else %}
+                                        Voir plus
+                                    {% endif %}
+                                </a>
+                            </td>
+                        </tr>   
+                    </table>
+                </div>
             </div>
         </section>
 

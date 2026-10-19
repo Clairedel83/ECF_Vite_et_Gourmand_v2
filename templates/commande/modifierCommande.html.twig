@@ -1,0 +1,299 @@
+{% extends 'base.html.twig' %}
+
+{% block importmap %}
+    {{ importmap(['app', 'commande']) }}
+{% endblock %}
+
+{% block title %}Vite et Gourmand - Traiteur{% endblock %}
+
+{% block body %}
+<!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_nos_menus"></div>
+    {% endblock %}
+
+    {# {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>PANIER</h1>
+            <h3>Choisissez votre menu</h3>
+            <h4><i>Et régalez-vous !</i></h4>
+        </div>
+    {% endblock %} #}
+
+
+    {% block main %}
+    <h1>RECAPITULATIF DE MA COMMANDE</h1>
+
+    <section class="recap_commande">
+
+        <section class="commande_left">
+            <div class="commande_left_content">
+                <h3>1. Panier</h3>
+                <div class="panier">
+                        <div class="panier_content_menu">
+                            <p id="menu_nom"><strong>Menu {{ commande.menuNom}}</strong></p>
+                            <span>{{ commande.menu.description }}</span>
+                            <span>{{ commande.menuComposition }}</span>
+                        </div>
+                        <div class="panier_content">
+                            <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt="">
+                            <p>Régime(s) : 
+                                {% for regime in commande.menu.regimes %}
+                                        {{ regime.nom }}
+                                        {# pour mettre une virgule entre les régimes #}
+                                        {% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <div class="panier_content">
+                            <img src="{{ asset('images/logos/Shopicons_Light_Hangtag.svg') }}" alt="">
+                            <p>Prix par personne : <span id ="prixPerPers">{{ commande.prixPerPers }}</span> €</p>
+                        </div>
+                        <div class="panier_content">
+                            <img src="{{ asset('images/logos/Shopicons_Light_Lock.svg') }}" alt="">
+                            <p>Stock : </p><p id="stock" data-stock = {{ commande.menu.stock }}></p>
+                        </div>
+                        <div class="panier_content_nbre">
+                            <div class="panier_content">
+                               <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                                <p>Nombre de convives : <input type="number" id="nbre_convives" name="nbre_convives" min="{{ commande.menu.nbreMin }}" value="{{ commande.menu.nbreMin }}" required></p> 
+                            </div>
+                            <p>Le nombre minimum de convives pour cet évènement est de : <span id="nbre_min">{{ commande.menu.nbreMin }}</span> personnes.</p>
+                            <p id="nbre_min_p">Une réduction de 10% est appliquée pour toutes les commandes ayant 5 personnes de plus que le nombre de personnes minimum indiqué.</p>
+                        </div>
+                </div>
+                <a href=""></a>
+            </div>
+
+            <hr>
+
+            <div class="commande_left_content">
+                <h3>2. Livraison</h3>
+                <div class="livraison">
+                    {# Récupération de l'adresse de l'utilisateur #}
+                    <div class="livraison_adresse">
+                        <p><strong>Adresse de livraison :</strong>   (<a href="#" class="modifier_adresse">Modifier</a>)</p>
+                        <p>{{ commande.user.nom }} {{ commande.user.prenom }}</p>
+                        <p>{{ commande.user.adressePostale }}</p>
+                        <p>{{ commande.user.codePostal }} {{ commande.user.ville }}</p>
+                    </div>
+
+                    {# Formulaire de modification d'adresse #}
+                    <div class="livraison_adresse_modifiee">
+                        <p><strong>Adresse de livraison :</strong></p>
+
+                        {{ form_start(adresseLivraisonForm, {
+                            'attr' : {'id' : 'adresse_livraison_form'}
+                        }) }}
+                            <div class="livraison_content">
+                                <span>Nom :</span>
+                                {{ form_widget(adresseLivraisonForm.nom) }}
+                                {{ form_errors(adresseLivraisonForm.nom) }}
+                            </div>
+                            <div class="livraison_content">
+                                <span>Prénom :</span>
+                                {{ form_widget(adresseLivraisonForm.prenom) }}
+                                {{ form_errors(adresseLivraisonForm.prenom) }}
+                            </div>
+                            <div class="livraison_content">
+                                <span>Adresse :</span>
+                                {{ form_widget(adresseLivraisonForm.adresse_postale) }}
+                                {{ form_errors(adresseLivraisonForm.adresse_postale) }}
+                            </div>
+                            <div class="livraison_content">
+                                <span>Code postal :</span>
+                                {{ form_widget(adresseLivraisonForm.code_postal) }}
+                                {{ form_errors(adresseLivraisonForm.code_postal) }}
+                            </div>
+                            <div class="livraison_content">
+                                <span>Ville :</span>
+                                {{ form_widget(adresseLivraisonForm.ville) }}
+                                {{ form_errors(adresseLivraisonForm.ville) }}
+                            </div>
+                        
+                        {{ form_widget(adresseLivraisonForm.submit) }}
+                        {{ form_end(adresseLivraisonForm) }}
+                    </div>
+
+                    {# Affichage de l'adresse modifiée #}
+                    <div class="livraison_nouvelle_adresse">
+                        <p><strong>Adresse de livraison :</strong>   (<a href="#" class="modifier_adresse">Modifier</a>)</p>
+                        <p id="nom_new"></p>
+                        <p id="adresse_new"></p>
+                        <p id="ville_new"></p>
+                    </div>
+
+                    <!-- Message affiché uniquement si le calcul de livraison échoue -->
+                    <p id="erreur_livraison" style="display: none;">
+                        Impossible de calculer les frais de livraison. Vérifiez votre adresse ou réessayez.
+                    </p>
+
+                    <!-- Bouton permettant de relancer le calcul -->
+                    <button type="button" id="btn_retry_livraison" style="display: none;">
+                        Réessayer le calcul des frais de livraison
+                    </button>
+
+                    <div class="livraison_prix">
+                        <p><strong>Forfait livraison :</strong></p>
+                        <ul>
+                            <li>Si dans la ville de Bordeaux : Gratuit</li>
+                            <li>
+                                Si hors de la ville de Bordeaux : 5€ (majoré de 59 centimes par kilomètre parcouru)
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="date">
+                        <div class="livraison_content">
+                            {# Récupère le délai minimum du menu #}
+                            {% set delaiMin = null %}
+                            {% if commande.menu is not null %}
+                                {% for condition in commande.menu.conditions %}
+                                    {% if condition.delaiMin is not null %}
+                                        {% set delaiMin = condition.delaiMin %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            <p><strong>Date de livraison souhaitée :</strong></p>
+                            <input type="date" id="date_livraison" data-debut="{{ commande.menu ? commande.menu.disponibiliteDebut : '' }}"
+                            data-fin="{{ commande.menu ? commande.menu.disponibiliteFin : '' }}" data-delai="{{ delaiMin }}" required>
+                        </div>
+                        {% if commande.menu %}
+                            <p>Toute commande doit être effectuée au minimum {{ delaiMin }} jours avant la date de prestation souhaitée.</p>
+                        {% endif %}
+                        <p id="erreur_date" style="display:none;">La date choisie ne correspond pas à la période de disponibilité du menu.</p>
+                    </div>
+
+                    <div class="heure">
+                    <div class="livraison_content">
+                        <p><strong>Heure de livraison souhaitée:</strong></p>
+                        <select id="heure_livraison" required>
+                            <option value="">Choisissez une heure</option>
+                            <option value="10:00">10h00</option>
+                            <option value="10:30">10h30</option>
+                            <option value="11:00">11h00</option>
+                            <option value="11:30">11h30</option>
+                            <option value="17:00">17h00</option>
+                            <option value="17:30">17h30</option>
+                            <option value="18:00">18h00</option>
+                        </select>
+                    </div>
+                    <p>Les livraisons sont effectuées de 10h à 11h30 et de 17h à 18h.</p>                     
+                    </div>
+
+                </div>
+            </div>
+
+            {# <button>Etape suivante</button> #}
+
+            <hr>
+
+            <div class="commande_left_content">
+                <h3>3. Matériel</h3>
+                <div class="materiel">
+                    <div class="materiel_content">
+                        <p>Vite & Gourmand met à disposition de ses clients de la vaisselle, du matériel de présentation, nappage etc.</p>
+                        <p>Forfait prêt de matériel : <span class="prix_materiel"></span> €</p>
+                    </div>
+
+                    <div class="materiel_radio">
+                        <input type="radio" name="materiel" value="oui">
+                        <p>J'ai besoin de louer du matériel</p>
+                    </div>
+                    <div class="materiel_radio">
+                        <input type="radio" name="materiel" value="non" checked>
+                        <p>Je n'ai pas besoin de louer de matériel</p>
+                    </div>
+                    
+                </div>
+            </div>
+
+            {# <button>Etape suivante</button> #}
+
+            <hr>
+
+            <div class="commande_left_content">
+                <h3>4. Commander</h3>
+                <div class="commande">
+                    <div class="livraison_adresse">
+                        <p><strong>Adresse de facturation :</strong></p>
+                        <p>{{ commande.user.nom }} {{ commande.user.prenom }}</p>
+                        <p>{{ commande.user.adressePostale }}</p>
+                        <p>{{ commande.user.codePostal }} {{ commande.user.ville }}</p>
+                    </div>
+                    
+                    <div class="commande_checkbox">
+                        <input type="checkbox" form="form_commande" id ="cgv" name="cgv" required>
+                        <label for="cgv">
+                            J'ai lu et accepte les <a href="{{ path('app_cgv') }}">conditions générales de vente</a> de Vite & Gourmand.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="commande_right">
+            <div class="commande_right_prix">
+                <h3>Prix</h3>
+
+                <table>
+                    <tr>
+                        <td class="td_left">Sous total :</td>
+                        <td class="td_right">
+                            <span id="sous_total">
+                                {# évite erreur en cas d'absence de menu choisi #}
+                                {% if commande.menu %}
+                                    {{ commande.menu.prixPerPers * commande.menu.nbreMin }}
+                                {% endif %}
+                            </span> €
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="td_left">Livraison :</td>
+                        <td class="td_right"><span id="prix_livraison"></span> €</td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left">Prêt de matériel :</td>
+                        <td class="td_right"><span class="prix_materiel"></span> €</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="td_left">TOTAL :</td>
+                        <td class="td_right"><span id="prix_total"></span> €</td>
+                    </tr>
+                </table>
+            </div>
+
+            <form method="POST" action="{{ path('app_commande_confirmation_modification', {'id' : commande.id}) }}" id="form_commande">
+                {# sécurisation avec jeton CSRF #}
+                <input type="hidden" name="token" value="{{ csrf_token('confirmation_modification_commande')}}">
+                {# nombre de convives #}
+                <input type="hidden" name="form_nbre_convives" id="form_nbre_convives">
+                {# date choisie #}
+                <input type="hidden" name="form_date" id="form_date">
+                {# heure choisie #}
+                <input type="hidden" name="form_heure" id="form_heure">
+                {# nom si modifié #}
+                <input type="hidden" name="form_nom" id="form_nom" value="{{ commande.user.nom }}">
+                {# prénom si modifié #}
+                <input type="hidden" name="form_prenom" id="form_prenom" value="{{ commande.user.prenom }}">
+                {# adresse au format google #}
+                <input type="hidden" name="form_adresse_google" id="form_adresse_google" value="{{ commande.user.adressePostale }} , {{ commande.user.codePostal }} {{ commande.user.ville }}">
+                {# code postal (pour vérification) #}
+                <input type="hidden" name="form_code_postal" id="form_code_postal" value="{{ commande.user.codePostal }}">
+                {# Commune de l'adresse sélectionnée, pour vérification #}
+                <input type="hidden" name="form_ville" id="form_ville" value="{{ commande.user.ville }}">
+                {# choix du matériel #}
+                <input type="hidden" name="form_materiel" id="form_materiel">
+                {# adresse par défaut = celle du user / si modifiée, récupérée via JS #}
+                <input type="hidden" name="form_adresse_choisie" id="form_adresse_choisie" value="{{ commande.user.nom }} {{ commande.user.prenom }} - {{ commande.user.adressePostale }} - {{ commande.user.codePostal }} {{ commande.user.ville }}">
+
+                <button type="submit" class="btn2 nav-item" id="btn_valider_commande">Valider ma commande</button>
+            </form>
+            
+        </section>
+
+    </section>
+    {% endblock %}
+{% endblock %}

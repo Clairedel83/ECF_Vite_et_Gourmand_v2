@@ -23,16 +23,15 @@ final class CommandeController extends AbstractController
 {
     // Sécurisation du formulaire avec utilisation d'un jeton CSRF
     #[IsCsrfTokenValid('valider_commande', tokenKey: 'token', methods: ['POST'])]
-    #[Route('/commande', name: 'app_commande')]
+    #[Route('/commande', name: 'app_commande', methods: ['POST'])]
     public function index(MenuRepository $menuRepository, Panier $panier, Request $request, EntityManagerInterface $entityManager, DistanceService $distanceService, PrixLivraison $prixLivraison, AdresseService $adresseService): Response
     {
+        // methods : [POST]
         // La page ne peut être appelée que par l'envoi du formulaire
         // Si l'utilisateur essaie d'y accéder par l'URL (GET), il sera redirigé vers le panier
-        if($request->getMethod() != 'POST'){
-            return $this->redirectToRoute('app_panier');
-        }
 
-    // ---------------------------------RECUPERE LES ELEMENTS NECESSAIRES A LA CONSTRUCTION DE COMMANDE-----------------------------------
+
+    // ----------------------------RECUPERE LES ELEMENTS NECESSAIRES A LA CONSTRUCTION DE COMMANDE-----------------------------------
         // RECUPERE L'UTILISATEUR CONNECTE
         $user = $this->getUser();
 
@@ -118,8 +117,6 @@ final class CommandeController extends AbstractController
                 return $this->redirectToRoute('app_panier');
             }
         }
-
-
 
         // RECUPERE L'HEURE DE LIVRAISON : et transforme en objet datetime pour enregistrer en format compatible en BDD
         $heure_choisie = $request->request->get('form_heure');

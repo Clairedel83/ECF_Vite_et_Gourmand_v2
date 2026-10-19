@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Utilisateurs;
 
 use App\Form\InscriptionUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
