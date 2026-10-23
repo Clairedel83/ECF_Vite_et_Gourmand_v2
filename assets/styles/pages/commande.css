@@ -26,6 +26,11 @@ main h1{
     margin-bottom: 4vh;
 }
 
+.sticky{
+    position:sticky;
+    top:3vh;
+}
+
 .panier, .livraison, .materiel, .commande{
     border: 1px solid #2524244b;
     background-color: #f7e0c473;
@@ -182,6 +187,7 @@ margin-top: 4vh;
 
 .commande_checkbox, .materiel_radio{
     display: flex;
+    align-items: center;
     gap: 1vw;
 }
 
@@ -251,11 +257,42 @@ margin-top: 4vh;
 /* ------------------CONFIRMATION --------------------------- */
 .success{
     display: flex;
-    align-items: center;
+    margin-top: 10vh;
     justify-content: center;
-    min-height: 40vh;
+    min-height: 60vh;
 }
 
 .success_content{
     text-align: center;
+}
+
+/* Rond du caddie */
+#caddie{
+    position: relative;
+}
+
+#caddie-plein{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+
+    background-color: #4caf50;
+    color: white;
+    border: 2px solid white;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.materiel_radio input:focus, .commande_checkbox input:focus{
+    border-color:none;
+    box-shadow: none;
 }

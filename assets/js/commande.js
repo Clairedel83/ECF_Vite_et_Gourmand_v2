@@ -530,3 +530,5 @@ calculLivraison();
 
 // Vérifie les conditions de validation de la commande
 verifierCommande();
+
+

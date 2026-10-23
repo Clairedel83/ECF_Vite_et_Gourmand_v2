@@ -15,16 +15,16 @@
 
     {% block main %}
         {% if numero_commande %}
-            <h1>COMMANDE EFFECTUEE !</h1>
             <div class="success">
                 <div class="success_content">
+                    <h1>COMMANDE EFFECTUEE !</h1>
                     <p>Votre commande N°{{ numero_commande }} a bien été transmise à notre équipe.</p>
                     <p>Vous pouvez la retrouver dans votre espace "<a href="{{ path('app_commandes') }}">Mes commandes</a>"".</p>
                 </div>
         {% else %}
-            <h1>En attente de commande</h1>
             <div class="success">
                 <div class="success_content">
+                    <h1>En attente de commande</h1>
                     <p>Une fois votre commande effectuée, vous pourrez la retrouver dans votre espace "<a href="{{ path('app_commandes') }}">Mes commandes</a>"".</p>
         
         </div>

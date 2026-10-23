@@ -245,65 +245,68 @@
         </section>
 
         <section class="commande_right">
-            <div class="commande_right_prix">
-                <h3>Prix</h3>
+            <div class="sticky">
+                <div class="commande_right_prix">
+                    <h3>Prix</h3>
 
-                <table>
-                    <tr>
-                        <td class="td_left">Sous total :</td>
-                        <td class="td_right">
-                            <span id="sous_total">
-                                {# évite erreur en cas d'absence de menu choisi #}
-                                {% if menu %}
-                                    {{ menu.prixPerPers * menu.nbreMin }}
-                                {% endif %}
-                            </span> €
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td class="td_left">Livraison :</td>
-                        <td class="td_right"><span id="prix_livraison"></span> €</td>
-                    </tr>
+                    <table>
+                        <tr>
+                            <td class="td_left">Sous total :</td>
+                            <td class="td_right">
+                                <span id="sous_total">
+                                    {# évite erreur en cas d'absence de menu choisi #}
+                                    {% if menu %}
+                                        {{ menu.prixPerPers * menu.nbreMin }}
+                                    {% endif %}
+                                </span> €
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="td_left">Livraison :</td>
+                            <td class="td_right"><span id="prix_livraison"></span> €</td>
+                        </tr>
 
-                    <tr>
-                        <td class="td_left">Prêt de matériel :</td>
-                        <td class="td_right"><span class="prix_materiel"></span> €</td>
-                    </tr>
-                    
-                    <tr>
-                        <td class="td_left">TOTAL :</td>
-                        <td class="td_right"><span id="prix_total"></span> €</td>
-                    </tr>
-                </table>
+                        <tr>
+                            <td class="td_left">Prêt de matériel :</td>
+                            <td class="td_right"><span class="prix_materiel"></span> €</td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="td_left">TOTAL :</td>
+                            <td class="td_right"><span id="prix_total"></span> €</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <form method="POST" action="{{ path('app_commande') }}" id="form_commande">
+                    {# sécurisation avec jeton CSRF #}
+                    <input type="hidden" name="token" value="{{ csrf_token('valider_commande')}}">
+                    {# nombre de convives #}
+                    <input type="hidden" name="form_nbre_convives" id="form_nbre_convives">
+                    {# date choisie #}
+                    <input type="hidden" name="form_date" id="form_date">
+                    {# heure choisie #}
+                    <input type="hidden" name="form_heure" id="form_heure">
+                    {# nom si modifié #}
+                    <input type="hidden" name="form_nom" id="form_nom" value="{{ user.nom }}">
+                    {# prénom si modifié #}
+                    <input type="hidden" name="form_prenom" id="form_prenom" value="{{ user.prenom }}">
+                    {# adresse au format google #}
+                    <input type="hidden" name="form_adresse_google" id="form_adresse_google" value="{{ user.adressePostale }} , {{ user.codePostal }} {{ user.ville }}">
+                    {# code postal (pour vérification) #}
+                    <input type="hidden" name="form_code_postal" id="form_code_postal" value="{{ user.codePostal }}">
+                    {# Commune de l'adresse sélectionnée, pour vérification #}
+                    <input type="hidden" name="form_ville" id="form_ville" value="{{ user.ville }}">
+                    {# choix du matériel #}
+                    <input type="hidden" name="form_materiel" id="form_materiel">
+                    {# adresse par défaut = celle du user / si modifiée, récupérée via JS #}
+                    <input type="hidden" name="form_adresse_choisie" id="form_adresse_choisie" value="{{ user.nom }} {{ user.prenom }} - {{ user.adressePostale }} - {{ user.codePostal }} {{ user.ville }}">
+
+                    <button type="submit" class="btn2 nav-item" id="btn_valider_commande">Valider ma commande</button>
+                </form>
             </div>
 
-            <form method="POST" action="{{ path('app_commande') }}" id="form_commande">
-                {# sécurisation avec jeton CSRF #}
-                <input type="hidden" name="token" value="{{ csrf_token('valider_commande')}}">
-                {# nombre de convives #}
-                <input type="hidden" name="form_nbre_convives" id="form_nbre_convives">
-                {# date choisie #}
-                <input type="hidden" name="form_date" id="form_date">
-                {# heure choisie #}
-                <input type="hidden" name="form_heure" id="form_heure">
-                {# nom si modifié #}
-                <input type="hidden" name="form_nom" id="form_nom" value="{{ user.nom }}">
-                {# prénom si modifié #}
-                <input type="hidden" name="form_prenom" id="form_prenom" value="{{ user.prenom }}">
-                {# adresse au format google #}
-                <input type="hidden" name="form_adresse_google" id="form_adresse_google" value="{{ user.adressePostale }} , {{ user.codePostal }} {{ user.ville }}">
-                {# code postal (pour vérification) #}
-                <input type="hidden" name="form_code_postal" id="form_code_postal" value="{{ user.codePostal }}">
-                {# Commune de l'adresse sélectionnée, pour vérification #}
-                <input type="hidden" name="form_ville" id="form_ville" value="{{ user.ville }}">
-                {# choix du matériel #}
-                <input type="hidden" name="form_materiel" id="form_materiel">
-                {# adresse par défaut = celle du user / si modifiée, récupérée via JS #}
-                <input type="hidden" name="form_adresse_choisie" id="form_adresse_choisie" value="{{ user.nom }} {{ user.prenom }} - {{ user.adressePostale }} - {{ user.codePostal }} {{ user.ville }}">
-
-                <button type="submit" class="btn2 nav-item" id="btn_valider_commande">Valider ma commande</button>
-            </form>
             
         </section>
 

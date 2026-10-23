@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Commande;
+use App\Entity\CommandeHistorique;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -10,13 +12,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 use Override;
@@ -86,6 +83,42 @@ class CommandeCrudController extends AbstractCrudController
             // BooleanField::new('pret_materiel')->setLabel('Prêt de matériel')->onlyOnDetail(),
             // BooleanField::new('restitution_materiel')->setLabel('Restitution de matériel')->onlyOnDetail()
         ];
+    }
+
+    // pour permettre le changement de statut
+    /** @var Commande $entityInstance */
+    #[Override]
+    public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    {
+        // Récupère les données de la commande avant modification
+        $donneesEnregistrees = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
+
+        // Récupère l'ancien et le nouveau statut
+        $ancienStatut = $donneesEnregistrees['statut'];
+        $nouveauStatut = $entityInstance->getStatut();
+
+        if($ancienStatut !== $nouveauStatut) {
+            // CREATION D'UN NOUVEL HISTORIQUE DE COMMANDE
+            $historiqueCommande = new CommandeHistorique();
+
+            // attribue le statut à l'historique de commande
+            $historiqueCommande->setStatut($nouveauStatut);
+
+            // attribue la date et l'heure de modification du statut
+            $date_actuelle = new \DateTime();
+
+            $historiqueCommande->setDateModification($date_actuelle);
+            $historiqueCommande->setHeureModification($date_actuelle);
+
+            // lie l'historique à la commande
+            $entityInstance->addCommandeHistorique($historiqueCommande);
+
+            // enregistre les modifications en BDD
+            $entityManager->persist($historiqueCommande);
+        }
+
+        // Enregistre les modifications
+        parent::updateEntity($entityManager, $entityInstance);
     }
     
 }
