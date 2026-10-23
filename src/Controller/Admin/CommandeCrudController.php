@@ -74,14 +74,20 @@ class CommandeCrudController extends AbstractCrudController
                         . ' à '
                         . $commande->getHeureLivraison()->format('H:i');
                 }),
-            ChoiceField::new('statut')->setLabel('Statut de commande')->setTemplatePath('admin/statut.html.twig'),
+            ChoiceField::new('statut')
+                ->setLabel('Statut de commande')
+                ->setChoices([
+                    '1 - En attente de validation' => 1,
+                    '2 - Commande acceptée' => 2,
+                    '3 - En préparation' => 3,
+                    '4 - En cours de livraison' => 4,
+                    '5 - Commande livrée' => 5,
+                    '6 - En attente du retour de matériel' => 6,
+                    '7 - Commande terminée' => 7,
+                    '8 - Commande annulée' => 8,
+                ])
+                ->setTemplatePath('admin/statut.html.twig'),
             TextField::new('menu_nom')->setLabel('Menu')->hideOnForm(),
-            // TextField::new('adresse_livraison')->setLabel('Adresse de livraison')->onlyOnDetail(),
-            // NumberField::new('prix_livraison')->setLabel('Prix de la livraison')->onlyOnDetail(),
-            // TextField::new('prix_total')->setLabel('Total TTC')->hideOnForm(),
-            // NumberField::new('nbre_pers')->setLabel('Nombre de convives')->onlyOnDetail(),
-            // BooleanField::new('pret_materiel')->setLabel('Prêt de matériel')->onlyOnDetail(),
-            // BooleanField::new('restitution_materiel')->setLabel('Restitution de matériel')->onlyOnDetail()
         ];
     }
 

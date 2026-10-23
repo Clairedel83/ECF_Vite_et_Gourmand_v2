@@ -1,9 +1,7 @@
 .badge{
     padding:5px 10px;
     border-radius: 10px;
-    /* font-size:14px; */
     line-height:1.75;
-    /* font-family: "Roboto"; */
     letter-spacing: 0.3px;
 }
 
@@ -28,13 +26,17 @@
 }
 
 .badge.gris{
-    background-color: grey;
+    background-color: rgb(170, 169, 169);
 }
 
 .badge.vert_fonce{
     background-color: green;
 }
 
+#statut_commande{
+    font-family: "Roboto" !important; 
+    font-size:14px !important;
+}
 
 /* ------------------------------------------------ DETAILS DE COMMANDE ----------------------------------------------- */
 .details_title{

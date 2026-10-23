@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block importmap %}
+    {{ importmap(['app', 'compte_user']) }}
+{% endblock %}
+
 {% block body %}
     <!-- HERO-->
     {% block hero_img %}
@@ -45,58 +49,84 @@
                 </div>
 
                 <div class="commandes_details">
+                    <table>
+                        <tr>
+                            <th>Date de la commande</th>
+                            <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
+                        </tr>      
+                        <tr>
+                            <th>Date de livraison</th>
+                            <td>{{ commande.dateLivraison|date('d/m/Y') }}</td>
+                        </tr>                
+                        <tr>
+                            <th>Heure de livraison</th>
+                            <td>{{ commande.heureLivraison|date('H:i') }}</td>
+                        </tr>                
+                        <tr>
+                            <th>Adresse de livraison</th>
+                            <td>{{ commande.adresseLivraison }}</td>
+                        </tr>                
+                        <tr>
+                            <th>Prix de livraison</th>
+                            <td>{{ commande.prixLivraison }}€</td>
+                        </tr>
+                        <tr>
+                            <th>Prêt de matériel</th>
+                            <td>{{commande.pretMateriel}}</td>
+                        </tr>
+                        <tr>
+                            <th>Prix matériel</th>
+                            <td>{{ commande.prixMateriel }}€</td>
+                        </tr>
+                        <tr>
+                            <th>Menu</th>
+                            <td>{{ commande.menuNom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Statut</th>
+                            <td>    
+                                {{ include('admin/statut.html.twig', { field: { value: commande.statut }}) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Prix par personne</th>
+                            <td>{{ commande.prixPerPers }}€</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre de convives</th>
+                            <td>{{ commande.nbrePers }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prix TTC</th>
+                            <td>{{ commande.prixTotal }}€</td>
+                        </tr>
+                    </table>
+
+                    <button id="lien_historique_commande">Consulter l'historique de la commande</button>
+                    <button id="fermer_historique_commande">Fermer l'historique de la commande</button>
+                    <div class="historique_commande">
+                        <h4>Historique de la commande</h4>
+
                         <table>
-                            <tr>
-                                <th>Date de la commande</th>
-                                <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
-                            </tr>      
-                            <tr>
-                                <th>Date de livraison</th>
-                                <td>{{ commande.dateLivraison|date('d/m/Y') }}</td>
-                            </tr>                
-                            <tr>
-                                <th>Heure de livraison</th>
-                                <td>{{ commande.heureLivraison|date('H:i') }}</td>
-                            </tr>                
-                            <tr>
-                                <th>Adresse de livraison</th>
-                                <td>{{ commande.adresseLivraison }}</td>
-                            </tr>                
-                            <tr>
-                                <th>Prix de livraison</th>
-                                <td>{{ commande.prixLivraison }}€</td>
-                            </tr>
-                            <tr>
-                                <th>Prêt de matériel</th>
-                                <td>{{commande.pretMateriel}}</td>
-                            </tr>
-                            <tr>
-                                <th>Prix matériel</th>
-                                <td>{{ commande.prixMateriel }}€</td>
-                            </tr>
-                            <tr>
-                                <th>Menu</th>
-                                <td>{{ commande.menuNom }}</td>
-                            </tr>
-                            <tr>
-                                <th>Statut</th>
-                                <td>    
-                                    {{ include('admin/statut.html.twig', { field: { value: commande.statut }}) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Prix par personne</th>
-                                <td>{{ commande.prixPerPers }}€</td>
-                            </tr>
-                            <tr>
-                                <th>Nombre de convives</th>
-                                <td>{{ commande.nbrePers }}</td>
-                            </tr>
-                            <tr>
-                                <th>Prix TTC</th>
-                                <td>{{ commande.prixTotal }}€</td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Heure</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for historique in commande.commandeHistorique %}
+                                    <tr>
+                                        <td>{{ historique.dateModification|date('d/m/Y') }}</td>
+                                        <td>{{ historique.heureModification|date('H:i') }}</td>
+                                        <td>{{ include('admin/statut.html.twig', { field: { value: historique.statut }}) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
+                    </div>   
             {% else %}
                 <div class="commandes_details">
                     <p>Vous n'avez pas encore passé de commande.</p>

@@ -110,7 +110,6 @@ final class CompteController extends AbstractController
             ['date_commande' => 'DESC']
         );
 
-
         return $this->render('compte/commandes.html.twig', [
             'commandes' => $commandes
         ]);

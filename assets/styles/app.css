@@ -17,7 +17,7 @@
 
 /* =========================== BASE ======================================== */
 *{
-    font-family:"Plus Jakarta Sans";
+
     margin:0;
     padding: 0;
     box-sizing: border-box;
@@ -27,6 +27,7 @@ body{
     color :#252424;
     display: flex;
     flex-direction: column;
+    font-family:"Roboto";
 }
 
 html, body{
@@ -41,6 +42,10 @@ html, body{
 /* ==================================================== STYLE ================================================== */
 h1{
     font-weight: 500;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-family:"Plus Jakarta Sans";
 }
 
 h2, h3, h4, h5, h6{
@@ -65,7 +70,7 @@ h2{
 }
 
 h3{
-    letter-spacing: 1px;;
+    letter-spacing: 1px;
     font-size:20px;
     padding-bottom:0;
 }
@@ -120,6 +125,7 @@ label{
     font-weight: 500;
     letter-spacing: 1.2px; /*8% sur figma*/
     color:white;
+    font-family: "Plus Jakarta Sans";
 }
 
 /* ====================== COMPONENTS ========================== */
@@ -214,6 +220,10 @@ label{
     background-color: transparent;
     border:1px solid white;
     color:white;
+}
+
+.btn1 a, .btn2 a , .btn3 a, .nav_item a{
+    font-family:'Plus Jakarta Sans';
 }
 
 /* ===================================== LAYOUT ================================================== */

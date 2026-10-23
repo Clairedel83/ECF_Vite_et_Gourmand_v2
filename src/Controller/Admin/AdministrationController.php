@@ -63,6 +63,7 @@ class AdministrationController extends AbstractDashboardController
         yield MenuItem::section(('UTILISATEURS'));
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list');
 
-
+        yield MenuItem::linkToRoute('Retour au site', 'fa fa-home', 'app_accueil');
+        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out-alt');
     }
 }

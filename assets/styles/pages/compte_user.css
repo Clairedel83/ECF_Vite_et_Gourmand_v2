@@ -133,11 +133,22 @@
     padding-bottom: 2vh;
 }
 
+.commande table{
+    margin-bottom: 10vh;
+}
 
 .commandes table, .commandes_details table{
     text-align: left;
     border-collapse: collapse;
     width: 100%;
+    
+}
+
+.commandes_details table{
+    margin-bottom: 3vh;
+}
+
+.commandes_details{
     margin-bottom: 10vh;
 }
 
@@ -176,4 +187,24 @@
 .btn_details{
     display: flex;
     gap:1vw;
+}
+
+.statut_commande{
+    font-style: "Roboto";
+}
+
+.historique_commande, #fermer_historique_commande{
+    display: none;
+}
+
+.historique_commande h4{
+    text-shadow: none;
+    letter-spacing: 1px;
+    font-weight: 500;
+    margin: 6vh 0 2vh;
+}
+
+.historique_commande table{
+    width:80%;
+    table-layout: fixed;
 }
