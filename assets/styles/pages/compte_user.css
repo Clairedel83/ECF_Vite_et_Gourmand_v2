@@ -172,3 +172,8 @@
 .commandes a{
     color:#252424;
 }
+
+.btn_details{
+    display: flex;
+    gap:1vw;
+}

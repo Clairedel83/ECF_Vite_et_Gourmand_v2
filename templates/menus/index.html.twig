@@ -223,7 +223,7 @@
                     data-regime-ids="{% for regime in menu.regimes %}{{ regime.id }}{% if not loop.last %},{% endif %}{% endfor %}">
 
                         <div class="menu_content_top">
-                            <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="">
+                            <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="Photo illustrant le menu {{ menu.nom }}">
 
                             <div class="theme">
                                 <img src="{{ asset('images/logos/Shopicons_Light_Pin2.svg') }}" alt="">

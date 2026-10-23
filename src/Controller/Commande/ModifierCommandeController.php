@@ -36,7 +36,7 @@ final class ModifierCommandeController extends AbstractController
         $statut = $commande->getStatut();
 
         if ($statut !== 1){
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         }
         
         
@@ -80,15 +80,22 @@ final class ModifierCommandeController extends AbstractController
             return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
         }
 
-        // RECUPERE LE NOMBRE DE CONVIVES : et transforme en int pour enregistrer en format compatible en BDD
-        $nbreConvives = (int) $request->request->get('form_nbre_convives');
+        // RECUPERE LE NOMBRE DE CONVIVES
+        // Récupère le nombre saisi
+        $nbreConvivesSaisi = $request->request->get('form_nbre_convives');
+        // Vérifie que le nombre saisi est bien un int
+        if(filter_var($nbreConvivesSaisi, FILTER_VALIDATE_INT) === false){
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
+        }
+        // Convertis ce qui est saisi en int pour enregistrer en format compatible en BDD
+        $nbreConvives = (int) $nbreConvivesSaisi;
 
         // RECUPERE LA DATE DE LIVRAISON, vérifie son format et vérifie si elle est valide (> au délai min)
         $date_choisie = $request->request->get('form_date');
 
         // Sécurisation : Vérifie qu'une date a bien été transmise (et non une injection POST)
         if (!is_string($date_choisie) || $date_choisie === '') {
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         }
         
         // Transforme la date en objet DateTime
@@ -96,7 +103,7 @@ final class ModifierCommandeController extends AbstractController
 
         // si le formatage ne réussit pas OU si la date conversion est inexacte :
         if(!$date_livraison || $date_livraison->format('Y-m-d') !== $date_choisie){
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         }
 
         // obtenir le délai des menus POUR CEUX qui ont un délai
@@ -111,15 +118,19 @@ final class ModifierCommandeController extends AbstractController
             }
         }
 
+        // Vérifie si la date de livraison enregistrée dans la commande est modifiée ($date_livraison du formulaire)
+        $date_enregistree = $commande->getDateLivraison();
+
         if ($delai_min === null) {
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         }
 
         $dateJour = new DateTime(('today'));
         $date_min = $dateJour->modify('+'.$delai_min.' days');
 
-        if($date_livraison < $date_min){
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+
+        if(($date_livraison->format('Y-m-d') !== $date_enregistree->format('Y-m-d'))  && ($date_livraison < $date_min)){
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         } 
 
         // VERIFICATION DE LA DISPONIBILITE DU MENU 
@@ -138,7 +149,7 @@ final class ModifierCommandeController extends AbstractController
             $date_livraison_formatee = $date_livraison->format('m-d');
 
             if (($disponibilite_debut_formatee > $date_livraison_formatee) || ($date_livraison_formatee > $disponibilite_fin_formatee)){
-                return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+                return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
             }
         }
 
@@ -148,7 +159,7 @@ final class ModifierCommandeController extends AbstractController
 
         // si l'heure choisie n'est pas compatible avec les horaires disponibles :
         if(!in_array($heure_choisie, $heure_dispo, true)){
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         }
         
         // transforme l'heure validée en DateTime
@@ -156,78 +167,24 @@ final class ModifierCommandeController extends AbstractController
 
 
         // RECUPERE LE CHOIX DU MATERIEL (avec ou sans location) : et transforme en booleen pour enregistrer en format compatible en BDD
-        $pret_materiel = $request->request->get('form_materiel') === 'oui';
+        $choix_pret_materiel = $request->request->get('form_materiel');
 
-        // RECUPERE LE NOM FOURNI POUR LIVRAISON (user ou modifié)
-        $nom = $request->request->get('form_nom');
-
-        // RECUPERE LE PRENOM FOURNI POUR LIVRAISON (user ou modifié)
-        $prenom = $request->request->get('form_prenom');
-
-        // RECUPERE L'ADRESSE DE LIVRAISON (user OU adresse modifiée)
-        $adresse_livraison = $request->request->get('form_adresse_choisie');
-
-        // RECUPERE L'ADRESSE FORMAT GOOGLE
-        $adresseGoogle = $request->request->get('form_adresse_google');
-
-        // RECUPERE LE CODE POSTAL DE LIVRAISON
-        $codePostal = $request->request->get('form_code_postal');
-
-        // RECUPERE LA VILLE DE LIVRAISON
-        $ville = $request->request->get('form_ville');
-
-        // VERIFICATION DE L'ADRESSE
-        // les adresses, code postal et villes doivent être des chaînes de caractères et non vides
-        if(
-            (!is_string($adresseGoogle) || trim($adresseGoogle) === '') || 
-            (!is_string($codePostal) || trim($codePostal)=== '')  || 
-            (!is_string($ville) || trim($ville) === '') ||
-            (!is_string($nom) || trim($nom) === '') ||
-            (!is_string($prenom) || trim($prenom) === '')
-        )
-        {
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]); 
+        // si l'input de pret du materiel indique autre chose que 'oui' ou 'non':
+        if(!in_array($choix_pret_materiel, ['oui', 'non'], true)){
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         }
 
-        // Appel à AdresseService pour vérifier
-        try{
-            $resultatVerification = $adresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
+        $pret_materiel = $request->request->get('form_materiel') == 'oui';
 
-            $adresseVerifiee = $resultatVerification['adresse'];
-            $codePostalVerifie = $resultatVerification['codePostal'];
-            $villeVerifiee = $resultatVerification['ville'];
-
-        } catch(\InvalidArgumentException $e){
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
-        } catch(HttpExceptionInterface $e){
-            $this->addFlash(
-                'error',
-                'Le service de vérification des adresses est temporairement indisponible.'
-            );
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
-        }
 
         // RECUPERE L'ACCEPTATION DES CGV
         $cgv = $request->request->get('cgv');
 
         // si les CGV ne sont pas cochées :
         if($cgv !== 'on'){
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         }
-        
-        
-    // -------------------------------------------MODIFICATION DE LA COMMANDE--------------------------------------------------------
 
-        // attribue la date de livraison
-        $commande->setDateLivraison($date_livraison);
-
-        // attribue l'heure de livraison
-        $commande->setHeureLivraison($heure_livraison);
-
-        // attribue l'adresse de livraison
-        $commande->setAdresseLivraison($nom.' '.$prenom.' - '.$adresseVerifiee);
-
-        // attribue le prix de la commande 
         // calcul du prix et possibilité de promo
         $prixPerPers = (float) $commande->getPrixPerPers();
         $nbre_min = $menu->getNbreMin();
@@ -242,17 +199,89 @@ final class ModifierCommandeController extends AbstractController
 
         $sous_total = $prixMenu - $montant_reduction;
 
-        // attribue le nombre de convives
-        $commande->setNbrePers($nbreConvives);
-
         // sécurise le nombre de convives (doit être > au nombre min)
         if ($nbreConvives < $nbre_min) {
-            return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
         }
 
-        // // attribue le prix de livraison
-        $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
-        $commande->setPrixLivraison(number_format($prixCalcule, 2, '.', ''));
+        // SI MODIFICATION DE LA LIVRAISON :
+        $adresseModifiee = $request->request->get('form_adresse_modifiee');
+        // adresseModifier doit renvoyer uniquement 'oui' ou 'non
+        if (!in_array($adresseModifiee, ['oui', 'non'], true)){
+            return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
+        }
+
+
+        if($adresseModifiee == 'oui'){
+            // RECUPERE LE NOM FOURNI POUR LIVRAISON (user ou modifié)
+            $nom = $request->request->get('form_nom');
+
+            // RECUPERE LE PRENOM FOURNI POUR LIVRAISON (user ou modifié)
+            $prenom = $request->request->get('form_prenom');
+
+            // RECUPERE L'ADRESSE DE LIVRAISON (user OU adresse modifiée)
+            $adresse_livraison = $request->request->get('form_adresse_choisie');
+
+            // RECUPERE L'ADRESSE FORMAT GOOGLE
+            $adresseGoogle = $request->request->get('form_adresse_google');
+
+            // RECUPERE LE CODE POSTAL DE LIVRAISON
+            $codePostal = $request->request->get('form_code_postal');
+
+            // RECUPERE LA VILLE DE LIVRAISON
+            $ville = $request->request->get('form_ville');
+
+            // VERIFICATION DE L'ADRESSE
+            // les adresses, code postal et villes doivent être des chaînes de caractères et non vides
+            if(
+                (!is_string($adresseGoogle) || trim($adresseGoogle) === '') || 
+                (!is_string($codePostal) || trim($codePostal)=== '')  || 
+                (!is_string($ville) || trim($ville) === '') ||
+                (!is_string($nom) || trim($nom) === '') ||
+                (!is_string($prenom) || trim($prenom) === '')
+            )
+            {
+                return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]); 
+            }
+
+            // Appel à AdresseService pour vérifier
+            try{
+                $resultatVerification = $adresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
+                $adresseVerifiee = $resultatVerification['adresse'];
+                $villeVerifiee = $resultatVerification['ville'];
+
+            } catch(\InvalidArgumentException $e){
+                return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
+            } catch(HttpExceptionInterface $e){
+                $this->addFlash(
+                    'error',
+                    'Le service de vérification des adresses est temporairement indisponible.'
+                );
+                return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
+            }
+
+            // attribue l'adresse de livraison
+            $commande->setAdresseLivraison($nom.' '.$prenom.' - '.$adresseVerifiee);
+
+            // attribue le prix de livraison
+            $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
+            $commande->setPrixLivraison(number_format($prixCalcule, 2, '.', ''));
+        } else{
+            // récupère le prix non modifié de la commande
+            $prixCalcule = $commande->getPrixLivraison();
+        }
+
+        
+    // -------------------------------------------MODIFICATION DE LA COMMANDE--------------------------------------------------------
+
+        // attribue la date de livraison
+        $commande->setDateLivraison($date_livraison);
+
+        // attribue l'heure de livraison
+        $commande->setHeureLivraison($heure_livraison);
+
+        // attribue le nombre de convives
+        $commande->setNbrePers($nbreConvives);
 
         // attribue le prix du matériel si location
         $prixMateriel = 0;
@@ -289,8 +318,12 @@ final class ModifierCommandeController extends AbstractController
         // enregistre les modifications en BDD
         $entityManager->flush();
 
+        $this->addFlash(
+            'success',
+            'Votre commande a bien été modifiée'
+        );
+
         return $this->redirectToRoute('app_commandes_details', [
-            'commande' => $commande,
             'id' => $id
         ]);
     }

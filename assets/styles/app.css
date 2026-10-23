@@ -134,8 +134,9 @@ label{
     align-items:center;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     transition: 0.2s ease;
-    width: fit-content;
-    height:50px;
+    width: fit-content; 
+    padding: 5px 12px;
+    height: 3rem;
     background-color:#F7E0C4;
     color:#252424;
     text-decoration: none;

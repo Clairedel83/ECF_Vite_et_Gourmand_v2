@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ContactController!{% endblock %}
+{% block title %}Vite et Gourmand - Traiteur{% endblock %}
 
 {% block body %}
     {% block hero_img %}
@@ -17,6 +17,66 @@
 
 
     {% block main %}
+        <section class="contact">
+            <div class="contact_visuel">
+                <div class="contact_visuel_content">
+                    <div class="beige_container">
+                        <div class="contact_visuel_content_top">
+                            <h2>UN PROJET ?</h2>
+                            <p>Mariages, cocktails, réceptions privées ou événements d'entreprise.</p>
+                            <p>Nous créons des expériences gourmandes adaptées à chaque occasion.</p>
+                        </div>
+
+                        <div class="contact_visuel_content_bottom">
+                            <div class="icon">
+                                <img src="../logos/beige_hat.svg" alt="">
+                                <p>Cuisine maison & de saison</p>
+                            </div>
+
+                            <div class="icon">
+                                <img src="../logos/beige_heart.svg" alt="">
+                                <p>Produits frais & locaux</p>
+                            </div>
+
+                            <div class="icon">
+                                <img src="../logos/beige_hour.svg" alt="">
+                                <p>Réponse sous 24h</p>
+                            </div>
+
+                            <div class="icon">
+                                <img src="../logos/beige_check.svg" alt="">
+                                <p>Devis gratuit</p>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+
+            <form action="" method="post" class="formulaire form_contact">
+                <div class="data">
+                    <label for="name">NOM :</label>
+                    <input type="text" name="name" id="name" required placeholder="ex : Dupont">
+                </div>
+
+                <div class="data">
+                    <label for="titre_demande">SUJET :</label>
+                    <input type="text" id="titre_demande" name="titre_demande" required placeholder="ex: Réception baptême">
+                </div>
+
+                <div class="data">
+                    <label for="email_inscription">ADRESSE EMAIL :</label>
+                    <input type="email" id="email_inscription" name="email_inscription" autocomplete="email" required placeholder="vous@gmail.com">
+                </div>
+
+                <div class="data">
+                    <label for="demande">MESSAGE :</label>
+                    <textarea id="demande" name="demande" required placeholder="Décrivez votre demande ou posez votre question."></textarea>
+                </div>                    
+
+                <button type="submit" class="btn2 btn_menu">Envoyer</button>
+            </form>
+        </section>
+
     {% endblock %}
 
 {% endblock %}

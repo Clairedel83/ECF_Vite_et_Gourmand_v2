@@ -1,3 +1,7 @@
+const formCommande = document.querySelector('#form_commande');
+// cet élément n'existe que sur la page de modification, s'il est trouvé c'est que la page affichée est bien celle de modification
+const pageModification = formCommande.dataset.page === 'modification';
+
 // ---------------------------------------------------------- STOCK-------------------------------------------------------------
 const stock = document.querySelector('#stock');
 
@@ -87,6 +91,7 @@ const formAdresseChoisie = document.querySelector('#form_adresse_choisie');
 const formAdresseGoogle = document.querySelector('#form_adresse_google');
 const formNom = document.querySelector('#form_nom');
 const formPrenom = document.querySelector('#form_prenom');
+const formAdresseModifiee = document.querySelector('#form_adresse_modifiee');
 
 const prixLivraison = document.querySelector('#prix_livraison');
 const erreurLivraison = document.querySelector('#erreur_livraison');
@@ -143,6 +148,11 @@ formAdresse.addEventListener('submit', async (event) => {
         formNom.value = inputNom.value;
         formPrenom.value = inputPrenom.value;
 
+        // dans la vue de modification de commande UNIQUEMENT (car champ inexistant dans le panier), attribue la valeur oui qui indique que l'adresse de livraison a été modifiée
+        if (formAdresseModifiee){
+            formAdresseModifiee.value = "oui";
+        }
+
         // Actualise l'affichage de la nouvelle adresse
         nomNew.textContent = inputNom.value + ' ' + inputPrenom.value;
         adresseNew.textContent = inputAdresse.value;
@@ -174,7 +184,7 @@ async function calculLivraison(adresse = formAdresseGoogle.value, codePostal = f
     erreurLivraison.style.display = 'none';
     btnRetryLivraison.style.display = 'none';
 
-    // ---------------------------Sécurité ajoutée en cas d'erreur de l'API Google Routes------------------------------------------------
+    // -----------------Sécurité ajoutée en cas d'erreur de l'API Google Routes------------------------
     try{
         // prépare les données à envoyer à Symfony
         // FormData permettra d'organiser les données comme un formulaire HTML
@@ -259,9 +269,17 @@ btnRetryLivraison.addEventListener('click', () => {
 
 
 // ------------------------------------------------- DATE DE LIVRAISON -------------------------------------------------------------
+// champ HTML
 const dateLivraison = document.querySelector('#date_livraison');
+
+// date sélectionnée par l'utilisateur dans le formulaire
+dateLivraison.value;
+
 const erreurDate = document.querySelector('#erreur_date');
 const delaiMin = Number(dateLivraison.dataset.delai);
+
+// date de livraison enregistrée dans la commande
+const dateEnregistree = dateLivraison.dataset.dateEnregistree;
 
 // enregistre la date et l'heure actuelles
 const dateJour = new Date();
@@ -288,10 +306,20 @@ dateMin.setDate(dateMin.getDate() + delaiMin);
     const jourFormate = String(jour).padStart(2, '0');
     const moisFormate = String(mois).padStart(2, '0');
 
+    // on obtient la date de livraison minimum
     const dateFormatee = `${annee}-${moisFormate}-${jourFormate}`;
 
-    // attribue la date minimum de livraison
-    dateLivraison.min = dateFormatee;
+    // Attribue la date minimum de livraison
+
+    // si l'utilisateur est sur la page de modifiation de commande ET que la date de livraison enregistrée est antérieure à la date min, elle est conservée
+    // permet à l'utilisateur de modifier des détails de commande sans perdre sa date initiale de livraison
+    if(pageModification && dateEnregistree < dateFormatee){
+        dateLivraison.min = dateEnregistree;
+    } else{
+        dateLivraison.min = dateFormatee;
+    }
+
+    
 
 
 // ---------------------------------------VERIFICATION DATE DISPONIBILITE DU MENU---------------------------------------------------
@@ -411,7 +439,7 @@ calculTotal();
 
 
 // ----------------------------------RECUPERATION DES DONNEES AVANT ENVOI DU FORMULAIRE---------------------------------------------
-const formCommande = document.querySelector('#form_commande');
+
 const formNbreConvives = document.querySelector('#form_nbre_convives');
 const heureLivraison = document.querySelector('#heure_livraison');
 const formDate = document.querySelector('#form_date');
@@ -421,18 +449,25 @@ const formMateriel = document.querySelector('#form_materiel');
 
 const cgv = document.querySelector('#cgv');
 
+
 // Vérifie que toutes les conditions sont remplies pour valider la commande
 function verifierCommande() {
-    // vérifie que le menu est disponible (stock)
-    const stockOK = stock != null && Number(stock.dataset.stock) > 0;
+    // vérifie que le menu est disponible (stock) lors du panier OU qu'il s'agit de la page de modification
+    const stockOK = (stock != null && Number(stock.dataset.stock) > 0) || pageModification;
 
     // Vérifie que le prix de livraison est disponible
     const livraisonOK =
         prixLivraison.textContent !== '--' &&
         prixLivraison.textContent !== '';
 
-    // Vérifie que la date et l'heure sont renseignées et valides (période de disponibilité)
-    const dateOK = dateLivraison.validity.valid;
+    // Vérifie que la date est renseignée et valide (délai min et période de disponibilité)
+        // sur la page de modification : autorise de conserver la date de livraison déjà enregistrée dans la commande 
+        // OU modifie la date en respectant le délai minimum
+        const dateOK = dateLivraison.validity.valid && 
+            ((pageModification && dateLivraison.value === dateEnregistree) || (dateLivraison.value >= dateFormatee));
+
+
+    // Vérifie que l'heure est renseignée et valide
     const heureOK = heureLivraison.value !== '';
 
     // Vérifie qu'un menu est sélectionné
@@ -484,8 +519,14 @@ formCommande.addEventListener('submit', (event) => {
     formMateriel.value = materielChoisi.value;
 });
 
-// Calcul du prix de livraison au chargement
+// CALCULS ET VERIFIACATION AU CHARGEMENT DE LA PAGE
+    // SI page de panier ok, si page de modification pas de calcul
+
+if(!pageModification){
+    // Calcul du prix de livraison au chargement
 calculLivraison();
+}
+
 
 // Vérifie les conditions de validation de la commande
 verifierCommande();

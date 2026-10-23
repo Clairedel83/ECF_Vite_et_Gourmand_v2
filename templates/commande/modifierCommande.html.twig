@@ -51,12 +51,11 @@
                         </div>
                         <div class="panier_content">
                             <img src="{{ asset('images/logos/Shopicons_Light_Lock.svg') }}" alt="">
-                            <p>Stock : </p><p id="stock" data-stock = {{ commande.menu.stock }}></p>
                         </div>
                         <div class="panier_content_nbre">
                             <div class="panier_content">
                                <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                <p>Nombre de convives : <input type="number" id="nbre_convives" name="nbre_convives" min="{{ commande.menu.nbreMin }}" value="{{ commande.menu.nbreMin }}" required></p> 
+                                <p>Nombre de convives : <input type="number" id="nbre_convives" name="nbre_convives" min="{{ commande.menu.nbreMin }}" value="{{ commande.nbrePers }}" required></p> 
                             </div>
                             <p>Le nombre minimum de convives pour cet évènement est de : <span id="nbre_min">{{ commande.menu.nbreMin }}</span> personnes.</p>
                             <p id="nbre_min_p">Une réduction de 10% est appliquée pour toutes les commandes ayant 5 personnes de plus que le nombre de personnes minimum indiqué.</p>
@@ -70,12 +69,10 @@
             <div class="commande_left_content">
                 <h3>2. Livraison</h3>
                 <div class="livraison">
-                    {# Récupération de l'adresse de l'utilisateur #}
+                    {# Récupération de l'adresse enregistrée dans la commande #}
                     <div class="livraison_adresse">
                         <p><strong>Adresse de livraison :</strong>   (<a href="#" class="modifier_adresse">Modifier</a>)</p>
-                        <p>{{ commande.user.nom }} {{ commande.user.prenom }}</p>
-                        <p>{{ commande.user.adressePostale }}</p>
-                        <p>{{ commande.user.codePostal }} {{ commande.user.ville }}</p>
+                        <p>{{ commande.adresseLivraison }}</p>
                     </div>
 
                     {# Formulaire de modification d'adresse #}
@@ -155,7 +152,7 @@
                             {% endif %}
                             <p><strong>Date de livraison souhaitée :</strong></p>
                             <input type="date" id="date_livraison" data-debut="{{ commande.menu ? commande.menu.disponibiliteDebut : '' }}"
-                            data-fin="{{ commande.menu ? commande.menu.disponibiliteFin : '' }}" data-delai="{{ delaiMin }}" required>
+                            data-fin="{{ commande.menu ? commande.menu.disponibiliteFin : '' }}" data-delai="{{ delaiMin }}" value="{{ commande.dateLivraison|date('Y-m-d') }}" data-date-enregistree="{{ commande.dateLivraison|date('Y-m-d') }}" required>
                         </div>
                         {% if commande.menu %}
                             <p>Toute commande doit être effectuée au minimum {{ delaiMin }} jours avant la date de prestation souhaitée.</p>
@@ -167,14 +164,14 @@
                     <div class="livraison_content">
                         <p><strong>Heure de livraison souhaitée:</strong></p>
                         <select id="heure_livraison" required>
-                            <option value="">Choisissez une heure</option>
-                            <option value="10:00">10h00</option>
-                            <option value="10:30">10h30</option>
-                            <option value="11:00">11h00</option>
-                            <option value="11:30">11h30</option>
-                            <option value="17:00">17h00</option>
-                            <option value="17:30">17h30</option>
-                            <option value="18:00">18h00</option>
+                            {# si l'option correspond à l'heure choisie dans la commande, ajoute 'selected' #}
+                            <option value="10:00" {{ commande.heureLivraison|date('H:i') == '10:00' ? 'selected' : '' }}>10:00</option>
+                            <option value="10:30" {{ commande.heureLivraison|date('H:i') == '10:30' ? 'selected' : '' }}>10:30</option>
+                            <option value="11:00" {{ commande.heureLivraison|date('H:i') == '11:00' ? 'selected' : '' }}>11:00</option>
+                            <option value="11:30" {{ commande.heureLivraison|date('H:i') == '11:30' ? 'selected' : '' }}>11:30</option>
+                            <option value="17:00" {{ commande.heureLivraison|date('H:i') == '17:00' ? 'selected' : '' }}>17:00</option>
+                            <option value="17:30" {{ commande.heureLivraison|date('H:i') == '17:30' ? 'selected' : '' }}>17:30</option>
+                            <option value="18:00" {{ commande.heureLivraison|date('H:i') == '18:00' ? 'selected' : '' }}>18:00</option>
                         </select>
                     </div>
                     <p>Les livraisons sont effectuées de 10h à 11h30 et de 17h à 18h.</p>                     
@@ -182,8 +179,6 @@
 
                 </div>
             </div>
-
-            {# <button>Etape suivante</button> #}
 
             <hr>
 
@@ -196,11 +191,12 @@
                     </div>
 
                     <div class="materiel_radio">
-                        <input type="radio" name="materiel" value="oui">
+                        {# si la commande a enregistré une location de matériel précoche sinon '' #}
+                        <input type="radio" name="materiel" value="oui" {% if commande.pretMateriel %}checked{% endif %}>
                         <p>J'ai besoin de louer du matériel</p>
                     </div>
                     <div class="materiel_radio">
-                        <input type="radio" name="materiel" value="non" checked>
+                        <input type="radio" name="materiel" value="non" {% if not commande.pretMateriel %}checked{% endif %}>
                         <p>Je n'ai pas besoin de louer de matériel</p>
                     </div>
                     
@@ -239,33 +235,28 @@
                     <tr>
                         <td class="td_left">Sous total :</td>
                         <td class="td_right">
-                            <span id="sous_total">
-                                {# évite erreur en cas d'absence de menu choisi #}
-                                {% if commande.menu %}
-                                    {{ commande.menu.prixPerPers * commande.menu.nbreMin }}
-                                {% endif %}
-                            </span> €
+                            <span id="sous_total">{{ commande.prixSousTotal }}</span> €
                         </td>
                     </tr>
                     
                     <tr>
                         <td class="td_left">Livraison :</td>
-                        <td class="td_right"><span id="prix_livraison"></span> €</td>
+                        <td class="td_right"><span id="prix_livraison">{{ commande.prixLivraison }}</span> €</td>
                     </tr>
 
                     <tr>
                         <td class="td_left">Prêt de matériel :</td>
-                        <td class="td_right"><span class="prix_materiel"></span> €</td>
+                        <td class="td_right"><span class="prix_materiel">{{ commande.prixMateriel }}</span> €</td>
                     </tr>
                     
                     <tr>
                         <td class="td_left">TOTAL :</td>
-                        <td class="td_right"><span id="prix_total"></span> €</td>
+                        <td class="td_right"><span id="prix_total">{{ commande.prixTotal }}</span> €</td>
                     </tr>
                 </table>
             </div>
 
-            <form method="POST" action="{{ path('app_commande_confirmation_modification', {'id' : commande.id}) }}" id="form_commande">
+            <form method="POST" action="{{ path('app_commande_confirmation_modification', {'id' : commande.id}) }}" id="form_commande" data-page="modification">
                 {# sécurisation avec jeton CSRF #}
                 <input type="hidden" name="token" value="{{ csrf_token('confirmation_modification_commande')}}">
                 {# nombre de convives #}
@@ -288,8 +279,10 @@
                 <input type="hidden" name="form_materiel" id="form_materiel">
                 {# adresse par défaut = celle du user / si modifiée, récupérée via JS #}
                 <input type="hidden" name="form_adresse_choisie" id="form_adresse_choisie" value="{{ commande.user.nom }} {{ commande.user.prenom }} - {{ commande.user.adressePostale }} - {{ commande.user.codePostal }} {{ commande.user.ville }}">
+                {# permet de savoir si l'adresse a été modifiée #}
+                <input type="hidden" id="form_adresse_modifiee" name="form_adresse_modifiee" value="non">
 
-                <button type="submit" class="btn2 nav-item" id="btn_valider_commande">Valider ma commande</button>
+                <button type="submit" class="btn2 nav-item" id="btn_valider_commande">Enregistrer les modifications</button>
             </form>
             
         </section>

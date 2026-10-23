@@ -120,7 +120,7 @@
 
                                 <div class="conditions">
                                     <div class="price">
-                                        <h5>{{ menu.prixPerPers }}</h5>
+                                        <h5>{{ menu.prixPerPers }} €</h5>
                                     </div>
 
                                     <div class="min_pers">
@@ -129,7 +129,7 @@
                                     </div>
                                 </div>
 
-                                <a href="" class="btn2 btn_menu">Voir le menu</a>
+                                <button href="" class="btn2 btn_menu" data-menu-id='{{ menu.id }}'>Voir le menu</button>
                             </div>
                         </div>
                     {% endif %}

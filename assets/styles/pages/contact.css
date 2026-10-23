@@ -43,7 +43,7 @@
 }
 
 .contact_visuel, .formulaire{
-    height:100vh;
+    height:110vh;
     border-radius: 15px;
 }
 .contact_visuel_content_bottom{
@@ -85,7 +85,11 @@
 .data{
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    margin-bottom: 3vh;
+}
+
+.data label{
+    margin-bottom: 1.5vh;
 }
 
 .input{
@@ -99,12 +103,16 @@ textarea{
 
 .input, input, textarea{
     border: 1px solid rgba(37, 36, 36, 0.5);
+    border-radius: 10px;
     padding-left: 0.5rem;
-    height: 1.75rem;
 }
 
 
-.input:focus, input:focus{
+.input, input{
+    height: 2.5rem;
+}
+
+.input:focus, input:focus, textarea:focus{
   outline: none;
   border-color: rgb(37, 36, 36);
   box-shadow: 0 0 0 3px rgba(37, 36, 36, 0.2);
