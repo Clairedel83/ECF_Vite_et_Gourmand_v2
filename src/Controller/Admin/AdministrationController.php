@@ -43,25 +43,30 @@ class AdministrationController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
 
-        yield MenuItem::section('COMMANDES');
-        yield MenuItem::linkTo(CommandeCrudController::class,'Commandes', 'fas fa-list');         
-        yield MenuItem::linkTo(CommandeHistoriqueCrudController::class,'Historique de Commandes', 'fas fa-list');
+        yield MenuItem::submenu('Commandes', 'fa fa-newspaper')->setSubItems([
+            MenuItem::linkTo(CommandeCrudController::class,'Commandes', 'fas fa-list'),               
+            MenuItem::linkTo(CommandeHistoriqueCrudController::class,'Historique de Commandes', 'fas fa-list')
+        ]);
 
+        yield MenuItem::subMenu('Carte & Menus', 'fa fa-newspaper')->setSubItems([
+            MenuItem::linkTo(MenuCrudController::class,'Menus', 'fas fa-list'),
+            MenuItem::linkTo(EntreeCrudController::class,'Entrées', 'fas fa-list'),
+            MenuItem::linkTo(PlatCrudController::class,'Plats', 'fas fa-list'),        
+            MenuItem::linkTo(DessertCrudController::class,'Desserts', 'fas fa-list'),
+        ]);
+        
 
-        yield MenuItem::section(('CARTE & MENUS'));
-        yield MenuItem::linkTo(MenuCrudController::class,'Menus', 'fas fa-list');
-        yield MenuItem::linkTo(EntreeCrudController::class,'Entrées', 'fas fa-list');
-        yield MenuItem::linkTo(PlatCrudController::class,'Plats', 'fas fa-list');        
-        yield MenuItem::linkTo(DessertCrudController::class,'Desserts', 'fas fa-list');
+        yield MenuItem::subMenu('Carte des menus', 'fa fa-newspaper')->setSubItems([
+            MenuItem::linkTo(AllergeneCrudController::class, 'Allergènes', 'fas fa-list'),
+            MenuItem::linkTo(ConditionCrudController::class,'Conditions', 'fas fa-list'),
+            MenuItem::linkTo(RegimeCrudController::class,'Régimes', 'fas fa-list'),
+            MenuItem::linkTo(ThemeCrudController::class,'Thèmes', 'fas fa-list'),    
+        ]);
 
-        yield MenuItem::section(('PARAMETRES DES MENUS'));
-        yield MenuItem::linkTo(AllergeneCrudController::class, 'Allergènes', 'fas fa-list');
-        yield MenuItem::linkTo(ConditionCrudController::class,'Conditions', 'fas fa-list');
-        yield MenuItem::linkTo(RegimeCrudController::class,'Régimes', 'fas fa-list');
-        yield MenuItem::linkTo(ThemeCrudController::class,'Thèmes', 'fas fa-list');
-
-        yield MenuItem::section(('UTILISATEURS'));
-        yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list');
+        yield MenuItem::subMenu('Utilisateurs', 'fa fa-newspaper')->setSubItems([
+            MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list'),
+        ]);
+        
 
         yield MenuItem::linkToRoute('Retour au site', 'fa fa-home', 'app_accueil');
         yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out-alt');

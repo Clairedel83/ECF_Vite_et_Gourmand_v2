@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Commande;
 use App\Entity\CommandeHistorique;
+use App\Form\StatutType;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -25,7 +26,7 @@ class CommandeCrudController extends AbstractCrudController
         return Commande::class;
     }
 
-        public function configureCrud(Crud $crud): Crud
+    public function configureCrud(Crud $crud): Crud
     {
         return $crud
             ->setEntityLabelInSingular('Commande')
@@ -36,31 +37,36 @@ class CommandeCrudController extends AbstractCrudController
     #[Override]
     public function configureActions(Actions $actions): Actions
     {
-        $afficher = Action::new('Afficher')->linkToCrudAction('afficher');
+        $details = Action::new('Détails')->linkToCrudAction('details');
 
         return $actions
-        // rend impossible de supprimer ou ajouter manuellement un historique
-        ->remove(Crud::PAGE_INDEX, Action::NEW)
-        ->remove(Crud::PAGE_INDEX, Action::DELETE)
+            // rend impossible de supprimer ou ajouter manuellement un historique
+            ->remove(Crud::PAGE_INDEX, Action::NEW)
+            ->remove(Crud::PAGE_INDEX, Action::DELETE)
+            ->remove(Crud::PAGE_INDEX, Action::EDIT)
 
-        // ajoute la possibilité d'afficher les détails de commande
-        ->add(Crud::PAGE_INDEX, $afficher);
+            // ajoute la possibilité d'afficher les détails de commande
+            ->add(Crud::PAGE_INDEX, $details);
     }
 
     // pour afficher la vue des détails de commande :
-    #[AdminRoute('/{numero_commande/afficher}')]
-    public function afficher(AdminContext $context)
+    #[AdminRoute('/{numero_commande/details}')]
+    public function details(AdminContext $context)
     {
         // permet d'afficher l'ensemble des éléments de l'entité Commande
         $commande = $context->getEntity()->getInstance();
 
+        // permet de rattacher le formulaire de modification du statut
+        $form = $this->createForm(StatutType::class, $commande);
+
         // crée la vue de cet affichage
         return $this->render('admin/commande_details.html.twig', [
-            'commande' => $commande
+            'commande' => $commande,
+            'statutForm' => $form->createView(),
         ]);
     }
 
-    
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -68,7 +74,7 @@ class CommandeCrudController extends AbstractCrudController
             AssociationField::new('user')->setLabel('Client')->hideOnForm(),
             // DateTimeField::new('date_commande')->setLabel('Date de création')->setFormat('dd/MM/yyyy HH:mm')->onlyOnDetail(),
             DateField::new('dateLivraison', 'Livraison')->hideOnForm()
-            // associe heure et date de livraison dans la même colonne
+                // associe heure et date de livraison dans la même colonne
                 ->formatValue(function ($value, $commande) {
                     return $commande->getDateLivraison()->format('d/m/Y')
                         . ' à '
@@ -103,7 +109,7 @@ class CommandeCrudController extends AbstractCrudController
         $ancienStatut = $donneesEnregistrees['statut'];
         $nouveauStatut = $entityInstance->getStatut();
 
-        if($ancienStatut !== $nouveauStatut) {
+        if ($ancienStatut !== $nouveauStatut) {
             // CREATION D'UN NOUVEL HISTORIQUE DE COMMANDE
             $historiqueCommande = new CommandeHistorique();
 
@@ -126,5 +132,4 @@ class CommandeCrudController extends AbstractCrudController
         // Enregistre les modifications
         parent::updateEntity($entityManager, $entityInstance);
     }
-    
 }
