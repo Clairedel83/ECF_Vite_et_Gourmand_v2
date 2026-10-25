@@ -1,3 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+/* ----------------------------------------------------------DASHBOARD--------------------------------------------------------- */
+/* Modification du layout de base d'easy admin */
+.content-top{
+    justify-content: end;
+}
+
+.resizer-handler-right{
+    display: none;
+}
+
+.ea-sidebar{
+    background-color: #faebd8 !important;
+}
+
+.ea-sidebar-item-icon, .ea-sidebar-item-label{
+    color:#252424;
+}
+
+.ea-sidebar-item-label{
+    font-family: 'Plus Jakarta Sans';
+}
+
+.ea-sidebar-item-chevron{
+    display: none;
+}
+
+.ea-sidebar {
+    --sidebar-bg: #faebd8;
+}
+
+.ea-sidebar-group-items{
+    display: flex;
+    flex-direction: column;
+    gap:3vh;
+}
+
+.navigation_bas {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.navigation_bas a {
+    display: flex;
+    align-items: center;
+    gap:12px;
+    color: #252424;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    text-decoration: none;
+}
+
+/* --------------------------------------------------------------- STATUT --------------------------------------------------------- */
 .badge{
     padding:5px 20px;
     border-radius: 10px;
@@ -12,27 +65,27 @@
 
 .badge.orange{
     background-color: rgba(245, 198, 110, 0.200);
-    color :rgb(228, 149, 2);
+    color :rgb(202, 132, 2);
 }
 
 .badge.jaune{
     background-color: rgba(247, 247, 146, 0.200);
-    color: yellow;
+    color: rgb(201, 201, 2);
 }
 
 .badge.bleu{
     background-color: rgba(46, 157, 248, 0.200);
-    color:rgba(46, 157, 248);
+    color:rgb(10, 136, 240);
 }
 
 .badge.vert_clair{
     background-color: rgba(182, 243, 90, 0.200);
-    color:rgba(182, 243, 90);
+    color:rgb(125, 204, 5);
 }
 
 .badge.gris{
     background-color: rgb(170, 169, 169, 0.200);
-    color:rgb(170, 169, 169);
+    color:rgb(92, 92, 92);
 }
 
 .badge.vert_fonce{

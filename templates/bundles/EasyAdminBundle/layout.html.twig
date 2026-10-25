@@ -1,0 +1,15 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block sidebar_footer %}
+    <div class="navigation_bas">
+        <a href="{{ path('app_accueil') }}">
+            <twig:ea:Icon name="fa fa-link" />
+            <span>Retour au site</span>
+        </a>
+
+        <a href="{{ path('_logout_main') }}">
+            <twig:ea:Icon name="fa fa-sign-out-alt" />
+            <span>Déconnexion</span>
+        </a>
+    </div>
+{% endblock %}

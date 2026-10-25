@@ -41,34 +41,33 @@ class AdministrationController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
+        // Liens de gestion
+        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home')->setPermission('ROLE_ADMIN');
 
-        yield MenuItem::submenu('Commandes', 'fa fa-newspaper')->setSubItems([
-            MenuItem::linkTo(CommandeCrudController::class,'Commandes', 'fas fa-list'),               
-            MenuItem::linkTo(CommandeHistoriqueCrudController::class,'Historique de Commandes', 'fas fa-list')
+        yield MenuItem::submenu('Commandes', 'fa fa-cart-shopping')->setSubItems([
+            MenuItem::linkTo(CommandeCrudController::class,'Commandes', 'fas fa-ellipsis-vertical'),               
+            MenuItem::linkTo(CommandeHistoriqueCrudController::class,'Historique de Commandes', 'fas fa-ellipsis-vertical')
         ]);
 
-        yield MenuItem::subMenu('Carte & Menus', 'fa fa-newspaper')->setSubItems([
-            MenuItem::linkTo(MenuCrudController::class,'Menus', 'fas fa-list'),
-            MenuItem::linkTo(EntreeCrudController::class,'Entrées', 'fas fa-list'),
-            MenuItem::linkTo(PlatCrudController::class,'Plats', 'fas fa-list'),        
-            MenuItem::linkTo(DessertCrudController::class,'Desserts', 'fas fa-list'),
-        ]);
-        
-
-        yield MenuItem::subMenu('Carte des menus', 'fa fa-newspaper')->setSubItems([
-            MenuItem::linkTo(AllergeneCrudController::class, 'Allergènes', 'fas fa-list'),
-            MenuItem::linkTo(ConditionCrudController::class,'Conditions', 'fas fa-list'),
-            MenuItem::linkTo(RegimeCrudController::class,'Régimes', 'fas fa-list'),
-            MenuItem::linkTo(ThemeCrudController::class,'Thèmes', 'fas fa-list'),    
-        ]);
-
-        yield MenuItem::subMenu('Utilisateurs', 'fa fa-newspaper')->setSubItems([
-            MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list'),
+        yield MenuItem::subMenu('Carte & Menus', 'fa fa-utensils')->setSubItems([
+            MenuItem::linkTo(MenuCrudController::class,'Menus', 'fas fa-ellipsis-vertical'),
+            MenuItem::linkTo(EntreeCrudController::class,'Entrées', 'fas fa-ellipsis-vertical'),
+            MenuItem::linkTo(PlatCrudController::class,'Plats', 'fas fa-ellipsis-vertical'),        
+            MenuItem::linkTo(DessertCrudController::class,'Desserts', 'fas fa-ellipsis-vertical'),
         ]);
         
+        yield MenuItem::subMenu('Paramètres des menus', 'fa fa-gear')->setSubItems([
+            MenuItem::linkTo(AllergeneCrudController::class, 'Allergènes', 'fas fa-ellipsis-vertical'),
+            MenuItem::linkTo(ConditionCrudController::class,'Conditions', 'fas fa-ellipsis-vertical'),
+            MenuItem::linkTo(RegimeCrudController::class,'Régimes', 'fas fa-ellipsis-vertical'),
+            MenuItem::linkTo(ThemeCrudController::class,'Thèmes', 'fas fa-ellipsis-vertical'),    
+        ]);
 
-        yield MenuItem::linkToRoute('Retour au site', 'fa fa-home', 'app_accueil');
-        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out-alt');
+        yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-users')->setPermission('ROLE_ADMIN');
+        
+
+        // // Lien bas de page
+        // yield MenuItem::linkToRoute('Retour au site', 'fa fa-link', 'app_accueil')->setCssClass('menu-retour-site');
+        // yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out-alt');
     }
 }
