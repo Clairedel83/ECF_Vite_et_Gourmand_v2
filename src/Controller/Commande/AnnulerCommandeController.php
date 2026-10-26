@@ -2,10 +2,11 @@
 
 namespace App\Controller\Commande;
 
-use App\Entity\CommandeHistorique;
 use App\Repository\CommandeRepository;
+use App\Services\GestionCommandeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
@@ -13,9 +14,9 @@ use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 final class AnnulerCommandeController extends AbstractController
 {
     // Sécurisation du formulaire avec utilisation d'un jeton CSRF
-    #[IsCsrfTokenValid('annulation_commande', tokenKey: 'token', methods: ['POST'])]    
+    #[IsCsrfTokenValid('annulation_commande', tokenKey: 'token', methods: ['POST'])]
     #[Route('compte/commandes/details/{id}/supprimer', name: 'app_commandes_supprimer', methods: ['POST'])]
-    public function index(CommandeRepository $commandeRepository, int $id, EntityManagerInterface $entityManager): Response
+    public function index(CommandeRepository $commandeRepository, int $id, EntityManagerInterface $entityManager, GestionCommandeService $gestionCommandeService, Request $request): Response
     {
 
         // Récupère la commande appartenant à l'utilisateur
@@ -32,38 +33,32 @@ final class AnnulerCommandeController extends AbstractController
         // Vérifie que le statut de la commande permet une modification
         $statut = $commande->getStatut();
 
-        if ($statut !== 1){
+        if ($statut !== 1) {
+            $this->addFlash(
+                'warning',
+                'Cette commande ne peut plus être annulée. Contactez-nous si vous souhaitez l\'annuler avant préparation.'
+            );
             return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
         }
 
-        // ANNULATION DE LA COMMANDE
-        // attribue le statut
-        $commande->setStatut(8);
+        // appelle le service pour annuler la commande
+        try {
+            $gestionCommandeService->annulerCommande($commande, $entityManager);
+        } catch (\DomainException $exception) {
+            // affiche le message d'erreur
+            $this->addFlash('warning', $exception->getMessage());
 
-        // restitue le stock d'origine au menu
-        $stockMenu = $commande->getMenu()->getStock() + 1;
-        $commande->getMenu()->setStock($stockMenu);
+            // redirige vers la page précédente = depuis laquelle la demande a été faite (referer)
+            $referer = $request->headers->get('referer');
 
+            // vérifie que la dernère page consultée correspond à une page du domaine
+            if (is_string($referer) && str_starts_with($referer, $request->getSchemeAndHttpHost() . '/')) {
+                return $this->redirect($referer);
+            }
 
-        // CREATION D'UN NOUVEL HISTORIQUE DE COMMANDE
-        $historiqueCommande = new CommandeHistorique();
-
-        // attribue le statut à l'historique de commande
-        $historiqueCommande->setStatut($commande->getStatut());
-
-        // attribue la date et l'heure de modification du statut
-        $date_actuelle = new \DateTime();
-
-        $historiqueCommande->setDateModification($date_actuelle);
-        $historiqueCommande->setHeureModification($date_actuelle);
-
-        // lie l'historique à la commande
-        $commande->addCommandeHistorique($historiqueCommande);
-
-
-        // enregistre les modifications en BDD
-        $entityManager->persist($historiqueCommande);
-        $entityManager->flush();
+            // attention, en cas d'erreur, referer peut être vide donc prévoir redirection fiable
+            return $this->redirectToRoute('app_commandes');
+        }
 
         $this->addFlash(
             'success',
@@ -73,7 +68,5 @@ final class AnnulerCommandeController extends AbstractController
         return $this->redirectToRoute('app_commandes_details', [
             'id' => $id
         ]);
-
-
     }
 }

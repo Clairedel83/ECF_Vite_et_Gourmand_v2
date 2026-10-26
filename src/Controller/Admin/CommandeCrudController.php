@@ -132,4 +132,13 @@ class CommandeCrudController extends AbstractCrudController
         // Enregistre les modifications
         parent::updateEntity($entityManager, $entityInstance);
     }
+
+
+    
+
+
+
+
+
+
 }
