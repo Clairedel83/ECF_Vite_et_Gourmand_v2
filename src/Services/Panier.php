@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Classe;
+namespace App\Services;
 
 use App\Entity\Menu;
 use Symfony\Component\HttpFoundation\RequestStack;

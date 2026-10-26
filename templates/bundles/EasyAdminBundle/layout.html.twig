@@ -1,13 +1,63 @@
 {% extends '@!EasyAdmin/layout.html.twig' %}
 
-{% block sidebar_footer %}
-    <div class="navigation_bas">
-        <a href="{{ path('app_accueil') }}">
-            <twig:ea:Icon name="fa fa-link" />
-            <span>Retour au site</span>
-        </a>
+{% block content_top_header %}
+    {% set nomCompte = app.user
+        ? (app.user.prenom ~ ' ' ~ app.user.nom)|trim
+        : 'Mon compte'
+    %}
 
-        <a href="{{ path('_logout_main') }}">
+    {% set roleCompte = is_granted('ROLE_ADMIN')
+        ? 'Administrateur'
+        : 'Employé'
+    %}
+
+    <div class="admin_entete_lien">
+        {# Retour vers le site public #}
+        <a href="{{ path('app_accueil') }}" class="admin_entete_site">
+            <twig:ea:Icon name="fa fa-arrow-up-right-from-square" />
+            <span>Retour au site</span>
+        </a>        
+    </div>
+
+    <div class="admin_entete_outils">
+        {# Sélecteur natif : clair, sombre, automatique #}
+        {% if ea.dashboardLocales or ea.dashboardHasDarkModeEnabled %}
+            <div class="admin_entete_theme">
+                {{ settings_dropdown }}
+            </div>
+        {% endif %}
+
+        {# Menu utilisateur récupéré du layout de base #}
+        <div class="admin_entete_compte">
+            <twig:ea:ActionMenu class="user-menu-wrapper">
+                <twig:ea:ActionMenu:Button
+                    class="admin_entete_identite"
+                    withoutDropdownToggleMarker
+                    aria-label="Ouvrir le menu du compte"
+                >
+                    <span class="admin_entete_avatar" aria-hidden="true">
+                        <twig:ea:Icon name="internal:user" />
+                    </span>
+
+                    <span class="admin_entete_nom_role">
+                        <span class="admin_entete_nom">
+                            {{ nomCompte }}
+                        </span>
+
+                        <span class="admin_entete_role">
+                            {{ roleCompte }}
+                        </span>
+                    </span>
+                </twig:ea:ActionMenu:Button>
+
+                <twig:ea:ActionMenu:Overlay>
+                    {{ user_menu_dropdown }}
+                </twig:ea:ActionMenu:Overlay>
+            </twig:ea:ActionMenu>
+        </div>
+
+        {# Déconnexion #}
+        <a href="{{ path('_logout_main') }}" class="admin_entete_deconnexion">
             <twig:ea:Icon name="fa fa-sign-out-alt" />
             <span>Déconnexion</span>
         </a>

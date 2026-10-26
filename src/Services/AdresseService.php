@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Services;
+namespace App\Services;
 
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Contracts\HttpClient\HttpClientInterface;

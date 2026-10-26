@@ -37,13 +37,14 @@ class MenuCrudController extends AbstractCrudController
 
         return [
             TextField::new('nom')->setLabel('Nom'),
-            TextField::new('description')->setLabel('Description'),
-            IntegerField::new('nbre_min')->setLabel('Nombre de personnes minimum'),
-            NumberField::new('prix_per_pers')->setLabel('Prix par personne'),
+            TextField::new('description')->setLabel('Description')->onlyOnForms(),
+            IntegerField::new('nbre_min')->setLabel('Nombre de pers. min'),
+            NumberField::new('prix_per_pers')->setLabel('Prix / pers.'),
             IntegerField::new('stock')->setLabel('Stock'),
             TextField::new('disponibilite_debut')
                 ->setLabel('Début de période')
                 ->setHelp('Format JJ-MM (exemple : 15-03). Laisser vide si disponible toute l’année.')
+                ->onlyOnForms()
                 ->formatValue(function ($value) {
                     if ($value === null) {
                         return 'Toute l\'année';
@@ -53,6 +54,7 @@ class MenuCrudController extends AbstractCrudController
             TextField::new('disponibilite_fin')
                 ->setLabel('Fin de période')
                 ->setHelp('Format JJ-MM (exemple : 15-03). Laisser vide si disponible toute l’année.')
+                ->onlyOnForms()
                 ->formatValue(function ($value) {
                     if ($value === null) {
                         return 'Toute l\'année';
@@ -62,10 +64,10 @@ class MenuCrudController extends AbstractCrudController
             AssociationField::new('entree')->setLabel('Entrée'),
             AssociationField::new('plat')->setLabel('Plat'),
             AssociationField::new('dessert')->setLabel('Dessert'),
-            AssociationField::new('regimes')->setLabel('Régime'),
-            AssociationField::new('theme')->setLabel('Thème'),
-            AssociationField::new('conditions')->setLabel('Condition')->setHelp('Sélectionnez obligatoirement une condition de délai de commande.'),
-            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du menu')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)
+            AssociationField::new('regimes')->setLabel('Régime')->onlyOnForms(),
+            AssociationField::new('theme')->setLabel('Thème')->onlyOnForms(),
+            AssociationField::new('conditions')->setLabel('Condition')->setHelp('Sélectionnez obligatoirement une condition de délai de commande.')->onlyOnForms(),
+            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du menu')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)->onlyOnForms()
         ];
     }
     

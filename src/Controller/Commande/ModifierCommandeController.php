@@ -2,8 +2,8 @@
 
 namespace App\Controller\Commande;
 
-use App\Controller\Services\AdresseService;
-use App\Controller\Services\PrixLivraison;
+use App\Services\AdresseService;
+use App\Services\PrixLivraison;
 use App\Form\AdresseLivraisonType;
 use App\Repository\CommandeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

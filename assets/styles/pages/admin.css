@@ -1,44 +1,240 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 /* ----------------------------------------------------------DASHBOARD--------------------------------------------------------- */
 /* Modification du layout de base d'easy admin */
-.content-top{
-    justify-content: end;
+/* ================= EN-TÊTE ADMINISTRATION ================= */
+
+.content-top {
+    --admin-entete-fond: #ffffff;
+    --admin-entete-texte: #252424;
+    --admin-entete-secondaire: #696968;
+    --admin-entete-bordure: #25242425;
+    --admin-entete-beige: #faebd8;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+
+    block-size: auto;
+    min-height: 80px;
+    padding-block: 16px;
+
+    background-color: var(--admin-entete-fond);
+    color: var(--admin-entete-texte);
+    box-shadow: 0 1px 0 var(--admin-entete-bordure);
 }
 
-.resizer-handler-right{
-    display: none;
+/* Variante sombre */
+body.ea-dark-scheme .content-top {
+    --admin-entete-fond: var(--body-bg);
+    --admin-entete-texte: #f5f5f5;
+    --admin-entete-secondaire: #b8b8b8;
+    --admin-entete-bordure: #ffffff25;
+    --admin-entete-beige: #daa48125;
 }
 
-.ea-sidebar{
-    background-color: #faebd8 !important;
+
+
+.admin_entete_legende {
+    color: var(--admin-entete-secondaire);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
 }
 
-.ea-sidebar-item-icon, .ea-sidebar-item-label{
-    color:#252424;
+.admin_entete_contexte nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    font-family: "Roboto", sans-serif;
+    font-size: 13px;
 }
 
-.ea-sidebar-item-label{
-    font-family: 'Plus Jakarta Sans';
+.admin_entete_contexte nav a {
+    color: var(--admin-entete-secondaire);
+    text-decoration: none;
 }
 
-.ea-sidebar-item-chevron{
+.admin_entete_contexte nav a:hover {
+    text-decoration: underline;
+}
+
+/* Groupe d’actions à droite */
+.admin_entete_outils {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    margin-left: auto;
+    font-family: "Roboto", sans-serif;
+    font-size: 13px;
+}
+
+/* Liens et bouton du compte */
+.admin_entete_site, .admin_entete_deconnexion, .admin_entete_identite {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    color: var(--admin-entete-texte);
+    text-decoration: none;
+}
+
+.admin_entete_site:hover, .admin_entete_deconnexion:hover, .admin_entete_identite:hover {
+    color: var(--admin-entete-texte);
+}
+
+/* Retour au site */
+.admin_entete_site {
+    padding: 9px 12px;
+    border: 1px solid #faebd8;
+    border-radius: 7px;
+    background-color: #faebd8;
+    transition: background-color 0.2s ease;
+}
+
+.admin_entete_site:hover {
+    background-color: #daa481;
+    color: #252424;
+}
+
+/* Bouton du thème */
+.admin_entete_theme .dropdown-settings-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--admin-entete-texte);
+    padding: 0;
+}
+
+/* Séparation du compte */
+.admin_entete_compte {
+    padding-left: 16px;
+    border-left: 1px solid var(--admin-entete-bordure);
+}
+
+.admin_entete_identite {
+    padding: 0;
+}
+
+.admin_entete_avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    background-color: var(--admin-entete-beige);
+}
+
+.admin_entete_nom_role {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    text-align: left;
+}
+
+.admin_entete_nom {
+    font-weight: 500;
+}
+
+.admin_entete_role {
+    color: var(--admin-entete-secondaire);
+    font-size: 11px;
+}
+
+/* Déconnexion */
+.admin_entete_deconnexion {
+    padding: 8px 0 8px 16px;
+    border-left: 1px solid var(--admin-entete-bordure);
+}
+
+.admin_entete_deconnexion:hover {
+    text-decoration: underline;
+}
+
+/* Navigation au clavier */
+.content-top a:focus-visible {
+    outline: 2px solid #daa481;
+    outline-offset: 4px;
+}
+
+/* Sur mobile, EasyAdmin possède déjà son en-tête avec le bouton d’ouverture de la sidebar. */
+@media (max-width: 991.98px) {
+    .content-top {
+        min-height: auto;
+    }
+
+    .admin_entete_outils {
+        display: none;
+    }
+}
+
+
+
+.logo {
+    padding: 16px 0;
+}
+
+
+.resizer-handler-right {
     display: none;
 }
 
 .ea-sidebar {
+    box-shadow: none;
     --sidebar-bg: #faebd8;
+    --sidebar-item-hover-bg: #daa481;
 }
 
-.ea-sidebar-group-items{
-    display: flex;
-    flex-direction: column;
-    gap:3vh;
+.ea-sidebar-group-label-text {
+    letter-spacing: 1px;
+    font-family: "Roboto";
+    color: rgb(124, 130, 139);
 }
 
-.navigation_bas {
+.ea-sidebar-item-icon,
+.ea-sidebar-item-label {
+    color: #252424;
+}
+
+.ea-sidebar-item-label {
+    font-family: "Plus Jakarta Sans";
+}
+
+.ea-sidebar-item-chevron {
+    display: none;
+}
+
+.ea-sidebar-submenu-items {
+    border-inline-start-color: transparent;
+    padding-left: 0;
+}
+
+.ea-sidebar-group-items {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1vh;
+}
+
+/* .navigation_bas {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
 }
 
 .navigation_bas a {
@@ -48,90 +244,100 @@
     color: #252424;
     font-family: 'Plus Jakarta Sans', sans-serif;
     text-decoration: none;
+} */
+
+.ea-sidebar-footer {
+    box-shadow: none;
+}
+
+.is-active {
+    background-color: #daa481;
+    border: 0.5px solid #daa481;
+    border-radius: 5px;
 }
 
 /* --------------------------------------------------------------- STATUT --------------------------------------------------------- */
-.badge{
-    padding:5px 20px;
+.badge {
+    padding: 5px 20px;
     border-radius: 10px;
-    line-height:1.75;
+    line-height: 1.75;
     letter-spacing: 0.3px;
 }
 
-.badge.rouge{
-    background-color: rgba(245, 116, 116, 0.200);
-    color:rgb(238, 86, 86);
+.badge.rouge {
+    background-color: rgba(245, 116, 116, 0.2);
+    color: rgb(238, 86, 86);
 }
 
-.badge.orange{
-    background-color: rgba(245, 198, 110, 0.200);
-    color :rgb(202, 132, 2);
+.badge.orange {
+    background-color: rgba(245, 198, 110, 0.2);
+    color: rgb(202, 132, 2);
 }
 
-.badge.jaune{
-    background-color: rgba(247, 247, 146, 0.200);
+.badge.jaune {
+    background-color: rgba(247, 247, 146, 0.2);
     color: rgb(201, 201, 2);
 }
 
-.badge.bleu{
-    background-color: rgba(46, 157, 248, 0.200);
-    color:rgb(10, 136, 240);
+.badge.bleu {
+    background-color: rgba(46, 157, 248, 0.2);
+    color: rgb(10, 136, 240);
 }
 
-.badge.vert_clair{
-    background-color: rgba(182, 243, 90, 0.200);
-    color:rgb(125, 204, 5);
+.badge.vert_clair {
+    background-color: rgba(182, 243, 90, 0.2);
+    color: rgb(125, 204, 5);
 }
 
-.badge.gris{
-    background-color: rgb(170, 169, 169, 0.200);
-    color:rgb(92, 92, 92);
+.badge.gris {
+    background-color: rgb(170, 169, 169, 0.2);
+    color: rgb(92, 92, 92);
 }
 
-.badge.vert_fonce{
-    background-color: rgba(49, 116, 49, 0.200);
-    color:rgba(49, 116, 49);
+.badge.vert_fonce {
+    background-color: rgba(49, 116, 49, 0.2);
+    color: rgba(49, 116, 49);
 }
 
-#statut_commande{
-    font-family: "Roboto" !important; 
-    font-size:14px !important;
+#statut_commande {
+    font-family: "Roboto" !important;
+    font-size: 14px !important;
 }
 
 /* ------------------------------------------------ DETAILS DE COMMANDE ----------------------------------------------- */
-.details_title{
+.details_title {
     margin-bottom: 6vh;
 }
 
-.details_title_header{
+.details_title_header {
     display: flex;
     justify-content: space-between;
 }
 
-.btn_retour{
-    color:#252424;
+.btn_retour {
+    color: #252424;
     background-color: #faebd8c9;
     font-weight: 500;
     display: flex;
-    gap:1vw;
+    gap: 1vw;
     align-items: center;
     padding: 8px 12px;
-    border-radius: 10px;    
+    border-radius: 10px;
     cursor: pointer;
     transition: 0.2s ease;
 }
 
-.details_title p{
+.details_title p {
     margin-bottom: 1vh;
 }
 
-.details_body{
+.details_body {
     display: grid !important;
     grid-template-columns: 1.8fr 1.2fr;
     gap: 2vw;
 }
 
-.details_content h5{
+.details_content h5 {
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 1px;
@@ -140,169 +346,173 @@
     border-radius: 5px;
 }
 
-.details_content_left{
+.details_content_left {
     display: flex;
     flex-direction: column;
-    gap : 7vh;
+    gap: 7vh;
 }
 
-.details_content p{
+.details_content p {
     margin-bottom: 0;
-    line-height:1.75;
+    line-height: 1.75;
 }
 
-.details_content table{
+.details_content table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.client, .prestation, .details_content td{
+.client,
+.prestation,
+.details_content td {
     padding-top: 2vh;
 }
 
-.titre{
-    color:#252424a4;
+.titre {
+    color: #252424a4;
     font-weight: 400 !important;
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
 
-.client{
+.client {
     width: 5%;
 }
 
-.prestation{
+.prestation {
     width: 20%;
     font-weight: 400;
     color: #25242494;
 }
 
-.composition_elements{
-margin-bottom: 0;
-padding-left: 0;
+.composition_elements {
+    margin-bottom: 0;
+    padding-left: 0;
 }
 
-.composition_elements li{
+.composition_elements li {
     list-style: none;
 }
 
-.last{
+.last {
     padding-bottom: 2vh;
 }
 
-.total{
+.total {
     text-transform: uppercase;
     letter-spacing: 0.3px;
     font-weight: 500;
     border-top: 1px solid #2524244f;
-;
     padding-top: 2vh !important;
 }
 
-.facturation_legende{
+.facturation_legende {
     font-weight: 400;
     color: #25242494;
 }
 
-.facturation_elements{
-    text-align:right; 
+.facturation_elements {
+    text-align: right;
 }
 
-.historique table{
+.historique table {
     margin-top: 4vh;
     border-collapse: collapse;
     text-align: center;
 }
 
-.historique th{
+.historique th {
     font-weight: 400;
 }
 
-.historique th, .historique td{
-    border:0.5px solid #2524244f;
+.historique th,
+.historique td {
+    border: 0.5px solid #2524244f;
     padding: 5px !important;
 }
 
-.statut_champ{
+.statut_champ {
     display: flex;
     flex-direction: column;
-    gap:2vh;
+    gap: 2vh;
 }
 
-#statut_statut{
-    height:2rem;
+#statut_statut {
+    height: 2rem;
 }
 
-.statut, .form_statut, .form_statut .btn2{
-    margin-top: 4vh;    
+.statut,
+.form_statut,
+.form_statut .btn2 {
+    margin-top: 4vh;
 }
 
-.right{
+.right {
     margin-bottom: 6vh;
 }
 
-.btn2{
+.btn2 {
     display: flex;
     justify-content: center;
     align-items: center;
-    color:#252424;
+    color: #252424;
     width: 100%;
     padding: 8px 12px;
     font-weight: 500;
-    border-radius: 10px;    
+    border-radius: 10px;
     cursor: pointer;
     transition: 0.2s ease;
 }
 
 .form_statut .btn2 {
-    background-color: #DAA481;
+    background-color: #daa481;
     color: #252424;
     border: 2px solid transparent;
 }
 
-.form_statut .btn2:hover{
+.form_statut .btn2:hover {
     background-color: transparent;
-    border : 2px solid #DAA481;
+    border: 2px solid #daa481;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    color:#DAA481;
+    color: #daa481;
 }
 
-.actions{
+.commande_actions {
     display: flex;
     flex-direction: column;
-    gap:4vh;
+    gap: 4vh;
     margin: 4vh 0;
 }
 
-.btn2_modifier{
-    color:#a10303;
+.btn2_modifier {
+    color: #a10303;
     border: 1.5px solid #a10303;
     background-color: transparent;
 }
 
-.btn2_modifier:hover{
+.btn2_modifier:hover {
     background-color: #a10303;
-    color:#252424;
+    color: #252424;
 }
 
-.btn2_annuler{
-    color:red;
+.btn2_annuler {
+    color: red;
     border: 1.5px solid red;
     background-color: transparent;
 }
 
-.btn2_annuler:hover{
-    color:#252424;
+.btn2_annuler:hover {
+    color: #252424;
     background-color: red;
 }
 
-.infos{
+.infos {
     background-color: #faebd8;
     border: 1 solid #faebd8;
     border-radius: 10px;
     padding: 10px 20px;
 }
 
-.p500{
+.p500 {
     font-weight: 500;
 }

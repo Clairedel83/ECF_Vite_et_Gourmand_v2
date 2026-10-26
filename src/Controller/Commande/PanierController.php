@@ -2,7 +2,7 @@
 
 namespace App\Controller\Commande;
 
-use App\Controller\Classe\Panier;
+use App\Services\Panier;
 use App\Form\AdresseLivraisonType;
 use App\Repository\MenuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
