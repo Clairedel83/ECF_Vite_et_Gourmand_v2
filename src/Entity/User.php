@@ -60,15 +60,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $commandes;
 
     /**
-     * @var Collection<int, Commande>
+     * @var Collection<int, InterventionCommande>
      */
-    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'modifieePar')]
-    private Collection $commandesModifiees;
+    #[ORM\OneToMany(targetEntity: InterventionCommande::class, mappedBy: 'auteur')]
+    private Collection $interventionCommandes;
 
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
-        $this->commandesModifiees = new ArrayCollection();
+        $this->interventionCommandes = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -258,33 +258,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Commande>
+     * @return Collection<int, InterventionCommande>
      */
-    public function getCommandesModifiees(): Collection
+    public function getInterventionCommandes(): Collection
     {
-        return $this->commandesModifiees;
+        return $this->interventionCommandes;
     }
 
-    public function addCommandeModifiee(Commande $commandesModifiee): static
+    public function addInterventionCommande(InterventionCommande $interventionCommande): static
     {
-        if (!$this->commandesModifiees->contains($commandesModifiee)) {
-            $this->commandesModifiees->add($commandesModifiee);
-            $commandesModifiee->setModifieePar($this);
+        if (!$this->interventionCommandes->contains($interventionCommande)) {
+            $this->interventionCommandes->add($interventionCommande);
+            $interventionCommande->setAuteur($this);
         }
 
         return $this;
     }
 
-    public function removeCommandeModifiee(Commande $commandesModifiee): static
+    public function removeInterventionCommande(InterventionCommande $interventionCommande): static
     {
-        if ($this->commandesModifiees->removeElement($commandesModifiee)) {
+        if ($this->interventionCommandes->removeElement($interventionCommande)) {
             // set the owning side to null (unless already changed)
-            if ($commandesModifiee->getModifieePar() === $this) {
-                $commandesModifiee->setModifieePar(null);
+            if ($interventionCommande->getAuteur() === $this) {
+                $interventionCommande->setAuteur(null);
             }
         }
 
         return $this;
     }
-
 }

@@ -91,22 +91,17 @@ class Commande
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'commande')]
     private Collection $avis;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $motifIntervention = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $modeContactIntervention = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $dateIntervention = null;
-
-    #[ORM\ManyToOne(inversedBy: 'commandesModifiees')]
-    private ?User $modifieePar = null;
+    /**
+     * @var Collection<int, InterventionCommande>
+     */
+    #[ORM\OneToMany(targetEntity: InterventionCommande::class, mappedBy: 'commande')]
+    private Collection $interventionCommandes;
 
     public function __construct()
     {
         $this->commandeHistorique = new ArrayCollection();
         $this->avis = new ArrayCollection();
+        $this->interventionCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -414,50 +409,32 @@ class Commande
         return $this;
     }
 
-    public function getMotifIntervention(): ?string
+    /**
+     * @return Collection<int, InterventionCommande>
+     */
+    public function getInterventionCommandes(): Collection
     {
-        return $this->motifIntervention;
+        return $this->interventionCommandes;
     }
 
-    public function setMotifIntervention(?string $motifIntervention): static
+    public function addInterventionCommande(InterventionCommande $interventionCommande): static
     {
-        $this->motifIntervention = $motifIntervention;
+        if (!$this->interventionCommandes->contains($interventionCommande)) {
+            $this->interventionCommandes->add($interventionCommande);
+            $interventionCommande->setCommande($this);
+        }
 
         return $this;
     }
 
-    public function getModeContactIntervention(): ?string
+    public function removeInterventionCommande(InterventionCommande $interventionCommande): static
     {
-        return $this->modeContactIntervention;
-    }
-
-    public function setModeContactIntervention(?string $modeContactIntervention): static
-    {
-        $this->modeContactIntervention = $modeContactIntervention;
-
-        return $this;
-    }
-
-    public function getDateIntervention(): ?\DateTime
-    {
-        return $this->dateIntervention;
-    }
-
-    public function setDateIntervention(?\DateTime $dateIntervention): static
-    {
-        $this->dateIntervention = $dateIntervention;
-
-        return $this;
-    }
-
-    public function getModifieePar(): ?User
-    {
-        return $this->modifieePar;
-    }
-
-    public function setModifieePar(?User $modifieePar): static
-    {
-        $this->modifieePar = $modifieePar;
+        if ($this->interventionCommandes->removeElement($interventionCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($interventionCommande->getCommande() === $this) {
+                $interventionCommande->setCommande(null);
+            }
+        }
 
         return $this;
     }
