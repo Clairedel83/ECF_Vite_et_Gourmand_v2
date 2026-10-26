@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Entity\Menu;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class Panier
+class PanierService
 {
     // permet d'accéder à la requête HTTP et de la conserver (nécessaire pour la fonction suivante)
     public function __construct(private RequestStack $requestStack)

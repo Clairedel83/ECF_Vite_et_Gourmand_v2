@@ -2,8 +2,8 @@
 
 namespace App\Controller\Commande;
 
-use App\Services\AdresseService;
-use App\Services\PrixLivraison;
+use App\Services\VerificationAdresseService;
+use App\Services\CalculPrixLivraison;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CalculPrixLivraisonController extends AbstractController
 {
     #[Route('/calcul/prix/livraison', name: 'app_calcul_prix_livraison', methods: ['POST'])]
-    public function index(Request $request, PrixLivraison $prixLivraison, AdresseService $adresseService): JsonResponse
+    public function index(Request $request, CalculPrixLivraison $calculPrixLivraison, VerificationAdresseService $verificationAdresseService): JsonResponse
     {
         // Récupère l'adresse de livraison et le code postal donnés par l'utilisateur depuis JS
         $adresseGoogle = $request->request->get('adresse');
@@ -22,7 +22,7 @@ final class CalculPrixLivraisonController extends AbstractController
 
         // appelle verifierAdresse de AdresseService pour vérifier cette adresse par géocodage
         try{
-            $resultatAdresse = $adresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
+            $resultatAdresse = $verificationAdresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
         // en cas d'erreur (400 = données invalides : renvoie message)
         } catch (\InvalidArgumentException $e){
             return $this ->json([
@@ -34,7 +34,7 @@ final class CalculPrixLivraisonController extends AbstractController
         $villeVerifiee = $resultatAdresse['ville'];
         $adresseCompleteVerifiee = $resultatAdresse['adresse'];
 
-        $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseCompleteVerifiee);
+        $prixCalcule = $calculPrixLivraison->calculPrixLivraison($villeVerifiee, $adresseCompleteVerifiee);
 
         return $this->json([
             'prixLivraison' => $prixCalcule

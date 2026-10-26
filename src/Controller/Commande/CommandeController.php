@@ -2,10 +2,10 @@
 
 namespace App\Controller\Commande;
 
-use App\Services\Panier;
-use App\Services\AdresseService;
-use App\Services\DistanceService;
-use App\Services\PrixLivraison;
+use App\Services\PanierService;
+use App\Services\VerificationAdresseService;
+use App\Services\CalculDistanceService;
+use App\Services\CalculPrixLivraison;
 use App\Entity\Commande;
 use App\Entity\CommandeHistorique;
 use App\Repository\MenuRepository;
@@ -24,7 +24,7 @@ final class CommandeController extends AbstractController
     // Sécurisation du formulaire avec utilisation d'un jeton CSRF
     #[IsCsrfTokenValid('valider_commande', tokenKey: 'token', methods: ['POST'])]
     #[Route('/commande', name: 'app_commande', methods: ['POST'])]
-    public function index(MenuRepository $menuRepository, Panier $panier, Request $request, EntityManagerInterface $entityManager, DistanceService $distanceService, PrixLivraison $prixLivraison, AdresseService $adresseService): Response
+    public function index(MenuRepository $menuRepository, PanierService $panier, Request $request, EntityManagerInterface $entityManager, CalculDistanceService $distanceService, CalculPrixLivraison $prixLivraison, VerificationAdresseService $adresseService): Response
     {
         // methods : [POST]
         // La page ne peut être appelée que par l'envoi du formulaire

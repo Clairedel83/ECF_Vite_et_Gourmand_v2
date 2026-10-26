@@ -4,11 +4,11 @@ namespace App\Services;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class PrixLivraison
+class CalculPrixLivraison
 {
     // fait appel au service DistanceService
     public function __construct(
-        private DistanceService $distance_service
+        private CalculDistanceService $distance_service
     )
     {
     }

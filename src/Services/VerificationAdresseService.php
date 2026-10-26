@@ -5,7 +5,7 @@ namespace App\Services;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class AdresseService
+class VerificationAdresseService
 {
     public function __construct(private HttpClientInterface $client)
     {
