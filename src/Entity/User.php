@@ -59,9 +59,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'user')]
     private Collection $commandes;
 
+    /**
+     * @var Collection<int, Commande>
+     */
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'modifieePar')]
+    private Collection $commandesModifiees;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
+        $this->commandesModifiees = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -244,6 +251,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($commande->getUser() === $this) {
                 $commande->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandesModifiees(): Collection
+    {
+        return $this->commandesModifiees;
+    }
+
+    public function addCommandeModifiee(Commande $commandesModifiee): static
+    {
+        if (!$this->commandesModifiees->contains($commandesModifiee)) {
+            $this->commandesModifiees->add($commandesModifiee);
+            $commandesModifiee->setModifieePar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeModifiee(Commande $commandesModifiee): static
+    {
+        if ($this->commandesModifiees->removeElement($commandesModifiee)) {
+            // set the owning side to null (unless already changed)
+            if ($commandesModifiee->getModifieePar() === $this) {
+                $commandesModifiee->setModifieePar(null);
             }
         }
 

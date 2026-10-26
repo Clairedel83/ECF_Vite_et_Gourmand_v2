@@ -91,6 +91,18 @@ class Commande
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'commande')]
     private Collection $avis;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $motifIntervention = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $modeContactIntervention = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $dateIntervention = null;
+
+    #[ORM\ManyToOne(inversedBy: 'commandesModifiees')]
+    private ?User $modifieePar = null;
+
     public function __construct()
     {
         $this->commandeHistorique = new ArrayCollection();
@@ -398,6 +410,54 @@ class Commande
                 $avi->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMotifIntervention(): ?string
+    {
+        return $this->motifIntervention;
+    }
+
+    public function setMotifIntervention(?string $motifIntervention): static
+    {
+        $this->motifIntervention = $motifIntervention;
+
+        return $this;
+    }
+
+    public function getModeContactIntervention(): ?string
+    {
+        return $this->modeContactIntervention;
+    }
+
+    public function setModeContactIntervention(?string $modeContactIntervention): static
+    {
+        $this->modeContactIntervention = $modeContactIntervention;
+
+        return $this;
+    }
+
+    public function getDateIntervention(): ?\DateTime
+    {
+        return $this->dateIntervention;
+    }
+
+    public function setDateIntervention(?\DateTime $dateIntervention): static
+    {
+        $this->dateIntervention = $dateIntervention;
+
+        return $this;
+    }
+
+    public function getModifieePar(): ?User
+    {
+        return $this->modifieePar;
+    }
+
+    public function setModifieePar(?User $modifieePar): static
+    {
+        $this->modifieePar = $modifieePar;
 
         return $this;
     }
