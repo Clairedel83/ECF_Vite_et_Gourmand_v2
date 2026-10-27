@@ -34,8 +34,8 @@ class PlatCrudController extends AbstractCrudController
         return [
             TextField::new('nom')->setLabel('Nom')->setHelp('Nom court du plat'),
             TextField::new('description')->setLabel('Description')->setHelp('Description complète du plat'),
-            AssociationField::new('allergene')->setLabel('Allergène'),
-            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du plat')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)
+            AssociationField::new('allergene')->setLabel('Allergène')->onlyOnForms(),
+            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du plat')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)->onlyOnForms()
         ];
     }
     

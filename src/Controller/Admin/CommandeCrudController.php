@@ -85,12 +85,23 @@ class CommandeCrudController extends AbstractCrudController
             'minimum_convives' => $commande->getMenu()->getNbreMin(),
         ]);
 
+        // concernant la modification des informations (livraison)
+        // Sépare le destinataire de l'adresse enregistrée : conserve toute l'adresse après l" - ".
+        $elementsAdresse = explode(' - ', $commande->getAdresseLivraison(), 2);
+
+        // Si aucun séparateur n'est présent, conserve l'adresse entière.
+        $adresseLivraison = $elementsAdresse[1] ?? $elementsAdresse[0];
+
+        // Affiche uniquement l'adresse dans le champ du formulaire : permettra un recalcul plus facile
+        $formModification->get('adresseLivraison')->setData($adresseLivraison);
+
         // crée la vue de cet affichage
         return $this->render('admin/commande_details.html.twig', [
             'commande' => $commande,
             'statutForm' => $form->createView(),
             'InterventionCommandeForm' => $formAnnulation->createView(),
-            'modificationForm' => $formModification->createView()
+            'modificationForm' => $formModification->createView(),
+            'adresseInitialeLivraison' => $adresseLivraison,
         ]);
     }
 

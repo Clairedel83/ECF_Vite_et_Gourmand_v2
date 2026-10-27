@@ -34,8 +34,8 @@ class DessertCrudController extends AbstractCrudController
         return [
             TextField::new('nom')->setLabel('Nom'),
             TextField::new('description')->setLabel('Description'),
-            AssociationField::new('allergene')->setLabel('Allergène'),
-            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du dessert')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)
+            AssociationField::new('allergene')->setLabel('Allergène')->onlyOnForms(),
+            ImageField::new('illustration')->setLabel('Image')->setHelp('Image du dessert')->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads')->setRequired($required)->onlyOnForms()
         ];
     }
     

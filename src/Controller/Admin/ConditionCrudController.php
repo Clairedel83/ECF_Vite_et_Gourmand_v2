@@ -28,7 +28,7 @@ class ConditionCrudController extends AbstractCrudController
     {
         return [
             TextField::new('description')->setLabel('Description'),
-            NumberField::new('delai_min')->setLabel('Délai minimum')->setHelp('Nombre de jours minimum avant commande'),
+            NumberField::new('delai_min')->setLabel('Délai minimum')->setHelp('Nombre de jours minimum avant commande')->onlyOnForms(),
         ];
     }
     

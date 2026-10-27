@@ -523,15 +523,35 @@ body.ea-dark-scheme .content-top {
     width:10%;
 }
 
+#complement_adresse, #message_livraison, #reessayer_livraison{
+    margin-top: 2vh;
+}
+
+#message_livraison{
+    font-weight: 500;
+}
+
+#reessayer_livraison{
+    padding: 5px 12px;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    border:none;
+}
+
 .btn2_modifier {
     color: #aa3333;
     border: 1.5px solid #aa3333cc;
     background-color: transparent;
 }
 
-.btn2_modifier:hover, #btn_form_sauvegarder {
+.btn2_modifier:hover, #btn_form_sauvegarder, #reessayer_livraison {
     background-color: #aa3333cc;
     color: white;
+}
+
+#btn_form_sauvegarder{
+    border:none;
 }
 
 .btn2_annuler {

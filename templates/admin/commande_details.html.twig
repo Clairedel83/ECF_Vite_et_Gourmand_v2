@@ -49,7 +49,8 @@
                             'data-convives-supplementaires': '5',
                             'data-forfait-materiel': '20.00',
                             'data-livraison-initiale': commande.prixLivraison,
-                            'data-adresse-initiale': commande.adresseLivraison
+                            'data-adresse-initiale': adresseInitialeLivraison,
+                            'data-url-livraison': path('app_calcul_prix_livraison')
                         }
                     }) }}
                     <table>
@@ -68,7 +69,21 @@
                         <tr>
                             <th class="prestation">Adresse :</th>
                             <td class="anciennes_donnees">{{ commande.adresseLivraison }}</td>
-                            <td class="nouvelles_donnees">{{ form_widget(modificationForm.adresseLivraison) }}</td>
+                            <td class="nouvelles_donnees">
+                                {{ form_widget(modificationForm.adresseLivraison) }}
+
+                                {# champs cachés, utiles pour le calcul des frais de livraison avec JS #}
+                                <div id="complement_adresse" hidden>
+                                    {{ form_row(modificationForm.codePostalLivraison) }}
+                                    {{ form_row(modificationForm.villeLivraison) }}
+                                </div>
+
+                                <p id="message_livraison" role="status" aria-live="polite" hidden></p>
+
+                                <button type="button" id="reessayer_livraison" hidden>
+                                    Réessayer le calcul de livraison
+                                </button>
+                            </td>
                         </tr>
 
                         <tr>
@@ -128,7 +143,7 @@
                     <table>
                         <tr>
                             <th class="facturation_legende">Prix / pers x nombre convives :</th>
-                            <td class="facturation_elements"><span id="recap_prixPerPers"></span>{{ commande.prixPerPers }} € x <span id="recap_convives">{{ commande.nbrePers }}</span></td>
+                            <td class="facturation_elements"><span id="recap_prixPerPers">{{ commande.prixPerPers }}</span> € x <span id="recap_convives">{{ commande.nbrePers }}</span></td>
                         </tr>
 
                         <tr>
@@ -244,7 +259,7 @@
                                 <twig:ea:Icon name="fa fa-ban"/> Abandonner
                             </a>
                             
-                            <button type="submit" class="btn2" id="btn_form_sauvegarder">
+                            <button type="submit" class="btn2" id="btn_form_sauvegarder" form="form_modification_commande">
                                 <twig:ea:Icon name="fa fa-bookmark"/> Sauvegarder
                             </button>
                         </div>

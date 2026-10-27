@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -64,6 +65,26 @@ class ModifierCommandeType extends AbstractType
                     ),
                 ],
             ])
+
+            // Eléments non enregistrés en BDD mais qui permettent de calculer les frais de livraison 
+            ->add('codePostalLivraison', TextType::class, [
+                'label' => 'Code postal : ',
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'inputmode' => 'numeric',
+                    'pattern' => '[0-9]{5}',
+                    'maxlength' => 5,
+                ],
+            ])
+
+            ->add('villeLivraison', TextType::class, [
+                'label' => 'Ville : ',
+                'mapped' => false,
+                'required' => false,
+            ])
+
+            // Elements enregistrés en BDD
 
             ->add('nbrePers', IntegerType::class, [
                 'label' => 'Nombre de convives',
