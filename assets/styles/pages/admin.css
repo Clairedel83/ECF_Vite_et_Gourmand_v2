@@ -494,11 +494,33 @@ body.ea-dark-scheme .content-top {
     color: #daa481;
 }
 
+.btn_form{
+    display:none;
+    gap:10px;
+}
+
 .commande_actions {
     display: flex;
     flex-direction: column;
     gap: 4vh;
     margin: 4vh 0;
+}
+
+.nouvelles_donnees{
+    display: none;
+}
+
+.nouvelleDate{
+    width:20%;
+}
+
+.nouvelleAdresse{
+    width:100%;
+    resize:none;
+}
+
+.nouveauNbre{
+    width:10%;
 }
 
 .btn2_modifier {
@@ -507,9 +529,9 @@ body.ea-dark-scheme .content-top {
     background-color: transparent;
 }
 
-.btn2_modifier:hover {
+.btn2_modifier:hover, #btn_form_sauvegarder {
     background-color: #aa3333cc;
-    color: #252424;
+    color: white;
 }
 
 .btn2_annuler {
@@ -521,6 +543,11 @@ body.ea-dark-scheme .content-top {
 .btn2_annuler:hover {
     color: white;
     background-color: rgba(245, 61, 61, 0.829);
+}
+
+.btn2_annuler:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .infos {

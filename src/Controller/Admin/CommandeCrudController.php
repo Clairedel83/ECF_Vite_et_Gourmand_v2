@@ -6,6 +6,7 @@ use App\Entity\Commande;
 use App\Entity\CommandeHistorique;
 use App\Entity\InterventionCommande;
 use App\Form\InterventionCommandeType;
+use App\Form\ModifierCommandeType;
 use App\Form\StatutType;
 use App\Repository\CommandeRepository;
 use App\Services\GestionCommandeService;
@@ -75,11 +76,21 @@ class CommandeCrudController extends AbstractCrudController
             'method' => 'POST',
         ]);
 
+        // permet de rattacher le formulaire de modification de commande et donne la destination du formulaire
+        $formModification = $this->createForm(ModifierCommandeType::class, $commande, [
+            'action' => $this->generateUrl('admin_commande_modifier', [
+                'entityId' => $commande->getId(),
+            ]),
+            'method' => 'POST',
+            'minimum_convives' => $commande->getMenu()->getNbreMin(),
+        ]);
+
         // crée la vue de cet affichage
         return $this->render('admin/commande_details.html.twig', [
             'commande' => $commande,
             'statutForm' => $form->createView(),
-            'InterventionCommandeForm' => $formAnnulation->createView()
+            'InterventionCommandeForm' => $formAnnulation->createView(),
+            'modificationForm' => $formModification->createView()
         ]);
     }
 
@@ -234,4 +245,99 @@ class CommandeCrudController extends AbstractCrudController
             'ouvrirModaleAnnulation' => true,
         ]);
     }
+
+
+    // PERMET LA MODIFICATION D'UNE COMMANDE PAR UN EMPLOYE VIA UN FORM (POST)
+    #[AdminRoute(path: '/{entityId}/modifier', name: 'modifier', options: ['methods' => ['POST']])]
+    public function modifierCommande(AdminContext $context, Request $request)
+    {
+        // RECUPERE LES ELEMENTS
+        // récupère la commande concernée
+        $commande = $context->getEntity()->getInstance();
+
+        // récupère l'auteur 
+        $auteur = $this->getUser();
+
+        // crée l'intervention
+        $interventionCommande = new InterventionCommande();
+
+        // Reconstruit le formulaire 
+        $formModification = $this->createForm(ModifierCommandeType::class, $commande, [
+            'action' => $this->generateUrl('admin_commande_modifier', [
+                'entityId' => $commande->getId(),
+            ]),
+            'method' => 'POST',
+            'minimum_convives' => $commande->getMenu()->getNbreMin(),
+        ]);
+
+
+        // récupère les données envoyées dans le formulaire
+        $formModification->handleRequest($request);
+
+        // crée la date du jour
+        $dateModification = new \DateTimeImmutable();
+
+        // ENREGISTRE EN BDD
+        if ($formModification->isSubmitted() && $formModification->isValid()) {
+            // attribue l'auteur
+            $interventionCommande->setAuteur($auteur);
+
+            // attribue le type d'intervention
+            $interventionCommande->setType('modification');
+
+            // attribue la date de l'intervention
+            $interventionCommande->setDate($dateModification);
+
+            // 
+            try {
+                ;
+            } catch (\DomainException $exception) {
+                // affiche le message d'erreur
+                $this->addFlash('warning', $exception->getMessage());
+
+                // redirige vers la page précédente = depuis laquelle la demande a été faite (referer)
+                $referer = $request->headers->get('referer');
+
+                // vérifie que la dernère page consultée correspond à une page du domaine
+                if (is_string($referer) && str_starts_with($referer, $request->getSchemeAndHttpHost() . '/')) {
+                    return $this->redirect($referer);
+                }
+
+                // attention, en cas d'erreur, referer peut être vide donc prévoir redirection fiable
+                return $this->redirectToRoute('admin_commande_details', [
+                    'entityId' => $commande->getId(),
+                ]);
+            }
+
+            $this->addFlash(
+                'success',
+                'Cette commande a bien été modifiée.'
+            );
+
+            return $this->redirectToRoute('admin_commande_details', [
+                'entityId' => $commande->getId(),
+            ]);
+        }
+
+        // si le formulaire est invalide, affiche la page détails (obligé de remettre tous les éléments affichables)
+        $formStatut = $this->createForm(StatutType::class, $commande);
+        $formAnnulation = $this->createForm(InterventionCommandeType::class, $interventionCommande, [
+            'action' => $this->generateUrl('admin_commande_annuler', [
+                'entityId' => $commande->getId(),
+            ]),
+            'method' => 'POST',
+        ]);
+
+
+        return $this->render('admin/commande_details.html.twig', [
+            'commande' => $commande,
+            'statutForm' => $formStatut->createView(),
+            'InterventionCommandeForm' => $formAnnulation->createView(),
+            'modificationForm' => $formModification->createView()
+        ]);
+
+
+    }
+
+
 }
