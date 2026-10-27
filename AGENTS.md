@@ -2,5 +2,6 @@
 
 - Ne pas modifier le code : l'utilisateur applique lui-même les corrections expliquées dans le chat.
 - Ne lancer des tests que sur demande explicite. Ne pas entreprendre d'action supplémentaire sans accord.
-- Pour les choix de conception ECF, consulter outputs/ECF_choix_conception.md.
-- Lors de la rédaction du dossier ECF ou de la préparation de l'oral, rappeler et expliquer le choix d'enregistrer les informations d'intervention dans Commande, sans entité dédiée, avec l'hypothèse d'une seule modification employé ou annulation. Cette règle n'est pas une exigence explicite du sujet et son implémentation reste à vérifier.
+- À la prochaine reprise ECF, lire outputs/ECF_reprise.md et rappeler le contexte ainsi que le FormType d'annulation et la question du JS de modale avant de poursuivre.
+- Les choix actuels sont dans outputs/ECF_choix_conception.md. L'ancien choix des champs dans Commande est abandonné : une entité InterventionCommande est désormais retenue.
+- Une seule modification employé, sans interdire une annulation ultérieure. Ne pas confondre avec les changements de statut. Rappeler ce choix lors de la documentation et de l'oral.

@@ -43,7 +43,8 @@ final class AnnulerCommandeController extends AbstractController
 
         // appelle le service pour annuler la commande
         try {
-            $gestionCommandeService->annulerCommande($commande, $entityManager);
+            // précise au service que le client ne peut intervenir que si le statut == 1
+            $gestionCommandeService->annulerCommande($commande, $entityManager, [1]);
         } catch (\DomainException $exception) {
             // affiche le message d'erreur
             $this->addFlash('warning', $exception->getMessage());

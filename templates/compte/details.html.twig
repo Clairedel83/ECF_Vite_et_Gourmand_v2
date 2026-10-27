@@ -32,6 +32,15 @@
             </div>
 
             <div class="account_right">
+                {# affiche les flash messages #}
+                {% for type in ['success', 'warning'] %}
+                    {% for message in app.flashes(type) %}
+                        <div class="alert alert-{{ type }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
                 {% if commande %}
                 <div class="commandes_title">
                     <h3>Détails de ma commande N°{{ commande.numeroCommande }}</h3>

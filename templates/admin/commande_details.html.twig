@@ -16,142 +16,174 @@
                 <div class="details_content">
                     <h5>Informations du client</h5>
 
-                    <table>
-                        <tr>
-                            <th class="client"><img src="{{ asset('images/logos/user.svg') }}" alt="Logo de l'utilisateur"></th>
-                            <td>{{ commande.user.nom }} {{ commande.user.prenom }}</td>
-                        </tr>
-                        <tr>
-                            <th class="client"><img src="{{ asset('images/logos/Message_fill.svg') }}" alt="Logo de l'email"></th>
-                            <td>{{ commande.user.email }}</td>
-                        </tr>
-                        <tr>
-                            <th class="client"><img src="{{ asset('images/logos/Phone_fill2.svg') }}" alt="Logo du téléphone"></th>
-                            <td>{{ commande.user.telephone }}</td>
-                        </tr>
-                    </table>
+                    <div class="details_content_sub">
+                         <table>
+                            <tr>
+                                <th class="client"><img src="{{ asset('images/logos/user.svg') }}" alt="Logo de l'utilisateur"></th>
+                                <td>{{ commande.user.nom }} {{ commande.user.prenom }}</td>
+                            </tr>
+                            <tr>
+                                <th class="client"><img src="{{ asset('images/logos/Message_fill.svg') }}" alt="Logo de l'email"></th>
+                                <td>{{ commande.user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th class="client"><img src="{{ asset('images/logos/Phone_fill2.svg') }}" alt="Logo du téléphone"></th>
+                                <td>{{ commande.user.telephone }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                   
                 </div>
 
                 <div class ="details_content">
                     <h5>Prestation</h5>
-                    <table>
-                        <tr>
-                            <th class="prestation">Date :</th>
-                            <td>{{ commande.dateLivraison|date('d/m/Y') }}</td>
-                        </tr>
 
-                        <tr>
-                            <th class="prestation">Heure :</th>
-                            <td>{{ commande.heureLivraison|date('H:i') }}</td>
-                        </tr>
+                    <div class="details_content_sub">
+                        <table>
+                            <tr>
+                                <th class="prestation">Date :</th>
+                                <td>{{ commande.dateLivraison|date('d/m/Y') }}</td>
+                            </tr>
 
-                        <tr>
-                            <th class="prestation">Adresse :</th>
-                            <td>{{ commande.adresseLivraison }}</td>
-                        </tr>
+                            <tr>
+                                <th class="prestation">Heure :</th>
+                                <td>{{ commande.heureLivraison|date('H:i') }}</td>
+                            </tr>
 
-                        <tr>
-                            <th class="prestation"></th>
-                        </tr>
+                            <tr>
+                                <th class="prestation">Adresse :</th>
+                                <td>{{ commande.adresseLivraison }}</td>
+                            </tr>
 
-                        <tr>
-                            <th class="prestation">Menu :</th>
-                            <td>{{ commande.menuNom }}</td>
-                        </tr>
+                            <tr>
+                                <th class="prestation"></th>
+                            </tr>
 
-                        <tr>
-                            <th class="prestation">Convives :</th>
-                            <td>{{ commande.nbrePers }} personne(s)</td>
-                        </tr>
+                            <tr>
+                                <th class="prestation">Menu :</th>
+                                <td>{{ commande.menuNom }}</td>
+                            </tr>
 
-                        <tr>
-                            <th class="prestation">Composition :</th>
-                            
-                            <td>
-                            {% set composition = commande.menuComposition|split(',') %}
-                            {% for element in composition %}    
-                                <ul class="composition_elements">
-                                    <li>{{ element|trim }}</li>
-                                </ul>
-                            {% endfor %}
-                            </td>
-                            
-                        </tr>
+                            <tr>
+                                <th class="prestation">Convives :</th>
+                                <td>{{ commande.nbrePers }} personne(s)</td>
+                            </tr>
 
-                        <tr>
-                            <th class="prestation">Matériel :</th>
-                            <td>
-                                {% if commande.pretMateriel == 1 %}
-                                    Prêt de matériel demandé /
-                                {% else %}
-                                    Pas de prêt de matériel
-                                {% endif %}
+                            <tr>
+                                <th class="prestation">Composition :</th>
+                                
+                                <td>
+                                {% set composition = commande.menuComposition|split(',') %}
+                                {% for element in composition %}    
+                                    <ul class="composition_elements">
+                                        <li>{{ element|trim }}</li>
+                                    </ul>
+                                {% endfor %}
+                                </td>
+                                
+                            </tr>
 
-                                {% if  commande.restitutionMateriel == 1 %}
-                                    Matériel restitué
-                                {% else %}
-                                    En attente de retour du matériel
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </table>
+                            <tr>
+                                <th class="prestation">Matériel :</th>
+                                <td>
+                                    {% if commande.pretMateriel == 1 %}
+                                        Prêt de matériel demandé /
+                                    {% else %}
+                                        Pas de prêt de matériel
+                                    {% endif %}
+
+                                    {% if  commande.restitutionMateriel == 1 %}
+                                        Matériel restitué
+                                    {% else %}
+                                        En attente de retour du matériel
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="details_content">
                     <h5>Facturation</h5>
-                    <table class="facturation">
-                        <tr>
-                            <th class="facturation_legende">Prix / pers x nombre convives :</th>
-                            <td class="facturation_elements">{{ commande.prixPerPers }} € x {{ commande.nbrePers }}</td>
-                        </tr>
+                    <div class="details_content_sub">
+                        <table>
+                            <tr>
+                                <th class="facturation_legende">Prix / pers x nombre convives :</th>
+                                <td class="facturation_elements">{{ commande.prixPerPers }} € x {{ commande.nbrePers }}</td>
+                            </tr>
 
-                        <tr>
-                            <th class="facturation_legende">Sous-total :</th>
-                            <td class="facturation_elements">{{ commande.prixSousTotal }} €</td>
-                        </tr>
-                        <tr>
-                            <th class="facturation_legende">Réduction de 10% :</th>
-                            <td class="facturation_elements">- {{ commande.montantReduction }} €</td>
-                        </tr>
-                        <tr>
-                            <th class="facturation_legende">Frais de livraison :</th>
-                            <td class="facturation_elements">{{ commande.prixLivraison }} €</td>
-                        </tr>
-                        <tr>
-                            <th class="facturation_legende last">Location de matériel :</th>
-                            <td class="facturation_elements last">{{ commande.prixMateriel }}</td>
-                        </tr>
-                        
-                        <tr>
-                            <th class="total"><b>Total TTC :</b></th>
-                            <td class="total facturation_elements"><b>{{ commande.prixTotal }} €</b></td>
-                        </tr>
-                    </table>
+                            <tr>
+                                <th class="facturation_legende">Sous-total :</th>
+                                <td class="facturation_elements">{{ commande.prixSousTotal }} €</td>
+                            </tr>
+                            <tr>
+                                <th class="facturation_legende">Réduction de 10% :</th>
+                                <td class="facturation_elements">- {{ commande.montantReduction }} €</td>
+                            </tr>
+                            <tr>
+                                <th class="facturation_legende">Frais de livraison :</th>
+                                <td class="facturation_elements">{{ commande.prixLivraison }} €</td>
+                            </tr>
+                            <tr>
+                                <th class="facturation_legende last">Location de matériel :</th>
+                                <td class="facturation_elements last">{{ commande.prixMateriel }}</td>
+                            </tr>
+                            
+                            <tr>
+                                <th class="total"><b>Total TTC :</b></th>
+                                <td class="total facturation_elements"><b>{{ commande.prixTotal }} €</b></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="details_content historique">
                     <h5>historique des statuts</h5>
+                    
+                    <div class="details_content_sub">
+                        <table>
+                            <thead>
+                                <th>Date</th>
+                                <th>Heure</th>
+                                <th>Statut</th>
+                            </thead>
+                            <tbody>
+                                {% for historique in commande.commandeHistorique %}
+                                <tr>
+                                    <td>{{ historique.dateModification|date('d/m/Y') }}</td>
+                                    <td>{{ historique.heureModification|date('H:i') }}</td>
+                                    <td>
+                                        {{ include('admin/statut.html.twig', {
+                                            field: { value: historique.statut }
+                                        }) }}
+                                        
+                                        {% if (historique.statut == 8) %}
+                                            {% set annulationEmploye = commande.interventionCommandes
+                                                |filter(intervention => intervention.type == 'annulation')
+                                                |first
+                                            %}
 
-                    <table>
-                        <thead>
-                            <th>Date</th>
-                            <th>Heure</th>
-                            <th>Statut</th>
-                        </thead>
-                        <tbody>
-                            {% for historique in commande.commandeHistorique %}
-                            <tr>
-                                <td>{{ historique.dateModification|date('d/m/Y') }}</td>
-                                <td>{{ historique.heureModification|date('H:i') }}</td>
-                                <td>
-                                    {{ include('admin/statut.html.twig', {
-                                        field: { value: historique.statut }
-                                    }) }}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                             <p class="historique_annulation">
+                                                {# si la commande a été annulée par l'employé #}
+                                                {% if annulationEmploye %}
+                                                    Annulée par {{ annulationEmploye.auteur }}, le {{ annulationEmploye.date|date('d/m/Y') }} à {{ annulationEmploye.date|date('H:i') }}, après contact
+                                                    {{ annulationEmploye.modeContact == 'telephone'
+                                                        ? 'par téléphone'
+                                                        : 'par email'
+                                                    }}.
+                                                    Motif : {{ annulationEmploye.motif }}
+                                                {% else %}
+                                                {# si la commande a été annulée par le client #}
+                                                    Annulée par le client, le {{ historique.dateModification|date('d/m/Y') }} à {{ historique.heureModification|date('H:i') }}.
+                                                {% endif %}
+                                            </p>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -160,37 +192,120 @@
             <div class="details_content right">
                 <h5>SUIVI DE LA COMMANDE</h5>
                 
-                <p class="statut">{{ include('admin/statut.html.twig', { field : { 'value' : commande.statut}}) }}</p>
+                <div class="details_content_sub">
+                    <p class="statut">{{ include('admin/statut.html.twig', { field : { 'value' : commande.statut}}) }}</p>
 
-                <div class="form_statut">
-                    {{ form_start(statutForm) }}
-                        <div class="statut_champ">
-                            {{ form_label(statutForm.statut) }}
-                            {{ form_widget(statutForm.statut) }}
-                            {{ form_errors(statutForm.statut) }}                            
-                        </div>
-                        
-                        <button type="submit" class="btn2 btn2_statut">Mettre à jour le statut</button>
-                    {{ form_end(statutForm) }}    
+                    <div class="form_statut">
+                        {{ form_start(statutForm) }}
+                            <div class="statut_champ">
+                                {{ form_label(statutForm.statut) }}
+                                {{ form_widget(statutForm.statut) }}
+                                {{ form_errors(statutForm.statut) }}                            
+                            </div>
+                            
+                            <button type="submit" class="btn2 btn2_statut">Mettre à jour le statut</button>
+                        {{ form_end(statutForm) }}    
+                    </div>
                 </div>
             </div>
 
             <div class="details_content right">
                 <h5>ACTIONS</h5>
 
-                <div class="commande_actions">
-                    <button class="btn2 btn2_modifier"><img src="{{ asset('images/logos/Edit_fill.svg') }}" alt="">Modifier la commande</button>
+                <div class="details_content_sub">
+                    <div class="commande_actions">
+                        {# Bouton qui ouvre la modale d'annulation #}
+                        <button class="btn2 btn2_modifier">
+                            <twig:ea:Icon name="fa fa-pen" />Modifier la commande
+                        </button>
 
-                    <button class="btn2 btn2_annuler"><img src="{{ asset('images/logos/Trash_red.svg') }}" alt="">Annuler la commande</button>                    
-                </div>
+                        {# Bouton qui affiche le formulaire de modification #}
+                        <button class="btn2 btn2_annuler" data-bs-toggle="modal" data-bs-target="#annulationCommandeModal">
+                            <twig:ea:Icon name="fa fa-trash-can" />Annuler la commande
+                        </button>                    
+                    </div>
 
-                <div class="infos">
-                    <p class="p500">Conseil préalable obligatoire</p>
-                    <p>Pour modifier ou annuler une commande : renseigner le moyen de contact et le motif après avoir contacté le client.</p>
+                    <div class="infos">
+                        <p class="p500">OBLIGATOIRE :</p>
+                        <p>Pour modifier ou annuler une commande : il est impératif de contacter le client.</p>
+                        <p>Pour annuler une commande : renseigner le moyen de contact et le motif d'annulation.</p>
+                    </div>
                 </div>
             </div>
         </div>
 
     </section>
+
+    {# MODALE POUR ANNULATION DE COMMANDE #}
+    <div class="modal fade" id="annulationCommandeModal" tabindex="-1" aria-labelledby="annulationCommandeTitre" aria-hidden="true" data-ouvrir="{{ ouvrirModaleAnnulation|default(false) ? 'true' : 'false' }}">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <div class="modal-header-title">
+                        <h5 class="modal-title fs-5" id="annulationCommandeTitre">Annuler la commande</h5>
+                        <p>Commande N°{{ commande.numeroCommande }}</p>
+                    </div>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-client">
+                        <table>
+                            <tr>
+                                <th><img src="{{ asset('images/logos/user.svg') }}" alt="Logo de l'utilisateur"></th>
+                                <td>{{ commande.user.nom }} {{ commande.user.prenom }}</td>
+                            </tr>
+                            <tr>
+                                <th><img src="{{ asset('images/logos/Message_fill.svg') }}" alt="Logo de l'email"></th>
+                                <td>{{ commande.user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th><img src="{{ asset('images/logos/Phone_fill2.svg') }}" alt="Logo du téléphone"></th>
+                                <td>{{ commande.user.telephone }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="modal-form">
+                        {{ form_start(InterventionCommandeForm) }}
+                        {{ form_errors(InterventionCommandeForm) }}
+                            <div class="modal-form-content">
+                                {{ form_label(InterventionCommandeForm.modeContact, null, {
+                                    label_attr: { class: 'modal-label' } }) }}
+                                {{ form_widget(InterventionCommandeForm.modeContact, {
+                                    attr: {class: 'modal-select'} }) }}
+                                {{ form_errors(InterventionCommandeForm.modeContact) }}
+                            </div>
+                            <div class="modal-form-content">
+                                {{ form_label(InterventionCommandeForm.motif, null, {
+                                    label_attr: { class: 'modal-label' } }) }}
+                                {{ form_widget(InterventionCommandeForm.motif, {
+                                    attr: {class: 'modal-textarea'} }) }}
+                                {{ form_errors(InterventionCommandeForm.motif) }}
+                            </div>
+                            <div class="modal-form-checkbox">
+                                {{ form_widget(InterventionCommandeForm.clientContacte) }}
+                                {{ form_label(InterventionCommandeForm.clientContacte) }}
+                                {{ form_errors(InterventionCommandeForm.clientContacte) }}
+                            </div>
+
+                            <div class="info-warning">
+                                <twig:ea:Icon name="fa fa-triangle-exclamation" />
+                                <p>Cette action est définitive.</p>
+                            </div>
+
+                            <div class="modal-cta">
+                                <button type="button" data-bs-dismiss="modal" class="btn_modal btn_abandonner">Abandonner</button>
+                                <button type="submit" class="btn_modal btn_annuler ">Confirmer l'annulation</button>
+                            </div>
+                        {{ form_end(InterventionCommandeForm) }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 {%  endblock %}

@@ -316,7 +316,7 @@ body.ea-dark-scheme .content-top {
 
 .btn_retour {
     color: #252424;
-    background-color: #faebd8c9;
+    background-color: #faebd8;
     font-weight: 500;
     display: flex;
     gap: 1vw;
@@ -337,13 +337,18 @@ body.ea-dark-scheme .content-top {
     gap: 2vw;
 }
 
+.details_content{
+    border:1px solid #faebd8;
+    border-radius: 5px;
+}
+
 .details_content h5 {
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 1px;
-    background-color: #faebd8c9;
+    background-color: #faebd8;
+    border-radius: 5px 5px 0 0;
     padding: 10px;
-    border-radius: 5px;
 }
 
 .details_content_left {
@@ -360,6 +365,10 @@ body.ea-dark-scheme .content-top {
 .details_content table {
     width: 100%;
     border-collapse: collapse;
+}
+
+.details_content_sub{
+    padding: 0 15px 15px ;
 }
 
 .client,
@@ -431,6 +440,14 @@ body.ea-dark-scheme .content-top {
     padding: 5px !important;
 }
 
+
+.historique .historique_annulation {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
 .statut_champ {
     display: flex;
     flex-direction: column;
@@ -485,25 +502,25 @@ body.ea-dark-scheme .content-top {
 }
 
 .btn2_modifier {
-    color: #a10303;
-    border: 1.5px solid #a10303;
+    color: #aa3333;
+    border: 1.5px solid #aa3333cc;
     background-color: transparent;
 }
 
 .btn2_modifier:hover {
-    background-color: #a10303;
+    background-color: #aa3333cc;
     color: #252424;
 }
 
 .btn2_annuler {
-    color: red;
-    border: 1.5px solid red;
+    color: rgb(245, 61, 61);
+    border: 1.5px solid rgb(245, 61, 61);
     background-color: transparent;
 }
 
 .btn2_annuler:hover {
-    color: #252424;
-    background-color: red;
+    color: white;
+    background-color: rgba(245, 61, 61, 0.829);
 }
 
 .infos {
@@ -515,4 +532,104 @@ body.ea-dark-scheme .content-top {
 
 .p500 {
     font-weight: 500;
+}
+
+/* ---------------------------------------- MODAL --------------------------------- */
+
+#annulationCommandeModal {
+    --bs-modal-width: 30vw;
+    
+}
+
+.modal-content {
+    gap: 0;
+    padding: 0;
+}
+
+.modal-body{
+    padding: 15px;
+}
+
+.modal-header{
+    background-color: #faebd8;
+    border: 1 solid #faebd8;
+    border-radius: 10px 10px 0 0;
+    padding: 15px;
+}
+
+.modal-header-title p{
+    margin-bottom: 0;
+}
+
+.modal-form{
+    margin-top:4vh ;
+}
+
+.modal-client table th{
+padding-right: 10px;
+}
+
+.modal-form-content, .modal-form-checkbox{
+    margin-top: 2vh;
+}
+
+.modal-form-content{
+    display: flex;
+    flex-direction: column;
+    gap:1vh;
+}
+
+.modal-form-checkbox{
+    display: flex;
+    align-items: center;
+    gap:1vw;
+}
+
+.modal-label{
+    font-weight:500;
+}
+
+.modal-select{
+    height:1.75rem;
+}
+
+.modal-textarea{
+    resize:none;
+    height:3rem;
+}
+
+.modal-select, .modal-textarea{
+    border: 0.6px solid #696968a4;
+}
+
+.info-warning, .info-warning p{
+    color:rgba(245, 61, 61)
+}
+
+.info-warning{
+    display: flex;
+    gap:1vw;
+}
+
+.btn_modal{
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.btn_annuler{
+    color: white;
+    background-color: rgba(245, 61, 61, 0.829);
+    border:1px solid rgba(245, 61, 61, 0.829);
+}
+
+.btn_abandonner{
+    background-color: transparent;
+    border:1px solid #252424;
+    color:#252424;
+}
+
+.modal-cta{
+    display: flex;
+    justify-content: end;
+    gap:1vw;
 }

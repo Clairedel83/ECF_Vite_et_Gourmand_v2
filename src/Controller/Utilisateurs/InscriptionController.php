@@ -25,7 +25,6 @@ final class InscriptionController extends AbstractController
         // récupère les données saisies par l'utilisateur et les associe au formulaire
         $form->handleRequest($request);
 
-        
 
         // met à jour la BDD
         if($form->isSubmitted() && $form->isValid()){

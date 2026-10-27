@@ -4,7 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Entity\Commande;
 use App\Entity\CommandeHistorique;
+use App\Entity\InterventionCommande;
+use App\Form\InterventionCommandeType;
 use App\Form\StatutType;
+use App\Repository\CommandeRepository;
+use App\Services\GestionCommandeService;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -18,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 use Override;
+use Symfony\Component\HttpFoundation\Request;
 
 class CommandeCrudController extends AbstractCrudController
 {
@@ -50,7 +56,7 @@ class CommandeCrudController extends AbstractCrudController
     }
 
     // pour afficher la vue des détails de commande :
-    #[AdminRoute('/{numero_commande/details}')]
+    #[AdminRoute(path: '/{entityId}/details', name: 'details', options: ['methods' => ['GET']])]
     public function details(AdminContext $context)
     {
         // permet d'afficher l'ensemble des éléments de l'entité Commande
@@ -59,10 +65,21 @@ class CommandeCrudController extends AbstractCrudController
         // permet de rattacher le formulaire de modification du statut
         $form = $this->createForm(StatutType::class, $commande);
 
+        // permet de rattercher le formulaire d'annulation
+        $interventionCommande = new InterventionCommande();
+        // donne la destination du formulaire (method annulerCommande en POST, identification avec id)
+        $formAnnulation = $this->createForm(InterventionCommandeType::class, $interventionCommande, [
+            'action' => $this->generateUrl('admin_commande_annuler', [
+                'entityId' => $commande->getId(),
+            ]),
+            'method' => 'POST',
+        ]);
+
         // crée la vue de cet affichage
         return $this->render('admin/commande_details.html.twig', [
             'commande' => $commande,
             'statutForm' => $form->createView(),
+            'InterventionCommandeForm' => $formAnnulation->createView()
         ]);
     }
 
@@ -134,12 +151,87 @@ class CommandeCrudController extends AbstractCrudController
     }
 
 
-    // pour permettre l'annulation d'une commande par un employé
-    
+    // PERMET L'ANNULATION D'UNE COMMANDE PAR UN EMPLOYE VIA UN FORM (POST)
+    #[AdminRoute(path: '/{entityId}/annuler', name: 'annuler', options: ['methods' => ['POST']])]
+    public function annulerCommande(AdminContext $context, Request $request, EntityManagerInterface $entityManager, GestionCommandeService $gestionCommandeService)
+    {
+        // RECUPERE LES ELEMENTS
+        // récupère l'auteur 
+        $auteur = $this->getUser();
+
+        // récupère la commande concernée
+        $commande = $context->getEntity()->getInstance();
+
+        // crée l'intervention
+        $interventionCommande = new InterventionCommande();
+
+        // Reconstruit le formulaire envoyé depuis la modale
+        $formAnnulation = $this->createForm(InterventionCommandeType::class, $interventionCommande, [
+            'action' => $this->generateUrl('admin_commande_annuler', [
+                'entityId' => $commande->getId(),
+            ]),
+            'method' => 'POST',
+        ]);
+
+        // récupère les données envoyées dans le formulaire
+        $formAnnulation->handleRequest($request);
+
+        // crée la date du jour
+        $dateAnnulation = new \DateTimeImmutable();
 
 
+        // ENREGISTRE EN BDD
+        if ($formAnnulation->isSubmitted() && $formAnnulation->isValid()) {
+            // le mode de contact et le motif sont déjà renseignés par handlerequest()
 
+            // attribue l'auteur
+            $interventionCommande->setAuteur($auteur);
 
+            // attribue le type d'intervention
+            $interventionCommande->setType('annulation');
 
+            // attribue la date de l'intervention
+            $interventionCommande->setDate($dateAnnulation);
 
+            // appelle le service pour annuler la commande
+            try {
+                $gestionCommandeService->annulerCommande($commande, $entityManager, [1, 2, 3], $interventionCommande);
+            } catch (\DomainException $exception) {
+                // affiche le message d'erreur
+                $this->addFlash('warning', $exception->getMessage());
+
+                // redirige vers la page précédente = depuis laquelle la demande a été faite (referer)
+                $referer = $request->headers->get('referer');
+
+                // vérifie que la dernère page consultée correspond à une page du domaine
+                if (is_string($referer) && str_starts_with($referer, $request->getSchemeAndHttpHost() . '/')) {
+                    return $this->redirect($referer);
+                }
+
+                // attention, en cas d'erreur, referer peut être vide donc prévoir redirection fiable
+                return $this->redirectToRoute('admin_commande_details', [
+                    'entityId' => $commande->getId(),
+                ]);
+            }
+
+            $this->addFlash(
+                'success',
+                'Cette commande a bien été annulée.'
+            );
+
+            return $this->redirectToRoute('admin_commande_details', [
+                'entityId' => $commande->getId(),
+            ]);
+        }
+
+        // si le formulaire est invalide, affiche la page détails et rouvre la modale
+        $formStatut = $this->createForm(StatutType::class, $commande);
+
+        return $this->render('admin/commande_details.html.twig', [
+            'commande' => $commande,
+            'statutForm' => $formStatut->createView(),
+            'InterventionCommandeForm' => $formAnnulation->createView(),
+            'ouvrirModaleAnnulation' => true,
+        ]);
+    }
 }
