@@ -20,8 +20,11 @@
                 <div class="account_link">
                     <a href="{{ path('app_compte_informations') }}">Mes informations</a>
                     <a href="{{ path('app_compte_modifier_pass') }}">Modifier mon mot de passe</a>
-
-                    <a href="{{ path('app_commandes') }}">Mes commandes</a>
+                    
+                    {% if is_granted('ROLE_USER') and not is_granted('ROLE_EMPLOYE') %}
+                        <a href="{{ path('app_commandes') }}">Mes commandes</a>
+                    {% endif %}
+                    
                     <a href="{{ path('_logout_main') }}">Me déconnecter</a>
                 </div>
                 
@@ -63,7 +66,13 @@
                             </tbody>
                         </table>
                     {% else %}
-                        <p>Vous n'avez pas encore passé de commande.</p>
+                    <div class="no_commande">
+                        <p>N'hésitez pas à passer votre première commande.</p>
+                        <a href="{{ path('app_menus')}}" class="btn1 nav_item">
+                            <span>VOIR LES MENUS</span>
+                        </a>
+                    </div>
+
                     {% endif %}
                     
                 </div>

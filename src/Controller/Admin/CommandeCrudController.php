@@ -18,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -57,6 +58,43 @@ class CommandeCrudController extends AbstractCrudController
 
             // ajoute la possibilité d'afficher les détails de commande
             ->add(Crud::PAGE_INDEX, $details);
+    }
+
+
+    #[Override]
+    public function configureFilters(Filters $filters): Filters
+    {
+        return parent::configureFilters($filters);
+    }
+
+
+    public function configureFields(string $pageName): iterable
+    {
+        return [
+            TextField::new('numero_commande')->setLabel('N° de commande')->hideOnForm(),
+            AssociationField::new('user')->setLabel('Client')->hideOnForm(),
+            // DateTimeField::new('date_commande')->setLabel('Date de création')->setFormat('dd/MM/yyyy HH:mm')->onlyOnDetail(),
+            DateField::new('dateLivraison', 'Livraison')->hideOnForm()
+                // associe heure et date de livraison dans la même colonne
+                ->formatValue(function ($value, $commande) {
+                    return $commande->getDateLivraison()->format('d/m/Y')
+                        . ' à '
+                        . $commande->getHeureLivraison()->format('H:i');
+                }),
+            ChoiceField::new('statut')->setLabel('Statut de commande')
+                ->setChoices([
+                    '1 - En attente de validation' => 1,
+                    '2 - Commande acceptée' => 2,
+                    '3 - En préparation' => 3,
+                    '4 - En cours de livraison' => 4,
+                    '5 - Commande livrée' => 5,
+                    '6 - En attente du retour de matériel' => 6,
+                    '7 - Commande terminée' => 7,
+                    '8 - Commande annulée' => 8,
+                ])
+                ->setTemplatePath('admin/statut.html.twig'),
+            TextField::new('menu_nom')->setLabel('Menu')->hideOnForm(),
+        ];
     }
 
     // PERMET D'AFFICHER L'ENSEMBLE DES DETAILS DE COMMANDES (form compris)
@@ -111,37 +149,6 @@ class CommandeCrudController extends AbstractCrudController
             'modificationForm' => $formModification->createView(),
             'adresseInitialeLivraison' => $adresseLivraison,
         ]);
-    }
-
-
-    public function configureFields(string $pageName): iterable
-    {
-        return [
-            TextField::new('numero_commande')->setLabel('N° de commande')->hideOnForm(),
-            AssociationField::new('user')->setLabel('Client')->hideOnForm(),
-            // DateTimeField::new('date_commande')->setLabel('Date de création')->setFormat('dd/MM/yyyy HH:mm')->onlyOnDetail(),
-            DateField::new('dateLivraison', 'Livraison')->hideOnForm()
-                // associe heure et date de livraison dans la même colonne
-                ->formatValue(function ($value, $commande) {
-                    return $commande->getDateLivraison()->format('d/m/Y')
-                        . ' à '
-                        . $commande->getHeureLivraison()->format('H:i');
-                }),
-            ChoiceField::new('statut')
-                ->setLabel('Statut de commande')
-                ->setChoices([
-                    '1 - En attente de validation' => 1,
-                    '2 - Commande acceptée' => 2,
-                    '3 - En préparation' => 3,
-                    '4 - En cours de livraison' => 4,
-                    '5 - Commande livrée' => 5,
-                    '6 - En attente du retour de matériel' => 6,
-                    '7 - Commande terminée' => 7,
-                    '8 - Commande annulée' => 8,
-                ])
-                ->setTemplatePath('admin/statut.html.twig'),
-            TextField::new('menu_nom')->setLabel('Menu')->hideOnForm(),
-        ];
     }
 
 

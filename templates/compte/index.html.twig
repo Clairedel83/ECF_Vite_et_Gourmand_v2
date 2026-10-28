@@ -21,44 +21,16 @@
                     <a href="{{ path('app_compte_informations') }}">Mes informations</a>
                     <a href="{{ path('app_compte_modifier_pass') }}">Modifier mon mot de passe</a>
 
-                    <a href="{{ path('app_commandes') }}">Mes commandes</a>
+                    {% if is_granted('ROLE_USER') and not is_granted('ROLE_EMPLOYE') %}
+                        <a href="{{ path('app_commandes') }}">Mes commandes</a>
+                    {% endif %}
                     <a href="{{ path('_logout_main') }}">Me déconnecter</a>
                 </div>
                 
             </div>
 
-            <div class="account_right">
-                <h3>Ma dernière commande</h3>
-
-                <div class="commandes">
-                    <table>
-                        <tr>
-                            <th>N° commande</th>
-                            <th>Date de la commande</th>
-                            <th>Statut</th>
-                            <th>Prix TTC</th>
-                            <th>Détails</th>
-                        </tr>
-
-                        <tr>
-                            <td>{{ derniereCommande.numeroCommande }}</td>
-                            <td>{{ derniereCommande.dateCommande|date('d/m/Y') }}</td>
-                            <td>    
-                                {{ include('admin/statut.html.twig', { field: { value: derniereCommande.statut }}) }}
-                            </td>
-                            <td>{{ derniereCommande.prixTotal }}€</td>
-                            <td>
-                                <a href="{{ path('app_commandes_details', {'id': derniereCommande.id}) }}">
-                                    {% if derniereCommande.statut == 1 %}
-                                        Modifier
-                                    {% else %}
-                                        Voir plus
-                                    {% endif %}
-                                </a>
-                            </td>
-                        </tr>   
-                    </table>
-                </div>
+            <div class="account_right" id="bienvenue">
+                <h3>Bienvenue dans votre espace client !</h3>
             </div>
         </section>
 

@@ -110,6 +110,15 @@ final class CompteController extends AbstractController
             ['date_commande' => 'DESC']
         );
 
+        // Réserve cette page aux clients connectés
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($this->isGranted('ROLE_EMPLOYE')) {
+            throw $this->createAccessDeniedException(
+                'Cette page est réservée aux clients.'
+            );
+        }
+
         return $this->render('compte/commandes.html.twig', [
             'commandes' => $commandes
         ]);

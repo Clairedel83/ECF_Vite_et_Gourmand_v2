@@ -12,6 +12,23 @@
 
 .account_right{
     padding:5vh 100px 0 0;
+
+}
+
+#bienvenue{
+    display: flex;
+    justify-content: center;
+    padding:25vh 100px 0 0;
+}
+
+.no_commande{
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+    gap:4vh;
+    margin-top: 10vh;
 }
 
 .account_left h3, .account_right h3{
