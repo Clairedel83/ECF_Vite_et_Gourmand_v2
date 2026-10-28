@@ -100,13 +100,51 @@
 
                 <div class="horaires">
                     <h5>HORAIRES</h5>
-                    <p>Lundi : 10h - 14h /  17h - 20h</p>
+                    {# <p>Lundi : 10h - 14h /  17h - 20h</p>
                     <p>Mardi : 10h - 14h /  17h - 20h</p>
                     <p>Mercredi : 10h - 14h /  17h - 20h</p>
                     <p>Jeudi : 10h - 14h /  17h - 20h</p>
                     <p>Vendredi : 10h - 14h /  17h - 20h</p>
                     <p>Samedi : 10h - 14h</p>
-                    <p>Dimanche : Fermé</p>
+                    <p>Dimanche : Fermé</p> #}
+
+                    {% set horaires = horairesRepository.findBy({}, {jour: 'ASC'}) %}
+                    {% set jours = {
+                        1: 'Lundi',
+                        2: 'Mardi',
+                        3: 'Mercredi',
+                        4: 'Jeudi',
+                        5: 'Vendredi',
+                        6: 'Samedi',
+                        7: 'Dimanche'
+                    } %}
+
+                    {% for horaire in horaires %}
+                        {% set matin = horaire.matinDebut is not null and horaire.matinFin is not null %}
+                        {% set apresMidi = horaire.apresMidiDebut is not null and horaire.apresMidiFin is not null %}
+
+                        <p>
+                            {{ jours[horaire.jour] }} :
+
+                            {% if horaire.matinDebut is null
+                                and horaire.matinFin is null
+                                and horaire.apresMidiDebut is null
+                                and horaire.apresMidiFin is null %}
+                                Fermé
+                            {% else %}
+                                {% if matin %}
+                                    {{ horaire.matinDebut|date('H:i') }}-{{ horaire.matinFin|date('H:i') }}
+                                {% endif %}
+
+                                {% if matin and apresMidi %} / {% endif %}
+
+                                {% if apresMidi %}
+                                    {{ horaire.apresMidiDebut|date('H:i') }}-{{ horaire.apresMidiFin|date('H:i') }}
+                                {% endif %}
+                            {% endif %}
+                        </p>
+                    {% endfor %}
+
                 </div>
                 
                 <div class="about">

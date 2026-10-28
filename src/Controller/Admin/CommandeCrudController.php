@@ -8,7 +8,6 @@ use App\Entity\InterventionCommande;
 use App\Form\InterventionCommandeType;
 use App\Form\ModifierCommandeType;
 use App\Form\StatutType;
-use App\Repository\CommandeRepository;
 use App\Services\CalculPrixLivraison;
 use App\Services\GestionCommandeService;
 use App\Services\VerificationAdresseService;
@@ -25,7 +24,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Override;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,11 +60,22 @@ class CommandeCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $details);
     }
 
-
+    // PERMET D'UTILISER DES FILTRES
     #[Override]
     public function configureFilters(Filters $filters): Filters
     {
-        return parent::configureFilters($filters);
+        return $filters
+            ->add(ChoiceFilter::new('statut', 'Statut')->setChoices([
+                '1 - En attente de validation' => 1,
+                '2 - Commande acceptée' => 2,
+                '3 - En préparation' => 3,
+                '4 - En cours de livraison' => 4,
+                '5 - Commande livrée' => 5,
+                '6 - En attente du retour de matériel' => 6,
+                '7 - Commande terminée' => 7,
+                '8 - Commande annulée' => 8,
+            ]))
+            ->add(EntityFilter::new('user', 'Client'));
     }
 
 
@@ -153,7 +164,7 @@ class CommandeCrudController extends AbstractCrudController
 
 
     // PERMET LE CHANGEMENT DE STATUT
-    #[AdminRoute(path:'/{entityId}/statut', name:'statut', options: ['methods'=> 'POST'])]
+    #[AdminRoute(path: '/{entityId}/statut', name: 'statut', options: ['methods' => 'POST'])]
     public function modifierStatut(AdminContext $context, Request $request, EntityManagerInterface $entityManager)
     {
         // Récupère la commande 
@@ -163,7 +174,7 @@ class CommandeCrudController extends AbstractCrudController
         $connexion = $entityManager->getConnection();
         $connexion->beginTransaction();
 
-        try{
+        try {
             // recharge et verrouille : évite plusieurs modifications simultanées
             $entityManager->refresh($commande, LockMode::PESSIMISTIC_WRITE);
 
@@ -258,11 +269,9 @@ class CommandeCrudController extends AbstractCrudController
                 'success',
                 'Le statut de la commande a bien été mis à jour.'
             );
-
-        }catch (\DomainException $exception) {
+        } catch (\DomainException $exception) {
             // Affiche le message d'erreur
             $this->addFlash('warning', $exception->getMessage());
-
         } finally {
             // Ferme la transaction en cas de return ou d'erreur
             if ($connexion->isTransactionActive()) {
@@ -274,7 +283,6 @@ class CommandeCrudController extends AbstractCrudController
         return $this->redirectToRoute('admin_commande_details', [
             'entityId' => $commande->getId(),
         ]);
-
     }
 
 
@@ -406,7 +414,7 @@ class CommandeCrudController extends AbstractCrudController
         $formModification = null;
         $adresseInitialeLivraison = '';
 
-        try{
+        try {
             // Recharge et verrouille la commande AVANT de traiter le formulaire.
             $entityManager->refresh($commande, LockMode::PESSIMISTIC_WRITE);
 
@@ -443,19 +451,19 @@ class CommandeCrudController extends AbstractCrudController
                 $adresseInitialeLivraison = $elementsAdresse[1];
             }
 
-        
+
 
             // ------------------------------------------------ FORMULAIRE ------------------------------------------------
 
             // Reconstruit le formulaire envoyé depuis la page détails.
-            $formModification = $this->createForm(ModifierCommandeType::class, $commande,[
+            $formModification = $this->createForm(ModifierCommandeType::class, $commande, [
                 'action' => $this->generateUrl('admin_commande_modifier', [
                     'entityId' => $commande->getId(),
                 ]),
                 'method' => 'POST',
                 'minimum_convives' => $commande->getMenu()->getNbreMin(),
             ]);
-        
+
             // Prépare la valeur initiale du champ sans le destinataire.
             $formModification->get('adresseLivraison')->setData($adresseInitialeLivraison);
 
@@ -519,7 +527,7 @@ class CommandeCrudController extends AbstractCrudController
                     );
                 }
 
-            
+
 
                 // --------------- ADRESSE DE LIVRAISON ---------------
                 // récupère l'adresse saisie
@@ -531,7 +539,7 @@ class CommandeCrudController extends AbstractCrudController
                     $adresseComplete = $adresseCompleteInitiale;
                     $prixLivraison = (float) $prixLivraisonInitial;
 
-                // si l'adresse saisie est différente :
+                    // si l'adresse saisie est différente :
                 } else {
                     // Récupère les champs non mappés du formulaire.
                     $codePostal = trim((string) $formModification->get('codePostalLivraison')->getData());
@@ -546,7 +554,7 @@ class CommandeCrudController extends AbstractCrudController
                     }
 
                     // Appelle le service de vérification d'adresse
-                    $resultatAdresse = $verificationAdresseService->verifierAdresse($adresseSaisie,$codePostal,$ville);
+                    $resultatAdresse = $verificationAdresseService->verifierAdresse($adresseSaisie, $codePostal, $ville);
 
                     $adresseVerifiee = $resultatAdresse['adresse'];
                     $villeVerifiee = $resultatAdresse['ville'];
@@ -558,7 +566,7 @@ class CommandeCrudController extends AbstractCrudController
                     $adresseComplete = $adresseVerifiee;
 
                     if ($destinataire !== '') {
-                        $adresseComplete =$destinataire . ' - ' . $adresseVerifiee;
+                        $adresseComplete = $destinataire . ' - ' . $adresseVerifiee;
                     }
                 }
 
@@ -578,7 +586,7 @@ class CommandeCrudController extends AbstractCrudController
                     $montantReduction = round($prixMenu * 0.10, 2);
                 }
 
-                                // calcul du sous total
+                // calcul du sous total
                 $sousTotal = round($prixMenu - $montantReduction, 2);
 
                 // calcul du prix de location matériel (de base = 0, passe à 20 si checked)
@@ -608,7 +616,7 @@ class CommandeCrudController extends AbstractCrudController
                 // --------------- INTERVENTION ---------------
                 // crée l'intervention
                 $interventionCommande = new InterventionCommande();
-                
+
                 // attribue l'auteur, le type et la date
                 $interventionCommande->setAuteur($auteur);
                 $interventionCommande->setType('modification');
@@ -618,7 +626,7 @@ class CommandeCrudController extends AbstractCrudController
                 $commande->addInterventionCommande($interventionCommande);
 
                 // --------------- Enregistrement en BDD ---------------
-                
+
                 $entityManager->persist($interventionCommande);
                 $entityManager->flush();
 
@@ -633,14 +641,12 @@ class CommandeCrudController extends AbstractCrudController
                 return $this->redirectToRoute('admin_commande_details', [
                     'entityId' => $commande->getId(),
                 ]);
-
             }
 
             // fin du if (isSubmitted && isValid)
             // si le fomulaire est invalide : termine la transaction et rafraîchit les données
             $connexion->rollBack();
             $entityManager->refresh($commande);
-
         } catch (\DomainException | \InvalidArgumentException $exception) {
             // stop transaction si toujours active
             if ($connexion->isTransactionActive()) {
@@ -651,7 +657,7 @@ class CommandeCrudController extends AbstractCrudController
             $entityManager->refresh($commande);
 
 
-            if($formModification !== null){
+            if ($formModification !== null) {
                 // si le formulaire existe, affiche le message d'erreur
                 $formModification->addError(
                     new FormError($exception->getMessage())
@@ -660,8 +666,6 @@ class CommandeCrudController extends AbstractCrudController
                 // si le formulaire ne s'est pas ouvert, affiche le message d'erreur associé
                 $this->addFlash('warning', $exception->getMessage());
             }
-
-
         } catch (\Throwable $exception) {
             // stop transaction si toujours active
             if ($connexion->isTransactionActive()) {
@@ -683,7 +687,7 @@ class CommandeCrudController extends AbstractCrudController
         }
 
         // --------------- REAFFICHAGE APRES ERREUR ---------------
-        
+
         $formStatut = $this->createForm(StatutType::class, $commande, [
             'action' => $this->generateUrl('admin_commande_statut', [
                 'entityId' => $commande->getId(),

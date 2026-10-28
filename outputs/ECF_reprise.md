@@ -12,19 +12,24 @@ Choix : modifications successives autorisées selon statut, ancienne règle de m
 
 ## Avancement indicatif
 
-Estimation 28 octobre : environ 65 % du projet ECF global, environ 75 % de l'application hors livraison/documentation. Estimation indicative, pas mesure exacte : fonctionnalités obligatoires, tests, déploiement et livrables comptent dans le global. Les documents externes et le déploiement ne sont pas inspectés ; confirmer leur état avant de les déclarer absents. Énoncé local relu intégralement (12 pages).
+Estimation actualisée le 28 octobre après suivi/statuts, filtres et horaires : environ 80 % du développement fonctionnel de l'application. À la demande de l'utilisatrice, exclure les livrables et documents de ce calcul. Estimation indicative des fonctionnalités implémentées, pas proportion de temps restant ni validation par tests. Tests et mise en ligne à suivre séparément. Anciennes estimations 65 % global / 75 % application utilisaient un autre périmètre ; ne pas les comparer directement. Documents externes et déploiement non inspectés : confirmer leur état. Énoncé local relu intégralement (12 pages).
+
+## Dernières réalisations — 28 octobre 2026
+
+- Suivi du statut implémenté dans modifierStatut(), route POST dédiée, formulaire raccordé dans details() et les réaffichages, historique daté, transaction et verrou pessimiste. Ancienne surcharge updateEntity remplacée. Annulation conservée dans le parcours dédié ; choix 8 retiré de StatutType.
+- Restitution : passage au statut 7 avec prêt de matériel confirme la restitution (restitutionMateriel = true). Aucun formulaire supplémentaire requis. Mails des statuts 6 et 7 encore à faire.
+- Filtres commandes par statut et client : l'utilisatrice confirme avoir corrigé configureFilters avec les propriétés directes et les types adaptés. Marqués réalisés sur sa confirmation ; dernière version non relue ni testée dans ce tour.
+- Horaires du pied de page reliés aux données : l'utilisatrice demande de les marquer réalisés. Lundi = 1, créneaux absents non affichés, quatre heures nulles = Fermé. Dernière intégration non relue ni testée dans ce tour.
+- Modifications de commande : arrondis JS client et transaction/finally relus. Aucun test exécuté.
 
 ## Tâches ECF restantes
 
-- Suivi des statuts et restitution à raccorder : details() actuel GET prépare StatutType sans handleRequest ; updateEntity() ne traite pas automatiquement ce formulaire personnalisé. Traitement POST, historique et règles de clôture à terminer/vérifier.
-- Filtres commandes par statut/client : configureFilters absent du CRUD actuel.
 - Mails : bienvenue, confirmation commande, commande terminée invitant à donner avis, attente matériel (10 jours ouvrés, 600 euros), compte employé sans mot de passe dans mail. Pas de traitement Mailer trouvé dans src.
 - Mot de passe oublié avec lien de réinitialisation.
 - Avis depuis commande terminée, note 1 à 5/commentaire, validation/refus employé, accueil affichant les vrais avis validés. Entité et CRUD existent mais parcours restant ; harmoniser mapping Avis OneToOne / collection Commande.
 - Gestion employés par José : création email/mot de passe hashé, notification, désactivation empêchant connexion, compte admin créé hors application, protection serveur des actions réservées admin.
 - Statistiques José : graphique comparatif commandes/menu depuis NoSQL, chiffre d'affaires/menu avec filtres menu/période. Aucun raccordement NoSQL/statistiques trouvé.
 - Contact : formulaire titre/description/email et envoi entreprise ; contrôleur actuel affiche seulement vue.
-- Horaires : terminer CRUD et alimenter pied de page depuis BDD (actuellement statique).
 - Vérification finale exigences menus, galerie, conditions/allergènes et filtres dynamiques, droits des CRUD ; base présente, pas à refaire.
 - Sessions dédiées de tests parcours, droits/CSRF, calculs, erreurs, concurrence ; responsive/accessibilité RGAA.
 - Déploiement et contrôle en ligne ; état externe à confirmer.
