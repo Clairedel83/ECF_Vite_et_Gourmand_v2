@@ -40,16 +40,22 @@ function calculSousTotal() {
     // Récupère le prix par personne
     const prix = Number(prixPerPers.textContent);
 
-    // Calcule le sous-total
-    let total = nbreConvives * prix;
+    // Calcule le prix du menu avant réduction.
+    const prixMenu = Math.round(nbreConvives * prix * 100) / 100;
 
     // Applique une réduction de 10 % à partir de 5 convives supplémentaires 
-    if(nbreConvives >= nbrePromo){
-        total = (nbreConvives * prix) - (0.1 * nbreConvives * prix);
-    };
+    let montantReduction = 0;
+
+    // calcule le montant de réduction
+    if (nbreConvives >= nbrePromo) {
+        montantReduction = Math.round(prixMenu * 0.10 * 100) / 100;
+    }
+
+    // calcule le sous total
+    const montantSousTotal = Math.round((prixMenu - montantReduction) * 100) / 100;
 
     // Affiche le sous-total avec deux chiffres après la virgule
-    sousTotal.textContent = total.toFixed(2);
+    sousTotal.textContent = montantSousTotal.toFixed(2);
 }
 
 
@@ -262,9 +268,15 @@ async function calculLivraison(adresse = formAdresseGoogle.value, codePostal = f
     }
 }
 
-// Relance le calcul de livraison lorsque l'utilisateur clique sur Réessayer
+// Relance le calcul de livraison lorsque l'utilisateur clique sur Réessayer avec les informations modifiées
 btnRetryLivraison.addEventListener('click', () => {
+    if(adresseModifiee.style.display === 'block'){
+        // si le formulaire d'adresse est ouvert,  recalcule avec les nouvelles données et actualise les champs cachés (submit)
+        formAdresse.requestSubmit();
+    } else{
+        // si aucun formulaire ouvert, utilise l'adresse de base    
     calculLivraison();
+    }
 });
 
 

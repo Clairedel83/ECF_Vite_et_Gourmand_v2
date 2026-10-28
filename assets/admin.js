@@ -135,9 +135,9 @@ if (formulaireModification) {
             return;
         }
 
-        // Calcule le sous-total = prix AVANT réduction
+        // Calcule le prixMenu = prix AVANT réduction
         // prix par personne × nombre de convives (round : pour arrondir ,00)
-        const sousTotal = Math.round(nombreConvives * prixPersonne * 100) / 100;
+        const prixMenu = Math.round(nombreConvives * prixPersonne * 100) / 100;
 
         // Calcule le seuil donnant droit à la réduction :
         // minimum du menu + 5 convives.
@@ -148,23 +148,26 @@ if (formulaireModification) {
 
         // Applique la réduction de 10 % si le seuil est atteint.
         if (nombreConvives >= seuilReduction) {
-            montantReduction = Math.round(sousTotal * tauxReduction * 100) / 100;
+            montantReduction = Math.round(prixMenu * tauxReduction * 100) / 100;
         }
+
+        // calcule le sous total =  prix après réduction.
+        const sousTotal = Math.round((prixMenu - montantReduction) * 100) / 100;
 
         // Actualise les valeurs affichées dans la facturation.
         recapConvives.textContent = nombreConvives;
-        recapSousTotal.textContent = sousTotal.toFixed(2);
         recapReduction.textContent = montantReduction.toFixed(2);
+        recapSousTotal.textContent = sousTotal.toFixed(2);
 
-        // Si les frais de livraison ne sont pas encore vérifiés,
-        // n'affiche pas de total qui pourrait être incorrect.
+
+        // Si les frais de livraison ne sont pas encore vérifiés, n'affiche pas de total qui pourrait être incorrect.
         if (!livraisonValide) {
             recapTotal.textContent = '--';
             return;
         }
 
-        // Calcule le total = sous-total - réduction + livraison + matériel.
-        const total = Math.round((sousTotal - montantReduction + livraisonActuelle + montantMateriel) * 100) / 100;
+        // Calcule le total = sous-total  + livraison + matériel.
+        const total = Math.round((sousTotal + livraisonActuelle + montantMateriel) * 100) / 100;
 
         recapTotal.textContent = total.toFixed(2);
     }

@@ -9,7 +9,9 @@ use App\Form\InterventionCommandeType;
 use App\Form\ModifierCommandeType;
 use App\Form\StatutType;
 use App\Repository\CommandeRepository;
+use App\Services\CalculPrixLivraison;
 use App\Services\GestionCommandeService;
+use App\Services\VerificationAdresseService;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
@@ -24,6 +26,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 use Override;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 class CommandeCrudController extends AbstractCrudController
@@ -136,7 +139,7 @@ class CommandeCrudController extends AbstractCrudController
         ];
     }
 
-    // pour permettre le changement de statut
+    // PERMET LE CHANGEMENT DE STATUT
     /** @var Commande $entityInstance */
     #[Override]
     public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
@@ -249,30 +252,7 @@ class CommandeCrudController extends AbstractCrudController
         // si le formulaire est invalide, affiche la page détails et rouvre la modale
         $formStatut = $this->createForm(StatutType::class, $commande);
 
-        return $this->render('admin/commande_details.html.twig', [
-            'commande' => $commande,
-            'statutForm' => $formStatut->createView(),
-            'InterventionCommandeForm' => $formAnnulation->createView(),
-            'ouvrirModaleAnnulation' => true,
-        ]);
-    }
-
-
-    // PERMET LA MODIFICATION D'UNE COMMANDE PAR UN EMPLOYE VIA UN FORM (POST)
-    #[AdminRoute(path: '/{entityId}/modifier', name: 'modifier', options: ['methods' => ['POST']])]
-    public function modifierCommande(AdminContext $context, Request $request)
-    {
-        // RECUPERE LES ELEMENTS
-        // récupère la commande concernée
-        $commande = $context->getEntity()->getInstance();
-
-        // récupère l'auteur 
-        $auteur = $this->getUser();
-
-        // crée l'intervention
-        $interventionCommande = new InterventionCommande();
-
-        // Reconstruit le formulaire 
+        // Reconstruit le formulaire de modification, également présent sur la page.
         $formModification = $this->createForm(ModifierCommandeType::class, $commande, [
             'action' => $this->generateUrl('admin_commande_modifier', [
                 'entityId' => $commande->getId(),
@@ -281,74 +261,341 @@ class CommandeCrudController extends AbstractCrudController
             'minimum_convives' => $commande->getMenu()->getNbreMin(),
         ]);
 
+        // Sépare le destinataire de l'adresse de livraison.
+        $elementsAdresse = explode(' - ', $commande->getAdresseLivraison(), 2);
 
-        // récupère les données envoyées dans le formulaire
-        $formModification->handleRequest($request);
+        // Conserve l'adresse entière si aucun séparateur n'est présent.
+        $adresseLivraison = $elementsAdresse[1] ?? $elementsAdresse[0];
 
-        // crée la date du jour
-        $dateModification = new \DateTimeImmutable();
+        // Prépare le champ avec uniquement l'adresse géographique.
+        $formModification->get('adresseLivraison')->setData($adresseLivraison);
 
-        // ENREGISTRE EN BDD
-        if ($formModification->isSubmitted() && $formModification->isValid()) {
-            // attribue l'auteur
-            $interventionCommande->setAuteur($auteur);
+        return $this->render('admin/commande_details.html.twig', [
+            'commande' => $commande,
+            'statutForm' => $formStatut->createView(),
+            'InterventionCommandeForm' => $formAnnulation->createView(),
+            'ouvrirModaleAnnulation' => true,
+            'modificationForm' => $formModification->createView(),
+            'adresseInitialeLivraison' => $adresseLivraison,
+        ]);
+    }
 
-            // attribue le type d'intervention
-            $interventionCommande->setType('modification');
 
-            // attribue la date de l'intervention
-            $interventionCommande->setDate($dateModification);
+    // PERMET LA MODIFICATION D'UNE COMMANDE PAR UN EMPLOYE VIA UN FORM (POST)
+    #[AdminRoute(path: '/{entityId}/modifier', name: 'modifier', options: ['methods' => ['POST']])]
+    public function modifierCommande(AdminContext $context, Request $request, EntityManagerInterface $entityManager, VerificationAdresseService $verificationAdresseService, CalculPrixLivraison $calculPrixLivraison)
+    {
+        // RECUPERE LES ELEMENTS INITIAUX (avant modification éventuelle)
+        // récupère la commande concernée
+        $commande = $context->getEntity()->getInstance();
 
-            // 
-            try {
-                ;
-            } catch (\DomainException $exception) {
-                // affiche le message d'erreur
-                $this->addFlash('warning', $exception->getMessage());
+        // récupère l'auteur 
+        $auteur = $this->getUser();
 
-                // redirige vers la page précédente = depuis laquelle la demande a été faite (referer)
-                $referer = $request->headers->get('referer');
+        // Sécurisation : pour éviter que la même commande subisse plusieurs modifications en même temps
+        $connexion = $entityManager->getConnection();
+        $connexion->beginTransaction();
 
-                // vérifie que la dernère page consultée correspond à une page du domaine
-                if (is_string($referer) && str_starts_with($referer, $request->getSchemeAndHttpHost() . '/')) {
-                    return $this->redirect($referer);
+        // Valeurs initiales avant la préparation du formulaire
+        $formModification = null;
+        $adresseInitialeLivraison = '';
+
+        try{
+            // Recharge et verrouille la commande AVANT de traiter le formulaire.
+            $entityManager->refresh($commande, LockMode::PESSIMISTIC_WRITE);
+
+            // Vérifie que le statut permet la modification (= 1 ou 2)
+            if (!in_array($commande->getStatut(), [1, 2], true)) {
+                throw new \DomainException(
+                    'Le statut de cette commande ne permet plus sa modification.'
+                );
+            }
+
+            // récupère les éléments du menu
+            $menu = $commande->getMenu();
+
+            // if ($menu === null) {
+            //     throw new \DomainException(
+            //         'Le menu associé à cette commande ne permet plus sa modification.'
+            //     );
+            // }
+
+            // récupère l'adresse de livraison, la date de livraison et le prix avant modification
+            $adresseCompleteInitiale = $commande->getAdresseLivraison();
+            $prixLivraisonInitial = $commande->getPrixLivraison();
+            $dateLivraisonInitiale = $commande->getDateLivraison()->format('Y-m-d');
+
+
+            // Sépare le destinataire de l'adresse géographique pour vérifier l'adresse et calculer les frais de livraison. Le destinataire sera réintroduit lors de l'enregistrement en BDD.
+            $elementsAdresse = explode(' - ', $adresseCompleteInitiale, 2);
+
+            $destinataire = '';
+            $adresseInitialeLivraison = $elementsAdresse[0];
+
+            if (isset($elementsAdresse[1])) {
+                $destinataire = $elementsAdresse[0];
+                $adresseInitialeLivraison = $elementsAdresse[1];
+            }
+
+        
+
+            // ------------------------------------------------ FORMULAIRE ------------------------------------------------
+
+            // Reconstruit le formulaire envoyé depuis la page détails.
+            $formModification = $this->createForm(ModifierCommandeType::class, $commande,[
+                'action' => $this->generateUrl('admin_commande_modifier', [
+                    'entityId' => $commande->getId(),
+                ]),
+                'method' => 'POST',
+                'minimum_convives' => $commande->getMenu()->getNbreMin(),
+            ]);
+        
+            // Prépare la valeur initiale du champ sans le destinataire.
+            $formModification->get('adresseLivraison')->setData($adresseInitialeLivraison);
+
+            // récupère les données envoyées dans le formulaire
+            $formModification->handleRequest($request);
+
+            if ($formModification->isSubmitted() && $formModification->isValid()) {
+
+                // --------------- DATE DE LIVRAISON ---------------
+                $dateLivraison = $commande->getDateLivraison();
+
+                // Récupère le délai de préparation enregistré dans les conditions
+                $delaiMinimum = 0;
+
+                foreach ($menu->getConditions() as $condition) {
+                    if ($condition->getDelaiMin() !== null) {
+                        $delaiMinimum = $condition->getDelaiMin();
+                    }
                 }
 
-                // attention, en cas d'erreur, referer peut être vide donc prévoir redirection fiable
+                $dateMinimum = new \DateTime('today');
+                $dateMinimum->modify('+' . $delaiMinimum . ' days');
+
+                // Comme dans le controller client : applique le délai si la date change
+                if ($dateLivraison->format('Y-m-d') !== $dateLivraisonInitiale && $dateLivraison < $dateMinimum) {
+                    throw new \DomainException(
+                        'La date choisie ne respecte pas le délai de préparation du menu.'
+                    );
+                }
+
+                // Vérifie les disponibilités du menu
+                $disponibiliteDebut = $menu->getDisponibiliteDebut();
+                $disponibiliteFin = $menu->getDisponibiliteFin();
+
+                if ($disponibiliteDebut && $disponibiliteFin) {
+                    // Transforme JJ-MM en MM-JJ pour comparer les dates.
+                    [$jourDebut, $moisDebut] = explode('-', $disponibiliteDebut);
+                    [$jourFin, $moisFin] = explode('-', $disponibiliteFin);
+
+                    $debutFormate = $moisDebut . '-' . $jourDebut;
+                    $finFormatee = $moisFin . '-' . $jourFin;
+
+                    $dateChoisie = $dateLivraison->format('m-d');
+
+                    if ($dateChoisie < $debutFormate || $dateChoisie > $finFormatee) {
+                        throw new \DomainException(
+                            'Ce menu n’est pas disponible à la date choisie.'
+                        );
+                    }
+                }
+
+                // --------------- HEURE DE LIVRAISON ---------------
+
+                // Reprend les créneaux proposés au client (controller et vue twig)
+                $heuresDisponibles = ['10:00', '10:30', '11:00', '11:30', '17:00', '17:30', '18:00'];
+                $heureLivraison = $commande->getHeureLivraison()->format('H:i');
+
+                if (!in_array($heureLivraison, $heuresDisponibles, true)) {
+                    throw new \DomainException(
+                        'Veuillez choisir un créneau de livraison autorisé.'
+                    );
+                }
+
+            
+
+                // --------------- ADRESSE DE LIVRAISON ---------------
+                // récupère l'adresse saisie
+                $adresseSaisie = trim($formModification->get('adresseLivraison')->getData());
+
+                // si l'adresse saisie et l'adresse initiale sont les mêmes :
+                if ($adresseSaisie === trim($adresseInitialeLivraison)) {
+                    // Conserve l'adresse complète et les frais initiaux.
+                    $adresseComplete = $adresseCompleteInitiale;
+                    $prixLivraison = (float) $prixLivraisonInitial;
+
+                // si l'adresse saisie est différente :
+                } else {
+                    // Récupère les champs non mappés du formulaire.
+                    $codePostal = trim((string) $formModification->get('codePostalLivraison')->getData());
+
+                    $ville = trim((string) $formModification->get('villeLivraison')->getData());
+
+                    // récupère le code postal et la ville (utiles pour vérifier l'adresse si la nouvelle est différente)
+                    if ($codePostal === '' || $ville === '') {
+                        throw new \DomainException(
+                            'Veuillez renseigner le code postal et la ville.'
+                        );
+                    }
+
+                    // Appelle le service de vérification d'adresse
+                    $resultatAdresse = $verificationAdresseService->verifierAdresse($adresseSaisie,$codePostal,$ville);
+
+                    $adresseVerifiee = $resultatAdresse['adresse'];
+                    $villeVerifiee = $resultatAdresse['ville'];
+
+                    // Recalcule les frais de livraison
+                    $prixLivraison = $calculPrixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
+
+                    // Réintroduit le destinataire devant l'adresse vérifiée.
+                    $adresseComplete = $adresseVerifiee;
+
+                    if ($destinataire !== '') {
+                        $adresseComplete =$destinataire . ' - ' . $adresseVerifiee;
+                    }
+                }
+
+                $commande->setAdresseLivraison($adresseComplete);
+
+                // --------------- FACTURATION ---------------
+
+                // Récupère le prix/personne et le nombre de convives
+                $prixPersonne = (float) $commande->getPrixPerPers();
+                $nombreConvives = $commande->getNbrePers();
+                $prixMenu = ($prixPersonne * $nombreConvives);
+
+                // calcul du montant de réduction (s'il s'applique, de base = 0)
+                $montantReduction = 0;
+
+                if ($nombreConvives >= $menu->getNbreMin() + 5) {
+                    $montantReduction = round($prixMenu * 0.10, 2);
+                }
+
+                                // calcul du sous total
+                $sousTotal = round($prixMenu - $montantReduction, 2);
+
+                // calcul du prix de location matériel (de base = 0, passe à 20 si checked)
+                $prixMateriel = 0;
+
+                if ($commande->isPretMateriel()) {
+                    $prixMateriel = 20;
+                }
+
+                // calcul du prix total
+                $prixTotal = round($sousTotal + $prixLivraison + $prixMateriel, 2);
+
+                // met à jour les prix dans l'entité commande
+                $commande->setPrixSousTotal(number_format($sousTotal, 2, '.', ''));
+
+                $commande->setMontantReduction(number_format($montantReduction, 2, '.', ''));
+
+                $commande->setPrixLivraison(number_format($prixLivraison, 2, '.', ''));
+
+                $commande->setPrixMateriel(number_format($prixMateriel, 2, '.', ''));
+
+                $commande->setPrixTotal(number_format($prixTotal, 2, '.', ''));
+
+                // Statuts 1 ou 2 donc le matériel n'a pas été restitué
+                $commande->setRestitutionMateriel(false);
+
+                // --------------- INTERVENTION ---------------
+                // crée l'intervention
+                $interventionCommande = new InterventionCommande();
+                
+                // attribue l'auteur, le type et la date
+                $interventionCommande->setAuteur($auteur);
+                $interventionCommande->setType('modification');
+                $interventionCommande->setDate(new \DateTimeImmutable());
+
+                // attribue l'intervention à la commande
+                $commande->addInterventionCommande($interventionCommande);
+
+                // --------------- Enregistrement en BDD ---------------
+                
+                $entityManager->persist($interventionCommande);
+                $entityManager->flush();
+
+                // valide la transaction
+                $connexion->commit();
+
+                $this->addFlash(
+                    'success',
+                    'Cette commande a bien été modifiée.'
+                );
+
                 return $this->redirectToRoute('admin_commande_details', [
                     'entityId' => $commande->getId(),
                 ]);
+
             }
 
-            $this->addFlash(
-                'success',
-                'Cette commande a bien été modifiée.'
-            );
+            // fin du if (isSubmitted && isValid)
+            // si le fomulaire est invalide : termine la transaction et rafraîchit les données
+            $connexion->rollBack();
+            $entityManager->refresh($commande);
 
+        } catch (\DomainException | \InvalidArgumentException $exception) {
+            // stop transaction si toujours active
+            if ($connexion->isTransactionActive()) {
+                $connexion->rollBack();
+            }
+
+            // rafraîchit les données
+            $entityManager->refresh($commande);
+
+
+            if($formModification !== null){
+                // si le formulaire existe, affiche le message d'erreur
+                $formModification->addError(
+                    new FormError($exception->getMessage())
+                );
+            } else {
+                // si le formulaire ne s'est pas ouvert, affiche le message d'erreur associé
+                $this->addFlash('warning', $exception->getMessage());
+            }
+
+
+        } catch (\Throwable $exception) {
+            // stop transaction si toujours active
+            if ($connexion->isTransactionActive()) {
+                $connexion->rollBack();
+            }
+
+            // retire de la mémoire les modifications effectuées
+            $entityManager->clear();
+
+            throw $exception;
+        }
+
+
+        // Si le formulaire est vide, redirige vers la page de details
+        if ($formModification === null) {
             return $this->redirectToRoute('admin_commande_details', [
                 'entityId' => $commande->getId(),
             ]);
         }
 
-        // si le formulaire est invalide, affiche la page détails (obligé de remettre tous les éléments affichables)
+        // --------------- REAFFICHAGE APRES ERREUR ---------------
+        
         $formStatut = $this->createForm(StatutType::class, $commande);
-        $formAnnulation = $this->createForm(InterventionCommandeType::class, $interventionCommande, [
+
+        // L'annulation utilise son propre objet InterventionCommande.
+        $interventionAnnulation = new InterventionCommande();
+
+        $formAnnulation = $this->createForm(InterventionCommandeType::class, $interventionAnnulation, [
             'action' => $this->generateUrl('admin_commande_annuler', [
                 'entityId' => $commande->getId(),
             ]),
             'method' => 'POST',
         ]);
 
-
         return $this->render('admin/commande_details.html.twig', [
             'commande' => $commande,
             'statutForm' => $formStatut->createView(),
             'InterventionCommandeForm' => $formAnnulation->createView(),
-            'modificationForm' => $formModification->createView()
+            'modificationForm' => $formModification->createView(),
+            'adresseInitialeLivraison' => $adresseInitialeLivraison,
         ]);
-
-
     }
-
-
 }

@@ -53,17 +53,24 @@
                             'data-url-livraison': path('app_calcul_prix_livraison')
                         }
                     }) }}
+                    {{ form_errors(modificationForm) }}
                     <table>
                         <tr>
                             <th class="prestation">Date :</th>
                             <td class="anciennes_donnees">{{ commande.dateLivraison|date('d/m/Y') }}</td>
-                            <td class="nouvelles_donnees">{{ form_widget(modificationForm.dateLivraison) }}</td>
+                            <td class="nouvelles_donnees">
+                                {{ form_widget(modificationForm.dateLivraison) }}
+                                {{ form_errors(modificationForm.dateLivraison) }}
+                            </td>
                         </tr>
 
                         <tr>
                             <th class="prestation">Heure :</th>
                             <td class="anciennes_donnees">{{ commande.heureLivraison|date('H:i') }}</td>
-                            <td class="nouvelles_donnees">{{ form_widget(modificationForm.heureLivraison) }}</td>
+                            <td class="nouvelles_donnees">
+                                {{ form_widget(modificationForm.heureLivraison) }}
+                                {{ form_errors(modificationForm.heureLivraison) }}
+                            </td>
                         </tr>
 
                         <tr>
@@ -71,6 +78,7 @@
                             <td class="anciennes_donnees">{{ commande.adresseLivraison }}</td>
                             <td class="nouvelles_donnees">
                                 {{ form_widget(modificationForm.adresseLivraison) }}
+                                {{ form_errors(modificationForm.adresseLivraison) }}
 
                                 {# champs cachés, utiles pour le calcul des frais de livraison avec JS #}
                                 <div id="complement_adresse" hidden>
@@ -98,7 +106,10 @@
                         <tr>
                             <th class="prestation">Convives :</th>
                             <td class="anciennes_donnees">{{ commande.nbrePers }} personne(s)</td>
-                            <td class="nouvelles_donnees">{{ form_widget(modificationForm.nbrePers) }}</td>
+                            <td class="nouvelles_donnees">
+                                {{ form_widget(modificationForm.nbrePers) }}
+                                {{ form_errors(modificationForm.nbrePers) }}
+                            </td>
                         </tr>
 
                         <tr>
@@ -130,9 +141,13 @@
                                     En attente de retour du matériel
                                 {% endif %}
                             </td>
-                            <td class="nouvelles_donnees">{{ form_widget(modificationForm.pretMateriel) }}</td>
+                            <td class="nouvelles_donnees">
+                                {{ form_widget(modificationForm.pretMateriel) }}
+                                {{ form_errors(modificationForm.pretMateriel) }}
+                            </td>
                         </tr>
                     </table>
+                    
                     {{ form_end(modificationForm) }}
                 </div>
             </div>
@@ -147,13 +162,15 @@
                         </tr>
 
                         <tr>
-                            <th class="facturation_legende">Sous-total :</th>
-                            <td class="facturation_elements"><span id="recap_sous_total">{{ commande.prixSousTotal }}</span> €</td>
-                        </tr>
-                        <tr>
                             <th class="facturation_legende">Réduction de 10% :</th>
                             <td class="facturation_elements">- <span id="recap_reduction">{{ commande.montantReduction }}</span> €</td>
                         </tr>
+
+                        <tr>
+                            <th class="facturation_legende">Sous-total :</th>
+                            <td class="facturation_elements"><span id="recap_sous_total">{{ commande.prixSousTotal }}</span> €</td>
+                        </tr>
+
                         <tr>
                             <th class="facturation_legende">Frais de livraison :</th>
                             <td class="facturation_elements"><span id="recap_livraison">{{ commande.prixLivraison }}</span> €</td>
