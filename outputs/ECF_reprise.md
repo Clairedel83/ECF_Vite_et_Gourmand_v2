@@ -1,4 +1,44 @@
-# Reprise ECF — point d'arrêt du 26 octobre 2026
+# Reprise ECF — actualisation prioritaire du 28 octobre 2026
+
+Cette actualisation remplace les anciens points ci-dessous, conservés comme archives. Le FormType d'annulation, la modale et son JS sont réalisés : ne pas demander de les recréer.
+
+## Progression actuelle
+
+Modification et annulation des commandes implémentées côté client et employé et relues ; l'utilisatrice indique que l'affichage dynamique fonctionne. Transactions et verrou pessimiste avant vérifications ; annulation partagée dans GestionCommandeService ; interventions employé et informations d'annulation dans historique admin. Bouton Réessayer client réutilise le formulaire d'adresse ouvert. Dernier calculSousTotal JS client fourni avec arrondis intermédiaires : dernière copie à confirmer lors des tests.
+
+Ne lancer aucun test : séances de tests distinctes demandées. Ne pas confondre implémenté et validé par tests. Ne pas modifier le code applicatif.
+
+Choix : modifications successives autorisées selon statut, ancienne règle de modification unique abandonnée. Sous-total après réduction. Après erreur employé : erreur visible et champs fermés, nouveau clic sur Modifier. InterventionCommande conservée ; contact préalable obligatoire ; contact et motif enregistrés pour annulation. Client statut 1 ; modification employé 1/2, annulation 1/2/3 (choix du projet).
+
+## Avancement indicatif
+
+Estimation 28 octobre : environ 65 % du projet ECF global, environ 75 % de l'application hors livraison/documentation. Estimation indicative, pas mesure exacte : fonctionnalités obligatoires, tests, déploiement et livrables comptent dans le global. Les documents externes et le déploiement ne sont pas inspectés ; confirmer leur état avant de les déclarer absents. Énoncé local relu intégralement (12 pages).
+
+## Tâches ECF restantes
+
+- Suivi des statuts et restitution à raccorder : details() actuel GET prépare StatutType sans handleRequest ; updateEntity() ne traite pas automatiquement ce formulaire personnalisé. Traitement POST, historique et règles de clôture à terminer/vérifier.
+- Filtres commandes par statut/client : configureFilters absent du CRUD actuel.
+- Mails : bienvenue, confirmation commande, commande terminée invitant à donner avis, attente matériel (10 jours ouvrés, 600 euros), compte employé sans mot de passe dans mail. Pas de traitement Mailer trouvé dans src.
+- Mot de passe oublié avec lien de réinitialisation.
+- Avis depuis commande terminée, note 1 à 5/commentaire, validation/refus employé, accueil affichant les vrais avis validés. Entité et CRUD existent mais parcours restant ; harmoniser mapping Avis OneToOne / collection Commande.
+- Gestion employés par José : création email/mot de passe hashé, notification, désactivation empêchant connexion, compte admin créé hors application, protection serveur des actions réservées admin.
+- Statistiques José : graphique comparatif commandes/menu depuis NoSQL, chiffre d'affaires/menu avec filtres menu/période. Aucun raccordement NoSQL/statistiques trouvé.
+- Contact : formulaire titre/description/email et envoi entreprise ; contrôleur actuel affiche seulement vue.
+- Horaires : terminer CRUD et alimenter pied de page depuis BDD (actuellement statique).
+- Vérification finale exigences menus, galerie, conditions/allergènes et filtres dynamiques, droits des CRUD ; base présente, pas à refaire.
+- Sessions dédiées de tests parcours, droits/CSRF, calculs, erreurs, concurrence ; responsive/accessibilité RGAA.
+- Déploiement et contrôle en ligne ; état externe à confirmer.
+- Livrables à compléter ou confirmer hors dépôt : copie à rendre, GitHub public et liens application/gestion de projet, bonnes pratiques branches ; README installation (actuel très bref) ; SQL création et données en plus des migrations ; manuel PDF avec comptes ; charte PDF, 3 wireframes/mockups desktop et 3 mobiles ; documentation projet et technique (choix, environnement, sécurité, MCD/classes, cas d'utilisation, séquence, déploiement).
+
+## Annexes
+
+- Règle menus différée enregistrée : interdire suppression si commande en cours, indisponibilité pour nouvelles commandes et consultation des anciennes commandes sans menu.
+- Tableau de bord employé optionnel ; statistiques José obligatoires.
+- Raffinements graphiques et refactorisation supplémentaire : facultatifs.
+
+---
+
+# Archives — point d'arrêt du 26 octobre 2026 (dépassé par l'actualisation ci-dessus)
 
 À la prochaine reprise, commencer par rappeler ce contexte, sans entreprendre d'action non demandée.
 

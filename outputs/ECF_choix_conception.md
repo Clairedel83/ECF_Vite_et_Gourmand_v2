@@ -4,7 +4,9 @@ Référence de reprise : outputs/ECF_reprise.md.
 
 Le choix initial des champs directement dans Commande a été abandonné au profit d'une entité InterventionCommande. Elle permet de conserver une modification puis une annulation sans écraser leur trace. Le projet ne prévoit pas de journal détaillé des anciennes et nouvelles valeurs.
 
-Une seule modification employé est autorisée, puis les modifications client et employé sont bloquées. Une annulation ultérieure reste possible ; les changements de statut restent indépendants. Cette limite est un choix de conception, pas une exigence explicite de l'énoncé.
+Décision actualisée le 28 octobre 2026 : modifications successives autorisées tant que le statut le permet. Ancienne limite d'une modification employé et blocage du client abandonnés. Les interventions conservent la trace des actions ; une annulation ultérieure reste possible. Les changements de statut sont indépendants.
+
+Sous-total après réduction ; total = sous-total + livraison + matériel. Après erreur de modification employé : champs fermés, erreur visible, nouveau clic sur Modifier. Tests lors de séances distinctes, uniquement sur demande explicite.
 
 Contact préalable pour les deux actions ; moyen de contact et motif à conserver obligatoirement pour l'annulation employé. Aucun motif de modification imposé par le sujet.
 

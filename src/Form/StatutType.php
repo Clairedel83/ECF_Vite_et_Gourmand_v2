@@ -26,7 +26,6 @@ class StatutType extends AbstractType
                     'Commande livrée' => 5,
                     'En attente du retour de matériel' => 6,
                     'Commande terminée' => 7,
-                    'Commande annulée' => 8
                 ],
             ])
         ;

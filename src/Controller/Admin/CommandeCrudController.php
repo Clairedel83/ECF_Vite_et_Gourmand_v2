@@ -59,15 +59,20 @@ class CommandeCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $details);
     }
 
-    // pour afficher la vue des détails de commande :
+    // PERMET D'AFFICHER L'ENSEMBLE DES DETAILS DE COMMANDES (form compris)
     #[AdminRoute(path: '/{entityId}/details', name: 'details', options: ['methods' => ['GET']])]
     public function details(AdminContext $context)
     {
         // permet d'afficher l'ensemble des éléments de l'entité Commande
         $commande = $context->getEntity()->getInstance();
 
-        // permet de rattacher le formulaire de modification du statut
-        $form = $this->createForm(StatutType::class, $commande);
+        // permet de rattacher le formulaire de modification du statut et de prévoir sa destination (methode modifierStatut)
+        $form = $this->createForm(StatutType::class, $commande, [
+            'action' => $this->generateUrl('admin_commande_statut', [
+                'entityId' => $commande->getId(),
+            ]),
+            'method' => 'POST',
+        ]);
 
         // permet de rattercher le formulaire d'annulation
         $interventionCommande = new InterventionCommande();
@@ -139,40 +144,130 @@ class CommandeCrudController extends AbstractCrudController
         ];
     }
 
+
     // PERMET LE CHANGEMENT DE STATUT
-    /** @var Commande $entityInstance */
-    #[Override]
-    public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    #[AdminRoute(path:'/{entityId}/statut', name:'statut', options: ['methods'=> 'POST'])]
+    public function modifierStatut(AdminContext $context, Request $request, EntityManagerInterface $entityManager)
     {
-        // Récupère les données de la commande avant modification
-        $donneesEnregistrees = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
+        // Récupère la commande 
+        $commande = $context->getEntity()->getInstance();
 
-        // Récupère l'ancien et le nouveau statut
-        $ancienStatut = $donneesEnregistrees['statut'];
-        $nouveauStatut = $entityInstance->getStatut();
+        // Sécurisation : ouvre une transaction
+        $connexion = $entityManager->getConnection();
+        $connexion->beginTransaction();
 
-        if ($ancienStatut !== $nouveauStatut) {
-            // CREATION D'UN NOUVEL HISTORIQUE DE COMMANDE
+        try{
+            // recharge et verrouille : évite plusieurs modifications simultanées
+            $entityManager->refresh($commande, LockMode::PESSIMISTIC_WRITE);
+
+            $ancienStatut = $commande->getStatut();
+
+            // Reconstruit le formulaire envoyé depuis details(vue twig)
+            $formStatut = $this->createForm(StatutType::class, $commande, [
+                'action' => $this->generateUrl('admin_commande_statut', [
+                    'entityId' => $commande->getId(),
+                ]),
+                'method' => 'POST',
+            ]);
+
+            // Récupère le statut envoyé
+            $formStatut->handleRequest($request);
+
+            if (!$formStatut->isSubmitted() || !$formStatut->isValid()) {
+                $this->addFlash(
+                    'warning',
+                    'Le statut n’a pas pu être enregistré. Veuillez réessayer.'
+                );
+
+                return $this->redirectToRoute('admin_commande_details', [
+                    'entityId' => $commande->getId(),
+                ]);
+            }
+
+            $nouveauStatut = $commande->getStatut();
+
+            // Une commande annulée ne reprend pas son parcours.
+            if ($ancienStatut === 8) {
+                throw new \DomainException(
+                    'Cette commande est annulée : son statut ne peut plus être modifié.'
+                );
+            }
+
+            // L'annulation doit passer par le formulaire dédié.
+            if ($nouveauStatut === 8) {
+                throw new \DomainException(
+                    'Utilisez le bouton Annuler la commande pour renseigner le contact et le motif.'
+                );
+            }
+
+            // Évite un enregistrement et un historique inutiles
+            if ($ancienStatut === $nouveauStatut) {
+                $this->addFlash(
+                    'info',
+                    'La commande possède déjà ce statut.'
+                );
+
+                return $this->redirectToRoute('admin_commande_details', [
+                    'entityId' => $commande->getId(),
+                ]);
+            }
+
+            // uniquement si prêt de matériel
+            if ($nouveauStatut === 6 && !$commande->isPretMateriel()) {
+                throw new \DomainException(
+                    'Cette commande ne comporte pas de prêt de matériel.'
+                );
+            }
+
+            // Terminer une commande (statut = 7) avec prêt de matériel confirme sa restitution
+            if ($nouveauStatut === 7 && $commande->isPretMateriel()) {
+                $commande->setRestitutionMateriel(true);
+            }
+
+            // ------------------------------------------------ HISTORIQUE ------------------------------------------------
+
             $historiqueCommande = new CommandeHistorique();
 
-            // attribue le statut à l'historique de commande
             $historiqueCommande->setStatut($nouveauStatut);
 
-            // attribue la date et l'heure de modification du statut
-            $date_actuelle = new \DateTime();
+            // crée la date de modification
+            $dateModification = new \DateTime();
 
-            $historiqueCommande->setDateModification($date_actuelle);
-            $historiqueCommande->setHeureModification($date_actuelle);
+            $historiqueCommande->setDateModification($dateModification);
+            $historiqueCommande->setHeureModification($dateModification);
 
-            // lie l'historique à la commande
-            $entityInstance->addCommandeHistorique($historiqueCommande);
+            // Lie l'historique à la commande.
+            $commande->addCommandeHistorique($historiqueCommande);
 
-            // enregistre les modifications en BDD
+            // ------------------------------------------------ ENREGISTREMENT ------------------------------------------------
+
             $entityManager->persist($historiqueCommande);
+            $entityManager->flush();
+
+            // Valide ensemble le nouveau statut et son historique.
+            $connexion->commit();
+
+            $this->addFlash(
+                'success',
+                'Le statut de la commande a bien été mis à jour.'
+            );
+
+        }catch (\DomainException $exception) {
+            // Affiche le message d'erreur
+            $this->addFlash('warning', $exception->getMessage());
+
+        } finally {
+            // Ferme la transaction en cas de return ou d'erreur
+            if ($connexion->isTransactionActive()) {
+                $connexion->rollBack();
+                $entityManager->clear();
+            }
         }
 
-        // Enregistre les modifications
-        parent::updateEntity($entityManager, $entityInstance);
+        return $this->redirectToRoute('admin_commande_details', [
+            'entityId' => $commande->getId(),
+        ]);
+
     }
 
 
@@ -249,8 +344,12 @@ class CommandeCrudController extends AbstractCrudController
             ]);
         }
 
-        // si le formulaire est invalide, affiche la page détails et rouvre la modale
-        $formStatut = $this->createForm(StatutType::class, $commande);
+        $formStatut = $this->createForm(StatutType::class, $commande, [
+            'action' => $this->generateUrl('admin_commande_statut', [
+                'entityId' => $commande->getId(),
+            ]),
+            'method' => 'POST',
+        ]);
 
         // Reconstruit le formulaire de modification, également présent sur la page.
         $formModification = $this->createForm(ModifierCommandeType::class, $commande, [
@@ -578,7 +677,12 @@ class CommandeCrudController extends AbstractCrudController
 
         // --------------- REAFFICHAGE APRES ERREUR ---------------
         
-        $formStatut = $this->createForm(StatutType::class, $commande);
+        $formStatut = $this->createForm(StatutType::class, $commande, [
+            'action' => $this->generateUrl('admin_commande_statut', [
+                'entityId' => $commande->getId(),
+            ]),
+            'method' => 'POST',
+        ]);
 
         // L'annulation utilise son propre objet InterventionCommande.
         $interventionAnnulation = new InterventionCommande();
