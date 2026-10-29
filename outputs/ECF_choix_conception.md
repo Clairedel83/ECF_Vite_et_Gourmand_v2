@@ -14,6 +14,14 @@ Contact préalable pour les deux actions ; moyen de contact et motif à conserve
 
 ## Menus — règle à implémenter ultérieurement
 
+## Emails — argumentaire dossier et oral (29 octobre 2026)
+
+Choix envisagé : Symfony Mailer associé à Mailjet pour les emails automatiques. L'éditeur visuel et les newsletters constituent une ouverture possible pour l'autonomie de Julie, pas une fonctionnalité à ajouter à l'ECF. Ne pas présenter cette évolution comme réalisée. L'autonomie sur les modèles transactionnels dépendra de leur hébergement dans Mailjet plutôt que dans Twig.
+
+Terme demandé par l'utilisatrice, cité par son professeur : « logique microservices ». Le lui rappeler lors du dossier de projet et de l'oral sur ce choix technique. Préciser que déléguer l'envoi à Mailjet est une externalisation via un service spécialisé ; cela ne suffit pas à qualifier l'application Symfony d'architecture microservices. Formulation possible : séparation des responsabilités et recours à un service externe spécialisé dans l'envoi d'emails.
+
+## Menus — règle à implémenter ultérieurement (suite)
+
 Décision du 27 octobre 2026 : interdire la suppression d'un menu associé à une commande en cours. Rendre le menu indisponible pour les nouvelles commandes tout en conservant sa fiche pour honorer les commandes existantes. Cette règle reste à implémenter ; préciser alors les statuts considérés comme « en cours ».
 
 La relation actuelle autorise un menu null après suppression. Conserver une protection pour les anciennes commandes sans menu : leur détail et leur historique doivent rester consultables, mais leur modification nécessitant les données du menu doit être refusée proprement. Dans CommandeCrudController, adapter aussi la construction du formulaire de modification sur les vues de détail et les réaffichages d'erreur, qui appellent actuellement getMenu()->getNbreMin() sans vérifier le menu. Aucun changement du code applicatif effectué pour cette décision.
