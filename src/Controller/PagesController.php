@@ -3,15 +3,23 @@
 namespace App\Controller;
 
 use App\Repository\MenuRepository;
+use App\Services\MailService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class PagesController extends AbstractController
 {
+  
     #[Route('/', name: 'app_accueil')]
     public function accueil(MenuRepository $menuRepository): Response
     {
+        // $mail = new MailService();
+        // $mail->envoyerMail('essai.client@yopmail.com', 'John Doe', 'Bienvenue sur notre site', 'Bonjour, test de l\'envoi des mails');
+    
+        
+
+
         $menus = $menuRepository->findAll();
 
         return $this->render('pages/accueil.html.twig', [

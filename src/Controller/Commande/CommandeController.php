@@ -9,6 +9,7 @@ use App\Services\CalculPrixLivraison;
 use App\Entity\Commande;
 use App\Entity\CommandeHistorique;
 use App\Repository\MenuRepository;
+use App\Services\MailService;
 use DateTime;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +32,7 @@ final class CommandeController extends AbstractController
         // Si l'utilisateur essaie d'y accéder par l'URL (GET), il sera redirigé vers le panier
 
 
-    // ----------------------------RECUPERE LES ELEMENTS NECESSAIRES A LA CONSTRUCTION DE COMMANDE-----------------------------------
+        // ----------------------------RECUPERE LES ELEMENTS NECESSAIRES A LA CONSTRUCTION DE COMMANDE-----------------------------------
         // RECUPERE L'UTILISATEUR CONNECTE
         $user = $this->getUser();
 
@@ -49,11 +50,11 @@ final class CommandeController extends AbstractController
         if (!$menu) {
             return $this->redirectToRoute('app_panier');
         }
-        
+
         // VERIFIE LE STOCK DU MENU
         $stockMenu = $menu->getStock();
 
-        if ($stockMenu <= 0){
+        if ($stockMenu <= 0) {
             return $this->redirectToRoute('app_panier');
         }
 
@@ -67,12 +68,12 @@ final class CommandeController extends AbstractController
         if (!is_string($date_choisie) || $date_choisie === '') {
             return $this->redirectToRoute('app_panier');
         }
-        
+
         // Transforme la date en objet DateTime
         $date_livraison = DateTime::createFromFormat('!Y-m-d', $date_choisie);
 
         // si le formatage ne réussit pas OU si la date conversion est inexacte :
-        if(!$date_livraison || $date_livraison->format('Y-m-d') !== $date_choisie){
+        if (!$date_livraison || $date_livraison->format('Y-m-d') !== $date_choisie) {
             return $this->redirectToRoute('app_panier');
         }
 
@@ -80,9 +81,9 @@ final class CommandeController extends AbstractController
         $delai_min = null;
 
         // pour toutes les conditions du menu
-            // si le delai_min de la condition n'est pas null
-        foreach($menu->getConditions() as $condition){
-            if ($condition->getDelaiMin() !== null &&  $condition->getDelaiMin() > 0){
+        // si le delai_min de la condition n'est pas null
+        foreach ($menu->getConditions() as $condition) {
+            if ($condition->getDelaiMin() !== null &&  $condition->getDelaiMin() > 0) {
                 $delai_min = $condition->getDelaiMin();
             }
         }
@@ -92,28 +93,28 @@ final class CommandeController extends AbstractController
         }
 
         $dateJour = new DateTime(('today'));
-        $date_min = $dateJour->modify('+'.$delai_min.' days');
+        $date_min = $dateJour->modify('+' . $delai_min . ' days');
 
-        if($date_livraison < $date_min){
+        if ($date_livraison < $date_min) {
             return $this->redirectToRoute('app_panier');
-        } 
+        }
 
         // VERIFICATION DE LA DISPONIBILITE DU MENU 
         $disponibilite_debut = $menu->getDisponibiliteDebut();
         $disponibilite_fin = $menu->getDisponibiliteFin();
 
         // si menu est saisonnier
-        if($disponibilite_debut && $disponibilite_fin){
+        if ($disponibilite_debut && $disponibilite_fin) {
             // les disponibilités sont au format JJ-MM. Pour les comparer à la date_livraison, il faut les transformer en MM-JJ
             [$jourDebut, $moisDebut] = explode('-', $disponibilite_debut);
-            $disponibilite_debut_formatee = $moisDebut.'-'.$jourDebut;
+            $disponibilite_debut_formatee = $moisDebut . '-' . $jourDebut;
 
             [$jourFin, $moisFin] = explode('-', $disponibilite_fin);
-            $disponibilite_fin_formatee = $moisFin.'-'.$jourFin;
+            $disponibilite_fin_formatee = $moisFin . '-' . $jourFin;
 
             $date_livraison_formatee = $date_livraison->format('m-d');
 
-            if (($disponibilite_debut_formatee > $date_livraison_formatee) || ($date_livraison_formatee > $disponibilite_fin_formatee)){
+            if (($disponibilite_debut_formatee > $date_livraison_formatee) || ($date_livraison_formatee > $disponibilite_fin_formatee)) {
                 return $this->redirectToRoute('app_panier');
             }
         }
@@ -123,10 +124,10 @@ final class CommandeController extends AbstractController
         $heure_dispo = ['10:00', '10:30', '11:00', '11:30', '17:00', '17:30', '18:00'];
 
         // si l'heure choisie n'est pas compatible avec les horaires disponibles :
-        if(!in_array($heure_choisie, $heure_dispo, true)){
+        if (!in_array($heure_choisie, $heure_dispo, true)) {
             return $this->redirectToRoute('app_panier');
         }
-        
+
         // transforme l'heure validée en DateTime
         $heure_livraison = new \DateTime($heure_choisie);
 
@@ -154,28 +155,26 @@ final class CommandeController extends AbstractController
 
         // VERIFICATION DE L'ADRESSE
         // les adresses, code postal et villes doivent être des chaînes de caractères et non vides
-        if(
-            (!is_string($adresseGoogle) || trim($adresseGoogle) === '') || 
-            (!is_string($codePostal) || trim($codePostal)=== '')  || 
+        if (
+            (!is_string($adresseGoogle) || trim($adresseGoogle) === '') ||
+            (!is_string($codePostal) || trim($codePostal) === '')  ||
             (!is_string($ville) || trim($ville) === '') ||
             (!is_string($nom) || trim($nom) === '') ||
             (!is_string($prenom) || trim($prenom) === '')
-        )
-        {
-            return $this->redirectToRoute('app_panier'); 
+        ) {
+            return $this->redirectToRoute('app_panier');
         }
 
         // Appel à AdresseService pour vérifier
-        try{
+        try {
             $resultatVerification = $adresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
 
             $adresseVerifiee = $resultatVerification['adresse'];
             $codePostalVerifie = $resultatVerification['codePostal'];
             $villeVerifiee = $resultatVerification['ville'];
-
-        } catch(\InvalidArgumentException $e){
+        } catch (\InvalidArgumentException $e) {
             return $this->redirectToRoute('app_panier');
-        } catch(HttpExceptionInterface $e){
+        } catch (HttpExceptionInterface $e) {
             $this->addFlash(
                 'error',
                 'Le service de vérification des adresses est temporairement indisponible.'
@@ -189,12 +188,12 @@ final class CommandeController extends AbstractController
         $cgv = $request->request->get('cgv');
 
         // si les CGV ne sont pas cochées :
-        if($cgv !== 'on'){
+        if ($cgv !== 'on') {
             return $this->redirectToRoute('app_panier');
         }
-        
-        
-    // -------------------------------------------CREATION DE LA COMMANDE--------------------------------------------------------
+
+
+        // -------------------------------------------CREATION DE LA COMMANDE--------------------------------------------------------
         $commande = new Commande();
 
         // attribue un utilisateur à la commande
@@ -210,11 +209,11 @@ final class CommandeController extends AbstractController
         $menu_entree = $menu->getEntree()->getNom();
         $menu_plat = $menu->getPlat()->getNom();
         $menu_dessert = $menu->getDessert()->getNom();
-        $menu_composition = 'Entrée : '.$menu_entree.', '.'Plat : '.$menu_plat.', '.'Dessert : '.$menu_dessert.'.';
+        $menu_composition = 'Entrée : ' . $menu_entree . ', ' . 'Plat : ' . $menu_plat . ', ' . 'Dessert : ' . $menu_dessert . '.';
         $commande->setMenuComposition($menu_composition);
 
         // attribut un numéro de commande
-        $commande->setNumeroCommande('VG-'.date('Ymd').'-'.random_int(100000, 999999));
+        $commande->setNumeroCommande('VG-' . date('Ymd') . '-' . random_int(100000, 999999));
 
         // attribue la date de commande
         $commande->setDateCommande(new \DateTime());
@@ -229,7 +228,7 @@ final class CommandeController extends AbstractController
         $commande->setHeureLivraison($heure_livraison);
 
         // attribue l'adresse de livraison
-        $commande->setAdresseLivraison($nom.' '.$prenom.' - '.$adresseVerifiee);
+        $commande->setAdresseLivraison($nom . ' ' . $prenom . ' - ' . $adresseVerifiee);
 
         // attribue le prix de la commande 
         // calcul du prix et possibilité de promo
@@ -240,7 +239,7 @@ final class CommandeController extends AbstractController
         $prixMenu = $nbreConvives * $prixPerPers;
         $montant_reduction = 0;
 
-        if($nbreConvives >= $nbrePromo) {
+        if ($nbreConvives >= $nbrePromo) {
             $montant_reduction = 0.1 * $prixMenu;
         }
 
@@ -286,12 +285,8 @@ final class CommandeController extends AbstractController
         // attribue le booleen de prêt de matériel
         $commande->setPretMateriel($pret_materiel);
 
-        // attribue le booleen de restitution de matériel
-        if($pret_materiel === false){
-            $commande->setRestitutionMateriel(null);
-        } else {
-            $commande->setRestitutionMateriel(false);
-        }
+        // À la création, aucun matériel n'a encore été restitué.
+        $commande->setRestitutionMateriel(false);
 
         // ---------------------------------------------------------SECURISATION--------------------------------------------------------
         // Sécurise l'enregistrement de la commande et la modification du stock
@@ -300,16 +295,16 @@ final class CommandeController extends AbstractController
         $connexion = $entityManager->getConnection();
         $connexion->beginTransaction();
 
-        try{
+        try {
             // verrouille le menu
             $entityManager->lock($menu, LockMode::PESSIMISTIC_WRITE);
 
             // recharge les propriétés du menu depuis la BDD
             $entityManager->refresh($menu);
-            
+
             $stockMenu = $menu->getStock();
 
-            if ($stockMenu <= 0){
+            if ($stockMenu <= 0) {
                 // annule la transaction avant de rediriger
                 $connexion->rollBack();
                 return $this->redirectToRoute('app_panier');
@@ -318,7 +313,7 @@ final class CommandeController extends AbstractController
             // réduit le stock du menu de 1
             $menu->setStock($stockMenu - 1);
 
-        // CREATION DE L'HISTORIQUE DE COMMANDE ASSOCIE
+            // CREATION DE L'HISTORIQUE DE COMMANDE ASSOCIE
             // Crée un historique de commande pour chaque commande créée
             $historiqueCommande = new CommandeHistorique();
 
@@ -340,17 +335,16 @@ final class CommandeController extends AbstractController
             $entityManager->flush();
             // valide définitivement la transaction
             $connexion->commit();
-
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             // vérifie qu'une transaction est encore ouverte
-            if($connexion->isTransactionActive()){
+            if ($connexion->isTransactionActive()) {
                 // annule la transaction
-                $connexion->rollBack();                
+                $connexion->rollBack();
             }
             // donne l'erreur
             throw $e;
             // return $this->redirectToRoute('app_panier');
-            
+
         }
         // enregistre le numéro de commande
         $request->getSession()->set(
@@ -358,9 +352,14 @@ final class CommandeController extends AbstractController
             $commande->getNumeroCommande()
         );
 
+        // Envoi du mail automatique de confirmation de commande
+        $mail = new MailService();
+        $prenom = $commande->getUser()->getPrenom();
+        $adresseMail = $commande->getUser()->getEmail();
+        $mail->envoyerMail($adresseMail, $prenom, '', 8483040, $commande->getNumeroCommande());
+
         // Vide le panier pour éviter un rechargement de page et une seconde commande créée (si transaction effectuée)
         $panier->remove();
         return $this->redirectToRoute('app_confirmation');
     }
-
 }

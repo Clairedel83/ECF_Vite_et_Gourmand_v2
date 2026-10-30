@@ -73,6 +73,14 @@
         </header>
         
         <main>
+            {# Affiche puis retire les messages flash de la session #}
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }}" role="status">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
             {% block main %}{% endblock %}
         </main>
 

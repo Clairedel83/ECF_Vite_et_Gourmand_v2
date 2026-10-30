@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\RoleRepository;
+use App\Services\MailService;
 
 final class InscriptionController extends AbstractController
 {
@@ -43,6 +44,12 @@ final class InscriptionController extends AbstractController
                 'success',
                 'Votre compte a bien été créé ! Vous pouvez maintenant vous connecter.'
             );
+
+            // Envoi du mail automatique de bienvenue
+            $mail = new MailService();
+            $prenom = $user->getPrenom();
+            $adresseMail = $user->getEmail(); 
+            $mail->envoyerMail($adresseMail, $prenom, '', 8482760, '');
 
             // redirige vers la page de connexion
             return $this->redirectToRoute('app_connexion');

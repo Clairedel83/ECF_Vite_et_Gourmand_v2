@@ -111,14 +111,17 @@ label{
     letter-spacing: 0.3px;
     font-size:14px;
     line-height:1.75;
+    padding: 1vh 1vw;
 }
 
 .alert-success{
     color:green;
+    background-color: rgba(72, 158, 72, 0.342);
 }
 
 .alert-warning{
     color:red;
+    background-color: rgba(248, 74, 74, 0.61);
 }
 
 .nav_item{

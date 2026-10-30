@@ -24,11 +24,15 @@
 
                 
                 {{ form_start(inscriptionForm) }}
+                {{ form_errors(inscriptionForm) }}
                     <div class="formulaire-flex">
                         <div class="data">
                             {{ form_label(inscriptionForm.nom) }}
                             {{ form_widget(inscriptionForm.nom, {
                                 'attr': {'class': 'input'}
+                            }) }}
+                            {{ form_errors(inscriptionForm.nom, {
+                                'attr': {'class': 'form_error'}
                             }) }}
                         </div>
 
@@ -37,6 +41,9 @@
                             {{ form_widget(inscriptionForm.prenom, {
                                 'attr': {'class': 'input'}
                             }) }}
+                            {{ form_errors(inscriptionForm.prenom, {
+                                'attr': {'class': 'form_error'}
+                            }) }}
                         </div>
                     </div>
 
@@ -44,6 +51,9 @@
                         {{ form_label(inscriptionForm.email) }}
                         {{ form_widget(inscriptionForm.email, {
                             'attr': {'class': 'input'}
+                        }) }}
+                        {{ form_errors(inscriptionForm.email, {
+                            'attr': {'class': 'form_error'}
                         }) }}
                     </div>
 
@@ -63,10 +73,19 @@
                         </div>
                     </div>
 
+                    <div class="mdp_error">
+                        {{ form_errors(inscriptionForm.plainPassword) }}
+                        {{ form_errors(inscriptionForm.plainPassword.first) }}
+                        {{ form_errors(inscriptionForm.plainPassword.second) }}
+                    </div>
+
                     <div class="data">
                         {{ form_label(inscriptionForm.telephone) }}
                         {{ form_widget(inscriptionForm.telephone, {
                             'attr': {'class': 'input'}
+                        }) }}
+                        {{ form_errors(inscriptionForm.telephone, {
+                            'attr': {'class': 'form_error'}
                         }) }}
                     </div>
 
@@ -76,12 +95,19 @@
                         {{ form_widget(inscriptionForm.code_postal, {
                             'attr': {'class': 'input'}
                         }) }}
+                        {{ form_errors(inscriptionForm.code_postal, {
+                            'attr': {'class': 'form_error'}
+                        }) }}
+
                     </div>
 
                     <div class="data">
                         {{ form_label(inscriptionForm.ville) }}
                         {{ form_widget(inscriptionForm.ville, {
                             'attr': {'class': 'input'}
+                        }) }}
+                        {{ form_errors(inscriptionForm.ville, {
+                            'attr': {'class': 'form_error'}
                         }) }}
                     </div>
                     </div>
@@ -90,6 +116,9 @@
                         {{ form_label(inscriptionForm.adresse_postale) }}
                         {{ form_widget(inscriptionForm.adresse_postale, {
                             'attr': {'class': 'input'}
+                        }) }}
+                        {{ form_errors(inscriptionForm.adresse_postale, {
+                            'attr': {'class': 'form_error'}
                         }) }}
                     </div>
                     

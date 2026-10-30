@@ -2,9 +2,9 @@
 
 namespace App\Controller\Commande;
 
-use App\Services\Panier;
 use App\Form\AdresseLivraisonType;
 use App\Repository\MenuRepository;
+use App\Services\PanierService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PanierController extends AbstractController
 {
     #[Route('/panier', name: 'app_panier')]
-    public function index(Panier $panier, MenuRepository $menuRepository, Request $request): Response
+    public function index(PanierService $panier, MenuRepository $menuRepository, Request $request): Response
     {
         // AFFICHE LE MENU SELECTIONNE
         // récupère l'id du menu présent dans le panier
@@ -43,7 +43,7 @@ final class PanierController extends AbstractController
 
     // Ajoute un menu au panier
     #[Route('/panier/ajouter/{id}', name: 'app_panier_ajouter')]
-    public function add(int $id, Panier $panier, MenuRepository $menuRepository): Response
+    public function add(int $id, PanierService $panier, MenuRepository $menuRepository): Response
     {
         // dans une session : ajoute le menu choisi par l'utilisateur au panier
         // création de la function add dans panier.php
@@ -60,7 +60,7 @@ final class PanierController extends AbstractController
 
     // Retirer un menu du panier
     #[Route('/panier/retirer', name: 'app_panier_retirer')]
-    public function remove(Panier $panier): Response
+    public function remove(PanierService $panier): Response
     {
         $panier->remove();
         return $this->redirectToRoute('app_panier');

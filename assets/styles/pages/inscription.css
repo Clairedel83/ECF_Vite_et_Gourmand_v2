@@ -52,3 +52,16 @@
     font-size: 0.90rem;
     color :#252424;
 }
+
+.data li, .mdp_error li{
+    list-style: none;
+    font-family: "Roboto";
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    font-size: 0.8rem;
+    color: red;
+}
+
+.mdp_error{
+    margin-bottom: 3vh;
+}
