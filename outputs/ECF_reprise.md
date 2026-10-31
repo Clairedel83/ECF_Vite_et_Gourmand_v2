@@ -24,6 +24,13 @@ Estimation actualisée le 28 octobre après suivi/statuts, filtres et horaires :
 
 ## Tâches ECF restantes
 
+### Progression et sécurité des comptes — 31 octobre 2026
+
+- Mails bienvenue et confirmation commande : implémentés via SDK Mailjet et réception confirmée par l'utilisatrice. Ne plus les lister à développer.
+- Réinitialisation de mot de passe : parcours implémenté et relu ; validations fonctionnelles restantes lors des séances dédiées, renforcements ci-dessous.
+- Désactivation employé : BooleanField isActive, état actif par défaut, UserChecker et configuration firewall en place ; interdit une nouvelle authentification. Protection ROLE_ADMIN sur UserCrudController et affichage de l'erreur de connexion désormais présents et relus.
+- Sécurité différée à la demande de l'utilisatrice : rendre inopérante une session déjà ouverte d'un compte ensuite désactivé, à sa prochaine requête. UserChecker seul ne garantit pas cette révocation. Pas d'implémentation maintenant ; ne pas présenter la désactivation comme révoquant déjà les sessions actives. Vérifier ce scénario pendant les tests sécurité.
+
 ### Sécurité — réinitialisation de mot de passe (31 octobre 2026)
 
 - Prévoir une limitation des demandes répétées de lien (anti-abus), tout en conservant une réponse générique que le compte existe ou non.
@@ -48,10 +55,9 @@ Les trois templates CGV, politique de confidentialité et mentions légales ont 
 
 ### Fonctionnalités et livraison
 
-- Mails : bienvenue, confirmation commande, commande terminée invitant à donner avis, attente matériel (10 jours ouvrés, 600 euros), compte employé sans mot de passe dans mail. Pas de traitement Mailer trouvé dans src.
-- Mot de passe oublié avec lien de réinitialisation.
+- Mails restants : commande terminée invitant à donner avis, attente matériel (10 jours ouvrés, 600 euros), compte employé sans mot de passe dans mail. Bienvenue, confirmation et lien de réinitialisation déjà implémentés via Mailjet.
 - Avis depuis commande terminée, note 1 à 5/commentaire, validation/refus employé, accueil affichant les vrais avis validés. Entité et CRUD existent mais parcours restant ; harmoniser mapping Avis OneToOne / collection Commande.
-- Gestion employés par José : création email/mot de passe hashé, notification, désactivation empêchant connexion, compte admin créé hors application, protection serveur des actions réservées admin.
+- Gestion employés par José : finaliser création email/mot de passe hashé et notification ; vérifier que la création admin reste impossible et que le compte José est préparé hors application. Désactivation et protection ROLE_ADMIN du CRUD déjà implémentées ; révocation des sessions actives suivie en sécurité.
 - Statistiques José : graphique comparatif commandes/menu depuis NoSQL, chiffre d'affaires/menu avec filtres menu/période. Aucun raccordement NoSQL/statistiques trouvé.
 - Contact : formulaire titre/description/email et envoi entreprise ; contrôleur actuel affiche seulement vue.
 - Vérification finale exigences menus, galerie, conditions/allergènes et filtres dynamiques, droits des CRUD ; base présente, pas à refaire.

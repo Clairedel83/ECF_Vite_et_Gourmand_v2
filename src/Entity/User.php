@@ -37,16 +37,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 10, nullable: true)]
     private ?string $telephone = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $ville = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse_postale = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $code_postal = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
@@ -181,7 +181,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->telephone;
     }
 
-    public function setTelephone(string $telephone): static
+    public function setTelephone(?string $telephone): static
     {
         $this->telephone = $telephone;
 
@@ -193,7 +193,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->ville;
     }
 
-    public function setVille(string $ville): static
+    public function setVille(?string $ville): static
     {
         $this->ville = $ville;
 
@@ -205,7 +205,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->adresse_postale;
     }
 
-    public function setAdressePostale(string $adresse_postale): static
+    public function setAdressePostale(?string $adresse_postale): static
     {
         $this->adresse_postale = $adresse_postale;
 
@@ -229,7 +229,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->code_postal;
     }
 
-    public function setCodePostal(string $code_postal): static
+    public function setCodePostal(?string $code_postal): static
     {
         $this->code_postal = $code_postal;
 

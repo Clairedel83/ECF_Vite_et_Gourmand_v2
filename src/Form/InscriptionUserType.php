@@ -24,7 +24,11 @@ class InscriptionUserType extends AbstractType
                 'label' => 'Adresse email :',
                 'attr' => [
                     'placeholder' => "Adresse email"
-                ]
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message: 'Veuillez renseigner votre nom.'
+                    )],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class, 
@@ -40,8 +44,7 @@ class InscriptionUserType extends AbstractType
                     new Assert\Regex(
                         pattern: '/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[+!@#$%^&*]).+$/',
                         message:'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et caractère spécial.'
-                    ),
-                    ],
+                    )],
                 'first_options' => [
                     'label' => 'Mot de passe :', 
                     'hash_property_path' => 'password',
@@ -66,6 +69,9 @@ class InscriptionUserType extends AbstractType
                         max:30,
                         minMessage:"Le nom doit contenir au moins {{ limit }} caractères.",
                         maxMessage:"Le nom doit contenir au moins {{ limit }} caractères."
+                    ),
+                    new Assert\NotBlank(
+                        message: 'Veuillez renseigner votre nom.'
                     )],
                 'attr' => [
                     'placeholder' => "Nom",
@@ -82,6 +88,9 @@ class InscriptionUserType extends AbstractType
                         max:30,
                         minMessage:"Le prénom doit contenir au moins {{ limit }} caractères.",
                         maxMessage:"Le prénom doit contenir au maximum {{ limit }} caractères."
+                    ),
+                    new Assert\NotBlank(
+                        message: 'Veuillez renseigner votre prénom.'
                     )],
                 'attr' => [
                     'placeholder' => "Prénom",
@@ -93,14 +102,24 @@ class InscriptionUserType extends AbstractType
                 'label' => 'Téléphone :',
                 'attr' => [
                     'placeholder' => "Téléphone"
-                ]
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message: 'Veuillez renseigner votre numéro de téléphone.'
+                    )
+                ],
             ])
             ->add('ville', TextType::class, [
                 'label' => 'Ville :',
                 'attr' => [
                     'placeholder' => "Ville",
                     'class' => 'input'
-                ]
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message: 'Veuillez renseigner votre ville.'
+                    )
+                ],
             ])
 
             ->add('code_postal', TextType::class, [
@@ -114,6 +133,9 @@ class InscriptionUserType extends AbstractType
                     new Assert\Regex(
                         pattern: '/^[0-9]{5}$/',
                         message: 'Le code postal doit contenir 5 chiffres.'
+                    ),
+                    new Assert\NotBlank(
+                        message: 'Veuillez renseigner votre code postal.'
                     )
                 ]
             ])
@@ -122,7 +144,12 @@ class InscriptionUserType extends AbstractType
                 'label' => 'Adresse postale :',
                 'attr' => [
                     'placeholder' => "Adresse postale"
-                ]
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message: 'Veuillez renseigner votre adresse postale.'
+                    )
+                ],
             ])
 
             ->add('submit', SubmitType::class, [

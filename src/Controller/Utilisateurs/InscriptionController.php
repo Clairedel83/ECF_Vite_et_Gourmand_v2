@@ -48,8 +48,9 @@ final class InscriptionController extends AbstractController
             // Envoi du mail automatique de bienvenue
             $mail = new MailService();
             $prenom = $user->getPrenom();
+            $nom = $user->getNom();
             $adresseMail = $user->getEmail(); 
-            $mail->envoyerMail($adresseMail, $prenom, '', 8482760, '');
+            $mail->envoyerMail($adresseMail, $prenom.' '.$nom, '', 8482760, '', '');
 
             // redirige vers la page de connexion
             return $this->redirectToRoute('app_connexion');
