@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_connexion"></div>
+    {% endblock %}
+
+    {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>CONNEXION</h1>
+            <h3>Accédez à votre espace personnel</h3>
+            <h4><i>Suivez vos commandes et retrouvez vos prestations en toute simplicité.</i></h4>
+        </div>
+    {% endblock %}
+
+
+    {% block main %}
+        <section class="inscription">
+            <div class="form_connexion" id="resetPass">
+                <h5>NOUVEAU MOT DE PASSE</h5>
+
+                {{ form_start(resetPassForm) }}
+                {{ form_errors(resetPassForm) }}
+                    <div class="data">
+                        {{ form_label(resetPassForm.plainPassword.first) }}
+                        {{ form_widget(resetPassForm.plainPassword.first, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                        {{ form_errors(resetPassForm.plainPassword.first) }}
+                    </div>
+
+                    <div class="data">
+                        {{ form_label(resetPassForm.plainPassword.second) }}
+                        {{ form_widget(resetPassForm.plainPassword.second, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                        {{ form_errors(resetPassForm.plainPassword.second) }}
+                    </div>
+                {{ form_widget(resetPassForm.submit) }}
+                {{ form_end(resetPassForm) }}
+            </div>
+        </section>
+    {% endblock %}
+{% endblock %}

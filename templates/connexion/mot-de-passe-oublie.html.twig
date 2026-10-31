@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_connexion"></div>
+    {% endblock %}
+
+    {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>CONNEXION</h1>
+            <h3>Accédez à votre espace personnel</h3>
+            <h4><i>Suivez vos commandes et retrouvez vos prestations en toute simplicité.</i></h4>
+        </div>
+    {% endblock %}
+
+
+    {% block main %}
+        <section class="inscription">
+            <div class="form_connexion" id="resetPass">
+                <h5>MOT DE PASSE OUBLIE</h5>
+
+                {{ form_start(oubliPassForm) }}
+                {{ form_errors(oubliPassForm) }}
+                    <div class="data">
+                        {{ form_label(oubliPassForm.email) }}
+                        {{ form_widget(oubliPassForm.email, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                        {{ form_help(oubliPassForm.email) }}
+                        {{ form_errors(oubliPassForm.email, {
+                            'attr': {'class': 'form_error'}
+                        }) }}
+                    </div>
+                {{ form_widget(oubliPassForm.submit) }}
+                {{ form_end(oubliPassForm) }}
+            </div>
+        </section>
+    {% endblock %}
+{% endblock %}

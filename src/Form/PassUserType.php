@@ -70,8 +70,8 @@ class PassUserType extends AbstractType
                 ]
             ])
 
-            ->addEventListener(
-                FormEvents::SUBMIT,
+            // PERMET DE COMPARER LE MOT DE PASSE (actuel) SAISI A CELUI ENREGISTRE EN BDD
+            ->addEventListener(FormEvents::SUBMIT,
                 function (FormEvent $event) {
                     // récupère les éléments saisis par l'utilisateur
                     $form = $event->getForm();

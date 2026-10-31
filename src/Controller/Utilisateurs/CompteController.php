@@ -3,7 +3,6 @@
 namespace App\Controller\Utilisateurs;
 
 use App\Form\InformationsUserType;
-use App\Form\ModifierCommandeType;
 use App\Form\PassUserType;
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;

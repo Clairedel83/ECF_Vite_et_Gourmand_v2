@@ -65,6 +65,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: InterventionCommande::class, mappedBy: 'auteur')]
     private Collection $interventionCommandes;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $tokenExpireDate = null;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
@@ -283,6 +289,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $interventionCommande->setAuteur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getTokenExpireDate(): ?\DateTime
+    {
+        return $this->tokenExpireDate;
+    }
+
+    public function setTokenExpireDate(?\DateTime $tokenExpireDate): static
+    {
+        $this->tokenExpireDate = $tokenExpireDate;
 
         return $this;
     }

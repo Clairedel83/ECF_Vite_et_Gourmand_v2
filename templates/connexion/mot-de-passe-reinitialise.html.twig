@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<!-- HERO-->
+    {% block hero_img %}
+        <div class = "hero_img" id="hero_connexion"></div>
+    {% endblock %}
+
+    {% block hero_title %}
+        <div class = "header_bottom header_bottom_classic">
+            <h1>CONNEXION</h1>
+            <h3>Accédez à votre espace personnel</h3>
+            <h4><i>Suivez vos commandes et retrouvez vos prestations en toute simplicité.</i></h4>
+        </div>
+    {% endblock %}
+
+
+    {% block main %}
+        <section class="inscription">
+            <p>Si un compte correspond à cette adresse, vous recevrez un email contenant les instructions de réinitialisation.</p>
+        </section>
+    {% endblock %}
+{% endblock %}

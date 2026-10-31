@@ -24,6 +24,13 @@ Estimation actualisée le 28 octobre après suivi/statuts, filtres et horaires :
 
 ## Tâches ECF restantes
 
+### Sécurité — réinitialisation de mot de passe (31 octobre 2026)
+
+- Prévoir une limitation des demandes répétées de lien (anti-abus), tout en conservant une réponse générique que le compte existe ou non.
+- Protéger le stockage des tokens de réinitialisation : envisager un condensat stocké plutôt que le token utilisable en clair ; adapter la recherche et conserver expiration et invalidation après utilisation.
+- Traiter les refus et erreurs de Mailjet dans le service partagé sans divulguer l'existence d'un compte ; réponse API actuellement ignorée.
+- Parcours de réinitialisation relu le 31 octobre : génération aléatoire, durée 10 minutes, URL absolue, formulaire associé à User avec hash_property_path, NotBlank/Length/Regex, effacement token/date après succès et redirection connexion implémentés. Aucun test exécuté. Petit ajustement conseillé : vérifier date null avant comparaison et utiliser >= pour l'expiration. Option passwordHasher inutilisée encore présente dans ResetPassType : nettoyage facultatif.
+
 ### Pages légales — compléments à effectuer (30 octobre 2026)
 
 Les trois templates CGV, politique de confidentialité et mentions légales ont été relus : fichiers complets et règles métier cohérentes comme base ECF. Ne pas les réécrire intégralement à la reprise. Compléments demandés à conserver dans les tâches :

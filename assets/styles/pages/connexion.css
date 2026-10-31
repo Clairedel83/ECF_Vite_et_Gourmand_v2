@@ -7,7 +7,6 @@
 }
 
 .form_connexion{
-    height:70vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -44,4 +43,13 @@
     color:#252424;
     text-decoration:underline;
     
+}
+
+#resetPass form{
+    width:100%;
+    margin: 2vh 0;
+}
+
+#reset_pass_submit{
+    margin: 0;
 }

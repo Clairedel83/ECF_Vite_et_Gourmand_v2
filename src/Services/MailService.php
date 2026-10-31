@@ -7,7 +7,7 @@ use Mailjet\Resources;
 
 class MailService
 {
-    public function envoyerMail(string $to_email, string $to_nom, string $sujet, int $templateId, string $numero_commande)
+    public function envoyerMail(string $to_email, string $to_nom, string $sujet, int $templateId, string $numero_commande = null, string $lien = null)
     {
         // $mail->envoyerMail(('adresse du client', 'nom du client', 'sujet du mail', 'contenu du mail'))   ; 
 
@@ -31,7 +31,8 @@ class MailService
                     'TemplateID' => $templateId,
                     'TemplateLanguage' => true,
                     "Variables" => [
-                        "numero_commande" => $numero_commande
+                        "numero_commande" => $numero_commande,
+                        "confirmation_link" => $lien,
                         ]
                 ]
             ]
