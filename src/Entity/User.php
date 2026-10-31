@@ -71,6 +71,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTime $tokenExpireDate = null;
 
+    #[ORM\Column]
+    private bool $isActive = true;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
@@ -313,6 +316,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTokenExpireDate(?\DateTime $tokenExpireDate): static
     {
         $this->tokenExpireDate = $tokenExpireDate;
+
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
