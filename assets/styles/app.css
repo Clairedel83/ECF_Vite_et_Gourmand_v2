@@ -132,7 +132,7 @@ label{
 }
 
 /* ====================== COMPONENTS ========================== */
-.btn1, .btn2, .btn3, .btn_menu, .btn_fermer{
+.btn1, .btn2, .btn3, .btn4, .btn_menu, .btn_fermer{
     cursor:pointer;
 }
 
@@ -180,7 +180,8 @@ label{
     border:2px solid transparent; /*pour éviter qu'au hover un décalage apparaisse*/
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     transition: 0.2s ease;
-    padding: 5px 12px;
+    letter-spacing: 0.3px;
+    padding: 8px 15px;
     text-decoration: none;
     border-radius: 10px;
     width: fit-content;
@@ -205,26 +206,27 @@ label{
     color:#DAA481;
 }
 
-.btn3{
+.btn4{
     width:200px;
     height:30px;
     border-radius: 10px;
+        letter-spacing: 0.3px;
 }
 
-.btn3_apply{
+.btn4_apply{
     background-color: #F7E0C4;
     border: 1px solid #F7E0C4;
     transition: 0.2s ease;
     color:#252424;
 }
 
-.btn3_reset{
+.btn4_reset{
     background-color: transparent;
     border:1px solid white;
     color:white;
 }
 
-.btn1 a, .btn2 a , .btn3 a, .nav_item a{
+.btn1 a, .btn2 a , .btn4 a, .nav_item a{
     font-family:'Plus Jakarta Sans';
 }
 

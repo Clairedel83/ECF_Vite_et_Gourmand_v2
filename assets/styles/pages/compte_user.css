@@ -107,7 +107,7 @@
 .all_informations{
     display: flex;
     flex-direction: column;
-    gap:5vh;
+    gap:4vh;
     font-size:14px;
     line-height:1.75;
     font-family: "Roboto";
@@ -117,16 +117,15 @@
 }
 
 .informations{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(1, 1fr);
+    display: flex;
+    flex-direction: column;
+    gap:2vh;
 }
 
 .informations_content{
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 2vh;
 }
 
 .informations_content input {
@@ -143,6 +142,10 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 6vh;
+}
+
+.commandes_title a{
+    text-decoration: none;
 }
 
 .commandes_title h3{
@@ -203,7 +206,19 @@
 
 .btn_details{
     display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap:1vw;
+}
+
+.btn_details .btn3 {
+    width: auto;
+    padding: 8px 16px;
+    white-space: nowrap;
+}
+
+.btn_details form {
+    margin: 0;
 }
 
 .statut_commande{
@@ -222,6 +237,18 @@
 }
 
 .historique_commande table{
-    width:80%;
+    width:100%;
     table-layout: fixed;
+}
+
+.historique_commande th:nth-child(1), .historique_commande th:nth-child(2) {
+    width: 25%;
+}
+
+.historique_commande th:nth-child(3) {
+    width: 60%;
+}
+
+.historique_commande td, .historique_commande th{
+    text-align: center;
 }

@@ -10,10 +10,27 @@
     height:70vh;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    gap:2vh;
     width:30vw;
+        border:1px solid transparent;
+    box-shadow: 
+        1px 6px 10px rgba(0, 0, 0, 0.10),
+        -1px -2px 10px rgba(0, 0, 0, 0.25);
+    background-color: #F7E0C4;
+    align-items: center;
+    padding:30px;
 }
 
-form button {
+.data_connexion{
+    width: 80%;
+}
+
+.data_connexion a{
+    margin-top: 1vh;
+}
+
+.form_connexion button {
     justify-self: center;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }

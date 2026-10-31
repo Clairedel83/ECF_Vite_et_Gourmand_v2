@@ -34,51 +34,47 @@
                 <h3>Mes informations</h3>
 
                 {{ form_start(informationsForm) }}
-
-                <div class="all_informations">
-                    <div class="informations">
-                        <div class="informations_content">
-                            <span>Nom :</span>
-                            {{ form_widget(informationsForm.nom) }}
-                            {{ form_errors(informationsForm.nom) }}
-                        </div>
-                        <div class="informations_content">
-                            <span>Prénom :</span>
+                    <div class="all_informations">
+                        <div class="informations">
+                            <div class="informations_content">
+                                <span>Nom : </span> 
+                                {{ form_widget(informationsForm.nom) }}
+                                {{ form_errors(informationsForm.nom) }}
+                            </div>
+                            <div class="informations_content">
+                                <span>Prénom : </span> 
                             {{ form_widget(informationsForm.prenom) }}
-                            {{ form_errors(informationsForm.prenom) }}
+                            {{ form_errors(informationsForm.prenom) }}                                
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="informations">
-                        <div class="informations_content">
-                            <span>Téléphone :</span>
-                            {{ form_widget(informationsForm.telephone) }}
-                            {{ form_errors(informationsForm.telephone) }}
+                        <div class="informations">
+                            <div class="informations_content">
+                                <span>Téléphone : </span>
+                             {{ form_widget(informationsForm.telephone) }}
+                            {{ form_errors(informationsForm.telephone) }}                               
+                            </div>
                         </div>
-                        <div class="informations_content"></div>
-                    </div>
 
-                    <div class="informations">
-                        <div class="informations_content">
-                            <span>Adresse postale :</span>
+                        <div class="informations">
+                            <div class="informations_content">
+                                <span>Adresse postale : </span>
                             {{ form_widget(informationsForm.adresse_postale) }}
                             {{ form_errors(informationsForm.adresse_postale) }}
-                        </div>
-                    </div>
-                    <div class="informations">
-                        <div class="informations_content">
-                            <span>Code postal :</span>
+                            </div>                    
+
+                            <div class="informations_content">
+                                <span>Code postal : </span>
                             {{ form_widget(informationsForm.code_postal) }}
                             {{ form_errors(informationsForm.code_postal) }}
-                        </div>
-                        <div class="informations_content">
-                            <span>Ville :</span>
+                            </div>
+                            <div class="informations_content">
+                                <span>Ville : </span> 
                             {{ form_widget(informationsForm.ville) }}
-                            {{ form_errors(informationsForm.ville) }}
+                            {{ form_errors(informationsForm.ville) }}                     
+                            </div> 
                         </div>
                     </div>
-                </div>
-
                 {{ form_widget(informationsForm.submit) }}
                 {{ form_end(informationsForm) }}
             </div>

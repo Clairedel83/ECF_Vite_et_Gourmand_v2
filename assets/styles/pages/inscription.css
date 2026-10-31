@@ -2,6 +2,18 @@
     display: flex;
     justify-content: center;
     margin:50px 0;
+    align-items: center;
+}
+
+.formulaire_inscription{
+    border:1px solid transparent;
+    box-shadow: 
+        1px 6px 10px rgba(0, 0, 0, 0.10),
+        -1px -2px 10px rgba(0, 0, 0, 0.25);
+    background-color: #F7E0C4;
+    align-items: center;
+    padding:30px;
+    width: 40%;
 }
 
 .data p{
@@ -25,8 +37,9 @@
     letter-spacing: 0.3px;
 }
 
-.formulaire h5{
+.formulaire_inscription h5{
     text-align: center;
+    margin-bottom: 4vh;
 }
 
 .formulaire-flex{
@@ -37,10 +50,6 @@
 
 .formulaire-flex .data {
     flex: 1;
-}
-
-.inscription .formulaire{
-    width:40%;
 }
 
 .formulaire-link, .formulaire-link a {
@@ -64,4 +73,9 @@
 
 .mdp_error{
     margin-bottom: 3vh;
+}
+
+#inscription_user_submit{
+    justify-self: center;
+    margin-top: 6vh;
 }

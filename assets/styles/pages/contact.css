@@ -62,7 +62,7 @@
     font-weight: 400;
 }
 
-.formulaire{
+.formulaire_contact{
     border:1px solid transparent;
     box-shadow: 
         1px 6px 10px rgba(0, 0, 0, 0.10),
@@ -74,9 +74,6 @@
     height:auto;
 }
 
-.form_contact{
-        width:35vw;
-}
 
 .formulaire h5{
     margin-bottom: 20px;

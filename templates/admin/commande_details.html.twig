@@ -254,7 +254,7 @@
                             {{ form_errors(statutForm.statut) }}                            
                         </div>
                             
-                        <button type="submit" class="btn2 btn2_statut">Mettre à jour le statut</button>
+                        <button type="submit" class="btn3 btn3_statut">Mettre à jour le statut</button>
                         {{ form_end(statutForm) }}    
                     </div>
                 </div>
@@ -266,24 +266,24 @@
                 <div class="details_content_sub">
                     <div class="commande_actions">
                         {# Bouton qui ouvre la modale d'annulation #}
-                        <button type="button" class="btn2 btn2_modifier">
+                        <button type="button" class="btn3 btn3_modifier">
                             <twig:ea:Icon name="fa fa-pen"/>Modifier la commande
                         </button>
 
                         {# Boutons liés au formulaire de modification #}
                         <div class="btn_form">
-                            <a href="{{ path('admin_commande_details', {entityId: commande.id}) }}" class="btn2 btn_abandonner" id="btn_form_abandonner">
+                            <a href="{{ path('admin_commande_details', {entityId: commande.id}) }}" class="btn3 btn_abandonner" id="btn_form_abandonner">
                                 <twig:ea:Icon name="fa fa-ban"/> Abandonner
                             </a>
                             
-                            <button type="submit" class="btn2" id="btn_form_sauvegarder" form="form_modification_commande">
+                            <button type="submit" class="btn3" id="btn_form_sauvegarder" form="form_modification_commande">
                                 <twig:ea:Icon name="fa fa-bookmark"/> Sauvegarder
                             </button>
                         </div>
 
                         {# Bouton qui affiche le formulaire de modification #}
                         <button
-                            class="btn2 btn2_annuler"
+                            class="btn3 btn3_annuler"
                             data-bs-toggle="modal"
                             data-bs-target="#annulationCommandeModal"
                             {% if commande.statut == 8 %}disabled{% endif %}

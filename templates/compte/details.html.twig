@@ -34,25 +34,25 @@
             </div>
 
             <div class="account_right">
-                {# affiche les flash messages #}
+                {# affiche les flash messages
                 {% for type in ['success', 'warning'] %}
                     {% for message in app.flashes(type) %}
                         <div class="alert alert-{{ type }}" role="alert">
                             {{ message }}
                         </div>
                     {% endfor %}
-                {% endfor %}
+                {% endfor %} #}
 
                 {% if commande %}
                 <div class="commandes_title">
                     <h3>Détails de ma commande N°{{ commande.numeroCommande }}</h3>
                     {% if commande.statut == 1 %}
                     <div class="btn_details">
-                        <a href="{{ path('app_commandes_modifier', {'id': commande.id}) }}" class="btn3" id="modifier">Modifier ma commande</a>        
+                        <a href="{{ path('app_commandes_modifier', {'id': commande.id}) }}" class="btn3 btn3_modifier" id="modifier">Modifier ma commande</a>        
                         <form method="POST" action="{{ path('app_commandes_supprimer', {'id' : commande.id}) }}" id="form_annulation" >
                             {# sécurisation avec jeton CSRF #}
                             <input type="hidden" name="token" value="{{ csrf_token('annulation_commande')}}">
-                            <button type="submit" class="btn3" id="annuler">Annuler ma commande</button>
+                            <button type="submit" class="btn3 btn3_annuler" id="annuler">Annuler ma commande</button>
                         </form>                     
                     </div>
                     {% endif %}
@@ -113,8 +113,8 @@
                         </tr>
                     </table>
 
-                    <button id="lien_historique_commande">Consulter l'historique de la commande</button>
-                    <button id="fermer_historique_commande">Fermer l'historique de la commande</button>
+                    <button id="lien_historique_commande" class="btn2">Consulter l'historique de la commande</button>
+                    <button id="fermer_historique_commande" class="btn2">Fermer l'historique de la commande</button>
                     <div class="historique_commande">
                         <h4>Historique de la commande</h4>
 

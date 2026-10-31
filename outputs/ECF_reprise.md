@@ -24,6 +24,23 @@ Estimation actualisée le 28 octobre après suivi/statuts, filtres et horaires :
 
 ## Tâches ECF restantes
 
+### Pages légales — compléments à effectuer (30 octobre 2026)
+
+Les trois templates CGV, politique de confidentialité et mentions légales ont été relus : fichiers complets et règles métier cohérentes comme base ECF. Ne pas les réécrire intégralement à la reprise. Compléments demandés à conserver dans les tâches :
+- Uniformiser l'email de contact du pied de page dans templates/base.html.twig avec vite.gourmand2027@gmail.com, déjà utilisé dans les trois pages.
+- Compléter l'identité de l'éditeur, du responsable de publication et du responsable effectif du traitement, selon la réalité du site déployé ; ne pas inventer d'identifiants légaux.
+- Renseigner l'URL finale et les coordonnées de l'hébergeur après choix du déploiement.
+- Définir et appliquer les durées de conservation des comptes, commandes/interventions, échanges et journaux ; compléter la politique.
+- Vérifier la localisation des traitements et les garanties de transferts éventuels hors EEE des prestataires ; compléter la politique.
+- Identifier les cookies et leurs durées sur l'environnement déployé ; compléter l'information.
+- Adapter les bases légales de la politique aux traitements réels de la démonstration, distincts du scénario commercial décrit par l'ECF. Ne pas imposer de reformulation de toutes les pages en simulation : ce n'est pas une exigence de l'énoncé.
+- Pour une exploitation commerciale réelle : identifier le médiateur effectivement désigné et ses coordonnées dans les CGV ; point non résolu par une simple mention générique de la médiation.
+- Mettre en œuvre le mail de restitution déjà décrit dans les CGV (statut 6, dix jours ouvrés, 600 euros) ; garder le lien avec le chantier emails ci-dessous.
+- Actualiser la politique lors de la mise en service des avis, du formulaire de contact et de la réinitialisation de mot de passe, ainsi que de nouveaux traitements éventuels.
+- Paiement retenu pour le scénario ECF : à la livraison par carte bancaire ou virement, sans acompte ni paiement intégré au site ; choix proposé et repris dans les CGV, pas exigence de l'énoncé. Aucun développement de paiement à ajouter.
+
+### Fonctionnalités et livraison
+
 - Mails : bienvenue, confirmation commande, commande terminée invitant à donner avis, attente matériel (10 jours ouvrés, 600 euros), compte employé sans mot de passe dans mail. Pas de traitement Mailer trouvé dans src.
 - Mot de passe oublié avec lien de réinitialisation.
 - Avis depuis commande terminée, note 1 à 5/commentaire, validation/refus employé, accueil affichant les vrais avis validés. Entité et CRUD existent mais parcours restant ; harmoniser mapping Avis OneToOne / collection Commande.

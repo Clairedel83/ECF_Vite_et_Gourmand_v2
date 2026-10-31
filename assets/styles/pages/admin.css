@@ -460,7 +460,7 @@ body.ea-dark-scheme .content-top {
 
 .statut,
 .form_statut,
-.form_statut .btn2 {
+.form_statut .btn3 {
     margin-top: 4vh;
 }
 
@@ -468,7 +468,7 @@ body.ea-dark-scheme .content-top {
     margin-bottom: 6vh;
 }
 
-.btn2 {
+.btn3 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -479,15 +479,18 @@ body.ea-dark-scheme .content-top {
     border-radius: 10px;
     cursor: pointer;
     transition: 0.2s ease;
+    font-family: 'Roboto';
+    font-size:14px;
+    letter-spacing: 0.3px;
 }
 
-.form_statut .btn2 {
+.form_statut .btn3 {
     background-color: #daa481;
     color: #252424;
     border: 2px solid transparent;
 }
 
-.form_statut .btn2:hover {
+.form_statut .btn3:hover {
     background-color: transparent;
     border: 2px solid #daa481;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
@@ -539,13 +542,13 @@ body.ea-dark-scheme .content-top {
     border:none;
 }
 
-.btn2_modifier {
+.btn3_modifier {
     color: #aa3333;
     border: 1.5px solid #aa3333cc;
     background-color: transparent;
 }
 
-.btn2_modifier:hover, #btn_form_sauvegarder, #reessayer_livraison {
+.btn3_modifier:hover, #btn_form_sauvegarder, #reessayer_livraison {
     background-color: #aa3333cc;
     color: white;
 }
@@ -554,18 +557,18 @@ body.ea-dark-scheme .content-top {
     border:none;
 }
 
-.btn2_annuler {
+.btn3_annuler {
     color: rgb(245, 61, 61);
     border: 1.5px solid rgb(245, 61, 61);
     background-color: transparent;
 }
 
-.btn2_annuler:hover {
+.btn3_annuler:hover {
     color: white;
     background-color: rgba(245, 61, 61, 0.829);
 }
 
-.btn2_annuler:disabled {
+.btn3_annuler:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }

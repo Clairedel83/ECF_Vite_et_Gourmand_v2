@@ -1,17 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Vite et Gourmand - Traiteur{% endblock %}
+{% block title %}Conditions générales de vente - Vite & Gourmand{% endblock %}
 
 {% block body %}
-
-<!-- HERO-->
+    <!-- HERO-->
     {% block hero_img %}
-        <div class = "hero_img" id="hero_cgv"></div>
+        <div class="hero_img" id="hero_cgv"></div>
     {% endblock %}
 
     {% block hero_title %}
-        <div class = "header_bottom header_bottom_classic">
-            <h1>CONDITIONS GENERALES DE VENTE</h1>
+        <div class="header_bottom header_bottom_classic">
+            <h1>CONDITIONS GÉNÉRALES DE VENTE</h1>
         </div>
     {% endblock %}
 
@@ -20,118 +19,109 @@
         <div class="legal">
             <div class="legal_text">
                 <h4>1. Objet</h4>
-                <p>Les présentes Conditions Générales de Vente (CGV) régissent les relations contractuelles entre Vite & Gourmand et toute personne souhaitant effectuer une commande via le site internet www.vite-et-gourmand.fr (ci-après « le Client »).</p>
-                <p>Toute commande implique l’acceptation sans réserve des présentes CGV.</p>
+                <p>Les présentes Conditions générales de vente définissent les conditions de commande et de réalisation des prestations proposées par Vite & Gourmand sur son site internet.</p>
+                <p>Le client est invité à en prendre connaissance avant de valider sa commande. Les conditions applicables sont celles acceptées au moment de la commande.</p>
             </div>
 
             <div class="legal_text">
-                <h4>2. Produits et prestations</h4>
-                <p>Vite & Gourmand propose des prestations de traiteur pour particuliers et professionnels, incluant notamment :</p>
-                    <ul>
-                        <li>Événements familiaux</li>
-                        <li>Mariages et réceptions</li>
-                        <li>Événements d’entreprise</li>
-                        <li>Brunchs et menus saisonniers</li>
-                    </ul>
-                <p>Les produits proposés sont décrits et présentés avec la plus grande exactitude possible. Toutefois, des variations mineures peuvent exister.</p>
+                <h4>2. Menus et prestations</h4>
+                <p>Vite & Gourmand propose des menus et prestations de traiteur pour différents événements, notamment les repas familiaux, mariages, réceptions et événements d’entreprise.</p>
+                <p>Chaque fiche de menu présente sa composition, ses caractéristiques, les allergènes associés aux plats, le nombre minimum de convives, les tarifs, les disponibilités et les conditions de préparation ou de conservation.</p>
+                <p>Le client doit consulter ces informations avant de commander, notamment les conditions particulières du menu et les indications relatives aux allergènes.</p>
             </div>
 
             <div class="legal_text">
                 <h4>3. Commande</h4>
-                <p>Le Client peut passer commande :</p>
-                <ul>
-                    <li>En ligne via le site internet</li>
-                    <li>Ou via un formulaire de contact / devis</li>
-                </ul>
-                <p>Toute commande devient ferme et définitive après :</p>
-                <ul>
-                    <li>Validation du panier</li>
-                    <li>Acceptation des CGV</li>
-                    <li>Confirmation de la commande</li>
-                </ul>
-                <p>Vite & Gourmand se réserve le droit de refuser une commande en cas de litige antérieur.</p>
+                <p>La commande s’effectue depuis le site après connexion au compte client. Elle est soumise au stock disponible, au nombre minimum de convives et aux conditions affichées sur la fiche du menu.</p>
+                <p>Le client renseigne les informations nécessaires à la prestation, notamment l’adresse, la date, le créneau de livraison, le nombre de convives et son éventuel besoin de matériel.</p>
+                <p>Avant validation, un récapitulatif présente les informations de la commande et le détail de son prix. Le client doit vérifier leur exactitude et accepter les présentes CGV.</p>
+                <p>Après validation, la commande est enregistrée au statut « En attente de validation ». Un email confirme son enregistrement. Cette confirmation ne constitue pas encore son acceptation par l’équipe.</p>
+                <p>L’acceptation est indiquée par le passage au statut « Commande acceptée ». Le détail de la commande et l’historique de ses statuts restent consultables depuis l’espace personnel.</p>
             </div>
 
             <div class="legal_text">
                 <h4>4. Tarifs</h4>
-                <p>Les prix sont indiqués en euros (€) et toutes taxes comprises (TTC).</p>
-                <p>Vite & Gourmand se réserve le droit de modifier ses prix à tout moment, mais les prestations seront facturées sur la base des tarifs en vigueur au moment de la commande.</p>
-                <p>Des frais supplémentaires peuvent s’appliquer (livraison, installation, options spécifiques).</p>
+                <p>Les prix sont indiqués en euros (€), toutes taxes comprises (TTC). Le montant du menu dépend du nombre de convives, dans le respect du minimum indiqué sur sa fiche.</p>
+                <p>Une réduction de 10 % sur le montant du menu est appliquée lorsque le nombre de convives atteint au moins le minimum prévu pour ce menu augmenté de cinq personnes.</p>
+                <p>Le sous-total correspond au montant du menu après déduction de cette réduction. Les frais de livraison et de matériel s’y ajoutent pour constituer le montant total.</p>
+                <p>La livraison est gratuite dans la ville de Bordeaux. Hors Bordeaux, elle est facturée 5 €, majorés de 0,59 € par kilomètre de distance routière calculée depuis l’établissement jusqu’à l’adresse de livraison.</p>
+                <p>La mise à disposition de matériel, lorsqu’elle est demandée, est facturée au forfait de 20 €.</p>
+                <p>Les prix peuvent évoluer pour les nouvelles commandes. Le prix par personne enregistré lors d’une commande est conservé pour cette commande, y compris lors de sa modification. Les autres montants sont recalculés selon les changements apportés.</p>
             </div>
 
             <div class="legal_text">
                 <h4>5. Paiement</h4>
-                <p>Le paiement peut s’effectuer :</p>
-                    <ul>
-                        <li>Par carte bancaire</li>
-                        <li>Par virement bancaire</li>
-                        <li>Par tout autre moyen proposé sur le site</li>
-                    </ul>
-                <p>Selon la prestation, un acompte pourra être demandé pour valider la commande.</p>
-                <p>La commande ne sera considérée comme définitive qu’après réception du paiement ou de l’acompte.</p>
+                <p>Aucun paiement en ligne n’est proposé sur le site. Le règlement de la commande s’effectue à la livraison, par carte bancaire auprès de l’équipe ou par virement bancaire selon les coordonnées communiquées par Vite & Gourmand.</p>
+                <p>Aucun acompte n’est demandé lors de l’enregistrement de la commande sur le site.</p>
+                <p>Le montant à régler correspond au total de la commande, actualisé en cas de modification acceptée avant la prestation.</p>
             </div>
 
             <div class="legal_text">
-                <h4>6. Annulation et modification</h4>
-                <p>Toute demande de modification ou d’annulation doit être adressée par écrit (email).</p>
-                <p>Conditions :</p>
-                <ul>
-                    <li>Annulation plus de 7 jours avant la prestation : remboursement de l’acompte</li>
-                    <li>Annulation entre 3 et 7 jours : acompte conservé</li>
-                    <li>Annulation moins de 72h : totalité de la prestation due</li>
-                </ul>
-                <p>Ces conditions peuvent être ajustées en fonction de la nature de l’événement.</p>
+                <h4>6. Modification et annulation</h4>
+                <p>Le client peut modifier ou annuler sa commande depuis son espace personnel tant qu’elle n’a pas été acceptée par l’équipe.</p>
+                <p>Le choix du menu ne peut pas être modifié. Les autres modifications restent soumises aux conditions du menu, notamment au nombre minimum de convives, au délai de préparation et aux disponibilités.</p>
+                <p>Une modification peut entraîner un recalcul du montant du menu, de la réduction, des frais de livraison ou du matériel. Le nouveau montant est présenté avant l’enregistrement de la modification.</p>
+                <p>Après acceptation de la commande, le client doit contacter Vite & Gourmand pour toute demande. Les modifications par l’équipe restent possibles avant la mise en préparation et les annulations avant la mise en livraison.</p>
+                <p>L’employé contacte le client par téléphone ou par email avant de modifier ou d’annuler une commande. En cas d’annulation par un employé, le moyen de contact et le motif sont enregistrés.</p>
+                <p>Les modifications successives restent possibles tant que le statut de la commande et les conditions de la prestation le permettent.</p>
             </div>
 
             <div class="legal_text">
-                <h4>7. Livraison et retrait</h4>
-                <p>Les prestations peuvent être :</p>
-                <ul>
-                    <li>Retirées sur place</li>
-                    <li>Livrées à l’adresse indiquée par le Client</li>
-                </ul>
-                <p>Les délais sont communiqués à titre indicatif.</p>
-                <p>Vite & Gourmand ne pourra être tenu responsable en cas de retard dû à des circonstances indépendantes de sa volonté (trafic, conditions météorologiques, etc.).</p>
+                <h4>7. Livraison</h4>
+                <p>La livraison est effectuée à l’adresse et à la date renseignées lors de la commande, selon le créneau choisi.</p>
+                <p>Les créneaux proposés sont 10h00, 10h30, 11h00, 11h30, 17h00, 17h30 et 18h00.</p>
+                <p>Le client doit fournir une adresse exacte, des coordonnées permettant de le joindre et les informations nécessaires à la réception de la prestation.</p>
+                <p>Les délais de préparation et les périodes de disponibilité propres au menu sont précisés sur sa fiche et doivent être respectés lors de la commande ou d’un changement de date.</p>
+                <p>Si l’adresse est modifiée, elle fait l’objet d’une nouvelle vérification et les frais de livraison sont recalculés.</p>
+                <p>En cas de difficulté de livraison, l’entreprise prend contact avec le client afin de rechercher une solution.</p>
             </div>
 
             <div class="legal_text">
-                <h4>8. Responsabilité</h4>
-                <p>Vite & Gourmand ne saurait être tenu responsable :</p>
-                <ul>
-                    <li>D’une mauvaise conservation des produits après livraison</li>
-                    <li>D’une mauvaise utilisation des produits</li>
-                </ul>
-                <p>Le Client est responsable des conditions de stockage et de consommation après réception.</p>
+                <h4>8. Mise à disposition et restitution du matériel</h4>
+                <p>Lorsque du matériel est mis à disposition, le client doit en prendre soin et contacter Vite & Gourmand pour organiser sa restitution.</p>
+                <p>Au passage de la commande au statut « En attente du retour de matériel », un email informe le client qu’il dispose de dix jours ouvrés pour restituer le matériel.</p>
+                <p>En l’absence de restitution dans ce délai, des frais de 600 € sont prévus.</p>
+                <p>Pour une commande avec matériel, son passage au statut « Commande terminée » par l’équipe confirme également l’enregistrement de la restitution.</p>
             </div>
 
             <div class="legal_text">
-                <h4>9. Droit de rétractation</h4>
-                <p>Conformément à la réglementation en vigueur, le droit de rétractation ne s’applique pas aux prestations de services liées à des activités de restauration fournies à une date ou selon une périodicité déterminée.</p>
+                <h4>9. Conservation et utilisation des produits</h4>
+                <p>Le client doit respecter les consignes de stockage, de conservation et de consommation communiquées sur la fiche du menu et lors de la remise de la prestation.</p>
+                <p>Il doit également respecter les consignes d’utilisation du matériel éventuellement mis à disposition.</p>
+                <p>Ces obligations ne suppriment pas les garanties et responsabilités légales du professionnel.</p>
             </div>
 
             <div class="legal_text">
-                <h4>10. Données personnelles</h4>
-                <p>Les données personnelles collectées sont nécessaires au traitement des commandes et à la gestion de la relation client.</p>
-                <p>Elles ne sont en aucun cas revendues à des tiers.</p>
-                <p>Le Client dispose d’un droit d’accès, de rectification et de suppression de ses données.</p>
+                <h4>10. Droit de rétractation</h4>
+                <p>Conformément à l’article L221-28, 12° du Code de la consommation, le droit de rétractation ne s’applique pas aux prestations de restauration fournies à une date ou à une période déterminée.</p>
+                <p>Cette exclusion est distincte des possibilités de modification et d’annulation prévues à la section 6 des présentes conditions.</p>
             </div>
 
             <div class="legal_text">
-                <h4>11. Propriété intellectuelle</h4>
-                <p>Tous les éléments du site (textes, images, logo, etc.) sont la propriété exclusive de Vite & Gourmand.</p>
-                <p>Toute reproduction est interdite sans autorisation préalable.</p>
+                <h4>11. Données personnelles</h4>
+                <p>Les données nécessaires à la gestion du compte, des commandes et des communications associées sont traitées selon les modalités décrites dans la <a href="{{ path('app_politique_confidentialite') }}">politique de confidentialité</a>.</p>
+                <p>Cette politique présente les finalités des traitements, les destinataires, les durées de conservation et les droits des personnes concernées.</p>
             </div>
 
             <div class="legal_text">
-                <h4>12. Litiges</h4>
-                <p>Les présentes CGV sont soumises au droit français.</p>
-                <p>En cas de litige, une solution amiable sera recherchée en priorité.</p>
-                <p>À défaut, les tribunaux compétents seront saisis.</p>
+                <h4>12. Propriété intellectuelle</h4>
+                <p>Les textes, photographies, images, polices, icônes et autres éléments du site sont soumis aux droits de leurs titulaires respectifs. Les ressources tierces sont utilisées conformément à leurs licences.</p>
+                <p>Leur reproduction ou réutilisation doit respecter les autorisations et conditions applicables à chaque ressource.</p>
             </div>
 
             <div class="legal_text">
-                <h4>13. Acceptation des CGV</h4>
-                <p>Le Client reconnaît avoir pris connaissance des présentes CGV et les accepter sans réserve avant validation de sa commande.</p>
+                <h4>13. Réclamations et règlement des litiges</h4>
+                <p>Pour toute question ou réclamation concernant une commande, le client peut écrire à <a href="mailto:vite.gourmand2027@gmail.com">vite.gourmand2027@gmail.com</a> en précisant son numéro de commande et l’objet de sa demande.</p>
+                <p>Une solution amiable est recherchée en priorité avec l’entreprise.</p>
+                <p>Après une réclamation écrite préalable restée sans solution satisfaisante, le client consommateur peut recourir gratuitement à un médiateur de la consommation dans les conditions prévues par la réglementation.</p>
+                <p>Les présentes CGV sont soumises au droit français. À défaut de résolution amiable, les juridictions compétentes peuvent être saisies selon les règles applicables.</p>
+            </div>
+
+            <div class="legal_text">
+                <h4>14. Acceptation et actualisation des CGV</h4>
+                <p>Le client reconnaît avoir pris connaissance des présentes CGV et les accepter avant la validation de sa commande.</p>
+                <p>Les nouvelles versions s’appliquent aux commandes passées après leur entrée en vigueur. Une actualisation ne modifie pas rétroactivement les conditions acceptées pour une commande déjà enregistrée.</p>
+                <p>Dernière mise à jour : 30 octobre 2026.</p>
             </div>
         </div>
     {% endblock %}
