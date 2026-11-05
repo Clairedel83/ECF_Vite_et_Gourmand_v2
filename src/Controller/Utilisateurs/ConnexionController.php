@@ -66,13 +66,14 @@ final class ConnexionController extends AbstractController
                 
                 $entityManager->flush();
 
-                // génère l'url envoyé par mail
-                $lien = $this->generateUrl('app_mdp_nouveau', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-
                 // envoie un email
                 $mail = new MailService();
                 $prenom = $user->getPrenom();
-                $mail->envoyerMail($adresseEmail, $prenom, '', 8483968, '', $lien);
+                // génère l'url envoyé par mail
+                $variables = [
+                    'confirmation_link' => $this->generateUrl('app_mdp_nouveau', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL)
+                ];
+                $mail->envoyerMail($adresseEmail, $prenom, '', 8483968, $variables);
 
 
             } 

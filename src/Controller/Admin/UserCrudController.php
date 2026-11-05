@@ -105,7 +105,7 @@ class UserCrudController extends AbstractCrudController
         // Envoi du mail automatique de bienvenue
         $mail = new MailService();
         $adresseMail = $user->getEmail();
-        $mail->envoyerMail($adresseMail, $prenom . ' ' . $nom, '', 8484212, '', '');
+        $mail->envoyerMail($adresseMail, $prenom . ' ' . $nom, '', 8484212);
 
         $this->addFlash(
             'success',

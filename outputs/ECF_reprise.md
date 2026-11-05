@@ -26,6 +26,7 @@ Estimation actualisée le 28 octobre après suivi/statuts, filtres et horaires :
 
 ### Progression et sécurité des comptes — 31 octobre 2026
 
+- Création employé : UserCrudController relu le 31 octobre. persistEntity() hache le mot de passe choisi par José, impose ROLE_EMPLOYE côté serveur, enregistre puis appelle MailService avec le modèle 8484212 sans transmettre le mot de passe. Rôle masqué à la création ; CRUD réservé à ROLE_ADMIN. Coordonnées téléphone/adresse/code postal/ville nullable dans User et setters ?string ; NotBlank conservés dans InscriptionUserType pour les clients. Implémentation relue, aucun test exécuté. Confirmation de l'utilisatrice : migration et configuration du mail terminées ; seuls les tests restent pour les comptes employés. Ne pas conserver le mot de passe en clair en BDD.
 - Mails bienvenue et confirmation commande : implémentés via SDK Mailjet et réception confirmée par l'utilisatrice. Ne plus les lister à développer.
 - Réinitialisation de mot de passe : parcours implémenté et relu ; validations fonctionnelles restantes lors des séances dédiées, renforcements ci-dessous.
 - Désactivation employé : BooleanField isActive, état actif par défaut, UserChecker et configuration firewall en place ; interdit une nouvelle authentification. Protection ROLE_ADMIN sur UserCrudController et affichage de l'erreur de connexion désormais présents et relus.
@@ -55,9 +56,9 @@ Les trois templates CGV, politique de confidentialité et mentions légales ont 
 
 ### Fonctionnalités et livraison
 
-- Mails restants : commande terminée invitant à donner avis, attente matériel (10 jours ouvrés, 600 euros), compte employé sans mot de passe dans mail. Bienvenue, confirmation et lien de réinitialisation déjà implémentés via Mailjet.
+- Mails restant à développer : commande terminée invitant à donner avis, attente matériel (10 jours ouvrés, 600 euros). Mail compte employé désormais raccordé au modèle 8484212, configuration terminée selon l'utilisatrice ; réception à tester. Bienvenue, confirmation et lien de réinitialisation déjà implémentés via Mailjet.
 - Avis depuis commande terminée, note 1 à 5/commentaire, validation/refus employé, accueil affichant les vrais avis validés. Entité et CRUD existent mais parcours restant ; harmoniser mapping Avis OneToOne / collection Commande.
-- Gestion employés par José : finaliser création email/mot de passe hashé et notification ; vérifier que la création admin reste impossible et que le compte José est préparé hors application. Désactivation et protection ROLE_ADMIN du CRUD déjà implémentées ; révocation des sessions actives suivie en sécurité.
+- Gestion employés par José : création avec hachage, rôle employé imposé et notification implémentée et relue. Chantier terminé selon l'utilisatrice, hors tests de création, connexion, réception du mail et désactivation. Vérifier que le compte José est préparé hors application et les droits lors des tests. Désactivation et protection ROLE_ADMIN du CRUD déjà implémentées ; révocation des sessions actives suivie en sécurité.
 - Statistiques José : graphique comparatif commandes/menu depuis NoSQL, chiffre d'affaires/menu avec filtres menu/période. Aucun raccordement NoSQL/statistiques trouvé.
 - Contact : formulaire titre/description/email et envoi entreprise ; contrôleur actuel affiche seulement vue.
 - Vérification finale exigences menus, galerie, conditions/allergènes et filtres dynamiques, droits des CRUD ; base présente, pas à refaire.

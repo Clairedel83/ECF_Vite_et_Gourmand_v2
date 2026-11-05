@@ -29,22 +29,22 @@
 
                         <div class="contact_visuel_content_bottom">
                             <div class="icon">
-                                <img src="../logos/beige_hat.svg" alt="">
+                                <img src="{{ asset('images/logos/beige_hat.svg') }}" alt="">
                                 <p>Cuisine maison & de saison</p>
                             </div>
 
                             <div class="icon">
-                                <img src="../logos/beige_heart.svg" alt="">
+                                <img src="{{ asset('images/logos/beige_heart.svg') }}" alt="">
                                 <p>Produits frais & locaux</p>
                             </div>
 
                             <div class="icon">
-                                <img src="../logos/beige_hour.svg" alt="">
+                                <img src="{{ asset('images/logos/beige_hour.svg') }}" alt="">
                                 <p>Réponse sous 24h</p>
                             </div>
 
                             <div class="icon">
-                                <img src="../logos/beige_check.svg" alt="">
+                                <img src="{{ asset('images/logos/beige_check.svg') }}" alt="">
                                 <p>Devis gratuit</p>
                             </div>
                         </div>
@@ -52,29 +52,44 @@
                 </div>
             </div>
 
-            <form action="" method="post" class="formulaire_contact">
+            {{ form_start(formContact, {
+                    'attr': {'class': 'formulaire_contact'}
+                }) }}
+            {{ form_errors(formContact) }}
                 <div class="data">
-                    <label for="name">NOM :</label>
-                    <input type="text" name="name" id="name" required placeholder="ex : Dupont">
+                    {{ form_label(formContact.nom) }}
+                    {{ form_widget(formContact.nom) }}
+                    {{ form_errors(formContact.nom, {
+                        'attr': {'class': 'form_error'}
+                    }) }}
                 </div>
 
                 <div class="data">
-                    <label for="titre_demande">SUJET :</label>
-                    <input type="text" id="titre_demande" name="titre_demande" required placeholder="ex: Réception baptême">
+                    {{ form_label(formContact.email) }}
+                    {{ form_widget(formContact.email) }}
+                    {{ form_errors(formContact.email, {
+                        'attr': {'class': 'form_error'}
+                    }) }}
                 </div>
 
                 <div class="data">
-                    <label for="email_inscription">ADRESSE EMAIL :</label>
-                    <input type="email" id="email_inscription" name="email_inscription" autocomplete="email" required placeholder="vous@gmail.com">
+                    {{ form_label(formContact.sujet) }}
+                    {{ form_widget(formContact.sujet) }}
+                    {{ form_errors(formContact.sujet, {
+                        'attr': {'class': 'form_error'}
+                    }) }}
                 </div>
 
                 <div class="data">
-                    <label for="demande">MESSAGE :</label>
-                    <textarea id="demande" name="demande" required placeholder="Décrivez votre demande ou posez votre question."></textarea>
-                </div>                    
+                    {{ form_label(formContact.message) }}
+                    {{ form_widget(formContact.message) }}
+                    {{ form_errors(formContact.message, {
+                        'attr': {'class': 'form_error'}
+                    }) }}
+                </div>
 
-                <button type="submit" class="btn2 btn_menu">Envoyer</button>
-            </form>
+                {{ form_widget(formContact.submit) }}          
+            {{ form_end(formContact) }}
         </section>
 
     {% endblock %}

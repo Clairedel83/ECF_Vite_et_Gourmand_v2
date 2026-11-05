@@ -50,7 +50,7 @@ final class InscriptionController extends AbstractController
             $prenom = $user->getPrenom();
             $nom = $user->getNom();
             $adresseMail = $user->getEmail(); 
-            $mail->envoyerMail($adresseMail, $prenom.' '.$nom, '', 8482760, '', '');
+            $mail->envoyerMail($adresseMail, $prenom.' '.$nom, '', 8482760);
 
             // redirige vers la page de connexion
             return $this->redirectToRoute('app_connexion');

@@ -7,7 +7,7 @@ use Mailjet\Resources;
 
 class MailService
 {
-    public function envoyerMail(string $to_email, string $to_nom, string $sujet, int $templateId, string $numero_commande = null, string $lien = null)
+    public function envoyerMail(string $to_email, string $to_nom, string $sujet, int $templateId, array $variables = []): void
     {
         // $mail->envoyerMail(('adresse du client', 'nom du client', 'sujet du mail', 'contenu du mail'))   ; 
 
@@ -30,16 +30,19 @@ class MailService
                     'Subject' => $sujet,
                     'TemplateID' => $templateId,
                     'TemplateLanguage' => true,
-                    "Variables" => [
-                        "numero_commande" => $numero_commande,
-                        "confirmation_link" => $lien,
-                        ]
+                    "Variables" => $variables,
                 ]
             ]
         ];
 
         // Method pour envoyer le mail
-        $mj->post(Resources::$Email, ['body' => $body]);
+        // envoie la demande à mailjet et récupère sa réponse
+        $reponse = $mj->post(Resources::$Email, ['body' => $body]);
+
+        // si mailjet refuse l'envoi du mail, signale l'erreur au controller qui affichera le message d'erreur
+        if($reponse->success() !== true){
+            throw new \RuntimeException('Mailjet a refusé la demande d\'envoi.');
+        }
 
     }
 

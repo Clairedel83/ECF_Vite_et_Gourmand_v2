@@ -27,7 +27,7 @@ class InscriptionUserType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
-                        message: 'Veuillez renseigner votre nom.'
+                        message: 'Veuillez renseigner votre adresse email.'
                     )],
             ])
             ->add('plainPassword', RepeatedType::class, [

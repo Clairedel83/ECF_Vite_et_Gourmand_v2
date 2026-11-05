@@ -356,7 +356,10 @@ final class CommandeController extends AbstractController
         $mail = new MailService();
         $prenom = $commande->getUser()->getPrenom();
         $adresseMail = $commande->getUser()->getEmail();
-        $mail->envoyerMail($adresseMail, $prenom, '', 8483040, $commande->getNumeroCommande());
+        $variables = [
+            'numero_commande' => $commande->getNumeroCommande()
+        ];
+        $mail->envoyerMail($adresseMail, $prenom, '', 8483040, $variables);
 
         // Vide le panier pour éviter un rechargement de page et une seconde commande créée (si transaction effectuée)
         $panier->remove();

@@ -2,6 +2,10 @@
 
 Référence de reprise : outputs/ECF_reprise.md.
 
+## Comptes employés — 31 octobre 2026
+
+José choisit le mot de passe à la création ; seule sa version hachée est enregistrée. Le mail annonce la création et demande de contacter José pour obtenir le mot de passe, sans le contenir. Création EasyAdmin réservée à ROLE_ADMIN, rôle ROLE_EMPLOYE imposé dans persistEntity(). Coordonnées téléphone/adresse/code postal/ville facultatives pour les employés : colonnes nullable, validation NotBlank dans le FormType d'inscription client. Migration et configuration du mail terminées selon l'utilisatrice ; seuls les tests restent pour ce chantier.
+
 Le choix initial des champs directement dans Commande a été abandonné au profit d'une entité InterventionCommande. Elle permet de conserver une modification puis une annulation sans écraser leur trace. Le projet ne prévoit pas de journal détaillé des anciennes et nouvelles valeurs.
 
 Décision actualisée le 28 octobre 2026 : modifications successives autorisées tant que le statut le permet. Ancienne limite d'une modification employé et blocage du client abandonnés. Les interventions conservent la trace des actions ; une annulation ultérieure reste possible. Les changements de statut sont indépendants.

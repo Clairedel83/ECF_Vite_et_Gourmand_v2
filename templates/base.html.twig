@@ -4,6 +4,14 @@
         <meta charset="UTF-8">
         <title>{% block title %}Vite et Gourmand{% endblock %}</title>
         <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/responsive.css') }}">
+        {# Icône noire lorsque le navigateur utilise le thème clair. #}
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/logos/favicon_noir.svg') }}" media="(prefers-color-scheme: light)">
+
+        {# Icône blanche lorsque le navigateur utilise le thème sombre. #}
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/logos/favicon_blanc.svg') }}" media="(prefers-color-scheme: dark)">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         {% block stylesheets %}{% endblock %}
 
         {% block javascripts %}
@@ -87,7 +95,7 @@
         <footer>
             <div class="footer_top">
                 <div>
-                    <img src="{{ asset('images/logos/logo/MainLogo2.png') }}" class="logo_footer" alt="Logo Vite et Gourmand">
+                    <img src="{{ asset('images/logos/MainLogo2.png') }}" class="logo_footer" alt="Logo Vite et Gourmand">
                 </div>
                 
                 <div class="contact_footer">
