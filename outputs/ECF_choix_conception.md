@@ -2,6 +2,10 @@
 
 Référence de reprise : outputs/ECF_reprise.md.
 
+## Affichage des avis — choix du 6 novembre 2026
+
+Conserver le style actuel des cartes, sans ajouter Bootstrap au site public. Carrousel en CSS avec JavaScript minimal pour les flèches si nécessaire : trois avis visibles sur ordinateur, un sur mobile. Sur mobile, navigation tactile horizontale par glissement de droite à gauche ; sur ordinateur, flèches sous les cartes. Avis validés uniquement, triés du plus récent au plus ancien, sans défilement automatique. Ne pas masquer la section en absence d'avis : l'utilisatrice prévoit un à deux comptes fictifs de test pour alimenter les avis. Implémentation à différer jusqu'après les priorités de la feuille de route du 5 novembre.
+
 ## Comptes employés — 31 octobre 2026
 
 José choisit le mot de passe à la création ; seule sa version hachée est enregistrée. Le mail annonce la création et demande de contacter José pour obtenir le mot de passe, sans le contenir. Création EasyAdmin réservée à ROLE_ADMIN, rôle ROLE_EMPLOYE imposé dans persistEntity(). Coordonnées téléphone/adresse/code postal/ville facultatives pour les employés : colonnes nullable, validation NotBlank dans le FormType d'inscription client. Migration et configuration du mail terminées selon l'utilisatrice ; seuls les tests restent pour ce chantier.

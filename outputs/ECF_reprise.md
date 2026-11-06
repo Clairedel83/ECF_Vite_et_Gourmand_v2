@@ -4,6 +4,8 @@ Cette actualisation remplace les anciens points ci-dessous, conservés comme arc
 
 ## Priorités pour le 6 novembre 2026 — préparation demandée le 5 novembre
 
+Actualisation du 6 novembre : dépôt client et invitation statut 7 implémentés et relus, modération configurée avec statut seul modifiable ; action Détails native encore à ajouter si souhaitée et note obligatoire côté serveur à vérifier. Deux migrations identiques de statut Avis confirmées exécutées par captures fournies : conserver les deux, aucun nettoyage nécessaire. Réception mail et parcours restent à tester. Affichage public différé : carrousel conservant cartes actuelles sans Bootstrap, trois avis ordinateur avec flèches dessous, un avis mobile avec glissement tactile horizontal, ordre récent vers ancien, sans lecture automatique, section conservée même vide selon demande. Choix détaillé dans ECF_choix_conception.md. Reprendre d'abord les autres priorités d'hier.
+
 Cette mise à jour prévaut sur les anciennes tâches ci-dessous. Aucun code applicatif modifié ni test exécuté pendant la revue du 5 novembre. Priorités demandées : points 1 à 3 puis 6 de la liste donnée dans le chat. Responsive (point 5) à finaliser également. NoSQL était le point 4 : apprentissage nécessaire, rechercher ultérieurement des supports surtout vidéos avec l'utilisatrice ; aucune recherche effectuée pour cette préparation.
 
 ### 1. Avis clients

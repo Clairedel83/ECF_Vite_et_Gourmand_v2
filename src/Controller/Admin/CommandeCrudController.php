@@ -267,6 +267,30 @@ class CommandeCrudController extends AbstractCrudController
             // Valide ensemble le nouveau statut et son historique.
             $connexion->commit();
 
+            // tente l'envoie du mail pour restitution du matériel (si statut = 6)
+            if($nouveauStatut === 6){
+                $mail = new MailService();
+                $user = $commande->getUser();
+                $numero_commande = $commande->getNumeroCommande();
+                $prenom = $user->getPrenom();
+                $adresseMail = $user->getEmail();
+                $variables = [
+                    'prenom' => $prenom,
+                    'numero_commande' => $numero_commande,
+                ];
+                
+                try{
+                    $mail->envoyerMail($adresseMail, $prenom, '', 8503371, $variables);
+                    // en cas d'erreur
+                } catch(\Exception $exception){
+                    // le statut reste modifié même si l'envoi du mail échoue
+                    $this->addFlash(
+                        'warning',
+                        'Le statut a bien été modifié (\'En attente de restitution du matériel\').Mais l\'email de demande de restitution n\'a pas pu être envoyée au client.'
+                    );                    
+                }
+            }
+
             // tente l'envoi du mail pour obtenir l'avis (si statut = 7)
             if($nouveauStatut === 7){
                 $mail = new MailService();
@@ -285,7 +309,7 @@ class CommandeCrudController extends AbstractCrudController
                     // le statut reste modifié même si l'envoi du mail échoue
                     $this->addFlash(
                         'warning',
-                        'Le statut a bien été modifié (\'Commande terminée\').Mais l\'email de demande d\'avis n\'a pas pu être envoyé au client.'
+                        'Le statut a bien été modifié (\'Commande terminée\').Mais l\'email de demande d\'avis n\'a pas pu être envoyée au client.'
                     );
                 }
             }

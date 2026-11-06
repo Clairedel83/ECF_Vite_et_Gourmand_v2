@@ -359,7 +359,16 @@ final class CommandeController extends AbstractController
         $variables = [
             'numero_commande' => $commande->getNumeroCommande()
         ];
-        $mail->envoyerMail($adresseMail, $prenom, '', 8483040, $variables);
+
+        try{
+            $mail->envoyerMail($adresseMail, $prenom, '', 8483040, $variables);
+        } catch(\Exception $exception){
+            $this->addFlash(
+                'warning',
+                'Votre commande a bien été envoyée à notre équipe mais le mail de confirmation n\'a pas pu être envoyé.'
+            );
+        }
+        
 
         // Vide le panier pour éviter un rechargement de page et une seconde commande créée (si transaction effectuée)
         $panier->remove();

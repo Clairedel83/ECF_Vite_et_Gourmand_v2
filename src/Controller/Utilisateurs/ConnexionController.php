@@ -73,8 +73,17 @@ final class ConnexionController extends AbstractController
                 $variables = [
                     'confirmation_link' => $this->generateUrl('app_mdp_nouveau', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL)
                 ];
-                $mail->envoyerMail($adresseEmail, $prenom, '', 8483968, $variables);
+                
+                try{
+                    $mail->envoyerMail($adresseEmail, $prenom, '', 8483968, $variables);
+                } catch(\Exception $exception){
+                    $this->addFlash(
+                        'warning',
+                        'Le mail de réinitialisation du mot de passe n\'a pas pu être envoyé. Merci de réessayer.'
+                    );
 
+                    return $this->redirectToRoute('app_mdp_reinitalise');
+            }
 
             } 
 

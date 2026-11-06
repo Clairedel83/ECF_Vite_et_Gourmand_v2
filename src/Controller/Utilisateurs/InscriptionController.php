@@ -50,7 +50,16 @@ final class InscriptionController extends AbstractController
             $prenom = $user->getPrenom();
             $nom = $user->getNom();
             $adresseMail = $user->getEmail(); 
-            $mail->envoyerMail($adresseMail, $prenom.' '.$nom, '', 8482760);
+
+            try{
+                $mail->envoyerMail($adresseMail, $prenom.' '.$nom, '', 8482760);
+            } catch(\Exception $exception){
+                $this->addFlash(
+                    'warning',
+                    'Votre compte a bien été créé mais le mail de confirmation n\'a pas pu être envoyé. Vous pouvez toutefois vous connecter.'
+                );
+            }
+            
 
             // redirige vers la page de connexion
             return $this->redirectToRoute('app_connexion');

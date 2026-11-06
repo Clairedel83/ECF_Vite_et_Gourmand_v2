@@ -24,6 +24,9 @@ class InformationsUserType extends AbstractType
                         max:30,
                         minMessage:"Le nom doit contenir au moins {{ limit }} caractères.",
                         maxMessage:"Le nom doit contenir au moins {{ limit }} caractères."
+                    ),
+                    new Assert\NotBlank(
+                        message : 'Veuillez renseigner votre nom.'
                     )],
                 'attr' => [
                     'placeholder' => "Nom",
@@ -40,6 +43,9 @@ class InformationsUserType extends AbstractType
                         max:30,
                         minMessage:"Le prénom doit contenir au moins {{ limit }} caractères.",
                         maxMessage:"Le prénom doit contenir au maximum {{ limit }} caractères."
+                    ),
+                    new Assert\NotBlank(
+                        message : 'Veuillez renseigner votre prénom.'
                     )],
                 'attr' => [
                     'placeholder' => "Prénom",
@@ -51,14 +57,22 @@ class InformationsUserType extends AbstractType
                 'label' => 'Téléphone :',
                 'attr' => [
                     'placeholder' => "Téléphone"
-                ]
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message : 'Veuillez renseigner votre nom.'
+                    )],
             ])
             ->add('ville', TextType::class, [
                 'label' => 'Ville :',
                 'attr' => [
                     'placeholder' => "Ville",
                     'class' => 'input'
-                ]
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message : 'Veuillez renseigner votre nom.'
+                )],
             ])
 
             ->add('code_postal', TextType::class, [
@@ -72,15 +86,21 @@ class InformationsUserType extends AbstractType
                     new Assert\Regex(
                         pattern: '/^[0-9]{5}$/',
                         message: 'Le code postal doit contenir 5 chiffres.'
-                    )
-                ]
+                    ),
+                    new Assert\NotBlank(
+                        message : 'Veuillez renseigner votre nom.'
+                    )],
             ])
             
             ->add('adresse_postale', TextType::class, [
                 'label' => 'Adresse postale :',
                 'attr' => [
                     'placeholder' => "Adresse postale"
-                ]
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message : 'Veuillez renseigner votre nom.'
+                )],
             ])
 
             ->add('submit', SubmitType::class, [

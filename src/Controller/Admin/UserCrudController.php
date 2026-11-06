@@ -105,7 +105,15 @@ class UserCrudController extends AbstractCrudController
         // Envoi du mail automatique de bienvenue
         $mail = new MailService();
         $adresseMail = $user->getEmail();
-        $mail->envoyerMail($adresseMail, $prenom . ' ' . $nom, '', 8484212);
+
+        try {
+            $mail->envoyerMail($adresseMail, $prenom . ' ' . $nom, '', 8484212);
+        } catch (\Exception $exception) {
+            $this->addFlash(
+                'warning',
+                'Le compte employé a bien été crée mais le mail de confirmation n\'a pas pu être envoyé. L\'employé peut toutefois se connecter.'
+            );
+        }
 
         $this->addFlash(
             'success',

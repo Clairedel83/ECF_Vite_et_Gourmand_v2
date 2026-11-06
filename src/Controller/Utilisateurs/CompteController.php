@@ -109,6 +109,11 @@ final class CompteController extends AbstractController
             ['date_commande' => 'DESC']
         );
 
+        // Refuse l'affichage si la commande n'existe pas ou appartient à un autre client.
+        if (!$commandes) {
+            throw $this->createNotFoundException('Commande introuvable.');
+        }
+
         // Réserve cette page aux clients connectés
         $this->denyAccessUnlessGranted('ROLE_USER');
 
