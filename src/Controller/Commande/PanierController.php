@@ -24,6 +24,19 @@ final class PanierController extends AbstractController
 
         if ($menuId) {
             $menu = $menuRepository->find($menuId);
+
+            // Retire un menu devenu indisponible depuis son ajout au panier
+            if (!$menu || !$menu->isActive()) {
+                $panier->remove();
+                $menu = null;
+
+                $this->addFlash(
+                    'warning',
+                    'Le menu de votre panier n’est plus disponible. Veuillez choisir un autre menu.'
+                );
+
+                return $this->redirectToRoute('app_menus');
+            };
         };
 
         // AFFICHE LE FORMULAIRE DE MODIFICATION D'ADRESSE (livraison)
@@ -49,10 +62,15 @@ final class PanierController extends AbstractController
         // création de la function add dans panier.php
         $menu = $menuRepository->find($id);
         
-        // SECURITE : si l'utilisateur fourni un id (dans l'url) qui ne contient aucun menu, redirige
-        if (!isset($menu)) {
+        // SECURITE : Refuse un menu inexistant ou désactivé, même depuis une ancienne URL
+        if (!$menu || !$menu->isActive()) {
+            $this->addFlash(
+                'warning',
+                'Ce menu n’est plus disponible.'
+            );
+
             return $this->redirectToRoute('app_menus');
-        };
+        }
 
         $panier->add($menu);
         return $this->redirectToRoute('app_panier');

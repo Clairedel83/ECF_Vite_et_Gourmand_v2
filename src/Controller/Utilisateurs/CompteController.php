@@ -44,7 +44,7 @@ final class CompteController extends AbstractController
         $form->handleRequest($request);
 
         // permet de mettre à jour la BDD 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
             // ajoute une notification dont le design est noté dans base.html.twig
@@ -83,9 +83,9 @@ final class CompteController extends AbstractController
 
 
         // permet de mettre à jour la BDD 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            
+
             $this->addFlash(
                 'success',
                 'Vos informations ont bien été modifiées.'
@@ -133,18 +133,20 @@ final class CompteController extends AbstractController
     public function details(CommandeRepository $commandeRepository, int $id): Response
     {
         // récupère la commande de l'utilisateur et la retrouve en fonction de son id
-        $commande = $commandeRepository->findOneBy([
-            'id' => $id,
-            'user' => $this->getUser()]
+        $commande = $commandeRepository->findOneBy(
+            [
+                'id' => $id,
+                'user' => $this->getUser()
+            ]
         );
+
+        if (!$commande) {
+            throw $this->createNotFoundException('Commande introuvable.');
+        }
 
 
         return $this->render('compte/details.html.twig', [
             'commande' => $commande
         ]);
     }
-
-
-
 }
-    

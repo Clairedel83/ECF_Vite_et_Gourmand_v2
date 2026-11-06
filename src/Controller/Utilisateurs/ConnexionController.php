@@ -41,7 +41,7 @@ final class ConnexionController extends AbstractController
         $oubliPassForm->handleRequest($request);
 
         // traitement du formulaire
-        if($oubliPassForm->isSubmitted() && $oubliPassForm->isValid()){
+        if ($oubliPassForm->isSubmitted() && $oubliPassForm->isValid()) {
             // si email existe en bdd parmis les utilisateurs
             $adresseEmail = $oubliPassForm->get('email')->getData();
             $user = $userRepository->findOneBy(
@@ -54,7 +54,7 @@ final class ConnexionController extends AbstractController
                 'Si vous êtes inscrits sur notre site, vous recevrez un email pour réinitialiser votre mot de passe.'
             );
 
-            if($user){
+            if ($user) {
                 // crée un token stocké en BDD dans l'entity User
                 $token = bin2hex(random_bytes(15));
                 $user->setToken($token);
@@ -63,7 +63,7 @@ final class ConnexionController extends AbstractController
                 $date = new DateTime();
                 $date->modify('+10 minutes');
                 $user->setTokenExpireDate($date);
-                
+
                 $entityManager->flush();
 
                 // envoie un email
@@ -73,22 +73,14 @@ final class ConnexionController extends AbstractController
                 $variables = [
                     'confirmation_link' => $this->generateUrl('app_mdp_nouveau', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL)
                 ];
-                
-                try{
-                    $mail->envoyerMail($adresseEmail, $prenom, '', 8483968, $variables);
-                } catch(\Exception $exception){
-                    $this->addFlash(
-                        'warning',
-                        'Le mail de réinitialisation du mot de passe n\'a pas pu être envoyé. Merci de réessayer.'
-                    );
 
-                    return $this->redirectToRoute('app_mdp_reinitalise');
+                try {
+                    $mail->envoyerMail($adresseEmail, $prenom, '', 8483968, $variables);
+                } catch (\Exception $exception) {
+                }
             }
 
-            } 
-
             return $this->redirectToRoute('app_mdp_reinitalise');
-
         }
 
         return $this->render('connexion/mot-de-passe-oublie.html.twig', [
@@ -100,33 +92,33 @@ final class ConnexionController extends AbstractController
     #[Route('/mot-de-passe-reinitialise', name: 'app_mdp_reinitalise')]
     public function confirmerPass(): Response
     {
-    
+
         return $this->render('connexion/mot-de-passe-reinitialise.html.twig');
     }
 
     // NOUVEAU MOT DE PASSE
     #[Route('/mot-de-passe/nouveau/{token}', name: 'app_mdp_nouveau')]
-    public function nouveauPass(Request $request, UserRepository $userRepository ,string $token, EntityManagerInterface $entityManager): Response
+    public function nouveauPass(Request $request, UserRepository $userRepository, string $token, EntityManagerInterface $entityManager): Response
     {
         // si le token n'existe pas :
-        if(!$token){
+        if (!$token) {
             return $this->redirectToRoute('app_mdp');
         }
 
         // récupère le client identifié grâce au token
         $user = $userRepository->findOneBy([
             'token' => $token
-            ]);
+        ]);
 
         // vérifie que l'utilisateur existe, que le token n'a pas expiré et qu'il n'est pas null
         $dateActuelle = new DateTime();
-        if(!$user || $dateActuelle > $user->getTokenExpireDate() || $user->getTokenExpireDate() === null){
+        if (!$user || $dateActuelle > $user->getTokenExpireDate() || $user->getTokenExpireDate() === null) {
             $this->addFlash(
                 'warning',
                 'Ce lien est invalide ou expiré. Veuillez effectuer une nouvelle demande.'
             );
 
-            return $this->redirectToRoute('app_mdp');   
+            return $this->redirectToRoute('app_mdp');
         }
 
         // création du formulaire et le rattache à User
@@ -135,7 +127,7 @@ final class ConnexionController extends AbstractController
         // récupère le mot de passe saisi
         $resetPassForm->handleRequest($request);
 
-        if($resetPassForm->isSubmitted() && $resetPassForm->isValid()){
+        if ($resetPassForm->isSubmitted() && $resetPassForm->isValid()) {
             // vide le token
             $user->setToken(null);
             $user->setTokenExpireDate(null);
@@ -155,6 +147,4 @@ final class ConnexionController extends AbstractController
             'resetPassForm' => $resetPassForm->createView(),
         ]);
     }
-
 }
-

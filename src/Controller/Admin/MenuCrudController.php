@@ -10,7 +10,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use phpDocumentor\Reflection\Types\Integer;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 
 class MenuCrudController extends AbstractCrudController
 {
@@ -27,6 +29,13 @@ class MenuCrudController extends AbstractCrudController
         ;
     }
 
+    // Empêche la suppression définitive des menus.
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->disable(Action::DELETE);
+    }
+
     public function configureFields(string $pageName): iterable
     {
 
@@ -37,6 +46,7 @@ class MenuCrudController extends AbstractCrudController
 
         return [
             TextField::new('nom')->setLabel('Nom'),
+            BooleanField::new('isActive')->setLabel('Menu actif')->setHelp('Décochez pour retirer ce menu du site. Les commandes existantes sont conservées.')->renderAsSwitch(false)->hideWhenCreating(),
             TextField::new('description')->setLabel('Description')->onlyOnForms(),
             IntegerField::new('nbre_min')->setLabel('Nombre de pers. min'),
             NumberField::new('prix_per_pers')->setLabel('Prix / pers.'),

@@ -46,8 +46,15 @@ final class CommandeController extends AbstractController
             $menu = $menuRepository->find($menuId);
         }
 
-        // si le panier est vide mais que l'utilisateur clique sur Commander, il est redirigé
-        if (!$menu) {
+        // si le panier est vide ou que le menu est indisponible, il est redirigé
+        if (!$menu || !$menu->isActive()) {
+            $panier->remove();
+            
+            $this->addFlash(
+                'warning',
+                'Ce menu n’est plus disponible. Veuillez choisir un autre menu.'
+            );
+
             return $this->redirectToRoute('app_panier');
         }
 
@@ -301,6 +308,19 @@ final class CommandeController extends AbstractController
 
             // recharge les propriétés du menu depuis la BDD
             $entityManager->refresh($menu);
+
+            // Vérifie l'état actualisé après verrouillage du menu.
+            if (!$menu->isActive()) {
+                $connexion->rollBack();
+                $panier->remove();
+
+                $this->addFlash(
+                    'warning',
+                    'Ce menu vient d’être retiré du catalogue. Veuillez choisir un autre menu.'
+                );
+
+                return $this->redirectToRoute('app_panier');
+            }
 
             $stockMenu = $menu->getStock();
 

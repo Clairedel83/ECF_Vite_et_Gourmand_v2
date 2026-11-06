@@ -14,13 +14,10 @@ final class PagesController extends AbstractController
     #[Route('/', name: 'app_accueil')]
     public function accueil(MenuRepository $menuRepository): Response
     {
-        // $mail = new MailService();
-        // $mail->envoyerMail('essai.client@yopmail.com', 'John Doe', 'Bienvenue sur notre site', 'Bonjour, test de l\'envoi des mails');
-    
-        
-
-
-        $menus = $menuRepository->findAll();
+        // récupère uniquement les menus actifs
+        $menus = $menuRepository->findBy([
+            'isActive' => true,
+        ]);
 
         return $this->render('pages/accueil.html.twig', [
             'menus' => $menus,

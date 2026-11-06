@@ -23,7 +23,7 @@ class InformationsUserType extends AbstractType
                         min:2,
                         max:30,
                         minMessage:"Le nom doit contenir au moins {{ limit }} caractères.",
-                        maxMessage:"Le nom doit contenir au moins {{ limit }} caractères."
+                        maxMessage:"Le nom doit contenir au maximum {{ limit }} caractères."
                     ),
                     new Assert\NotBlank(
                         message : 'Veuillez renseigner votre nom.'
@@ -60,7 +60,7 @@ class InformationsUserType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
-                        message : 'Veuillez renseigner votre nom.'
+                        message : 'Veuillez renseigner votre téléphone.'
                     )],
             ])
             ->add('ville', TextType::class, [
@@ -71,7 +71,7 @@ class InformationsUserType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
-                        message : 'Veuillez renseigner votre nom.'
+                        message : 'Veuillez renseigner votre ville.'
                 )],
             ])
 
@@ -88,7 +88,7 @@ class InformationsUserType extends AbstractType
                         message: 'Le code postal doit contenir 5 chiffres.'
                     ),
                     new Assert\NotBlank(
-                        message : 'Veuillez renseigner votre nom.'
+                        message : 'Veuillez renseigner votre code postal.'
                     )],
             ])
             
@@ -99,7 +99,7 @@ class InformationsUserType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
-                        message : 'Veuillez renseigner votre nom.'
+                        message : 'Veuillez renseigner votre adresse postale.'
                 )],
             ])
 

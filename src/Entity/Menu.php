@@ -77,6 +77,9 @@ class Menu
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'menu')]
     private Collection $commandes;
 
+    #[ORM\Column]
+    private bool $isActive = true;
+
     // ajoute des contraintes lors des choix de date de disponibilite
     #[Assert\Callback]
     public function validateDisponibilite(ExecutionContextInterface $context): void
@@ -349,6 +352,18 @@ class Menu
                 $commande->setMenu(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

@@ -14,8 +14,10 @@ final class MenusController extends AbstractController
     #[Route('/nos_menus', name: 'app_menus')]
     public function index(MenuRepository $menuRepository, ThemeRepository $themeRepository, RegimeRepository $regimeRepository): Response
     {
-
-        $menus = $menuRepository->findAll();
+        // récupère uniquement les menus actifs
+        $menus = $menuRepository->findBy([
+            'isActive' => true,
+        ]);
         $themes = $themeRepository->findAll();
         $regimes = $regimeRepository->findAll();
 
