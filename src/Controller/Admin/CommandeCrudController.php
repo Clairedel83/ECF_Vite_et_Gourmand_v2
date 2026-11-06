@@ -10,6 +10,7 @@ use App\Form\ModifierCommandeType;
 use App\Form\StatutType;
 use App\Services\CalculPrixLivraison;
 use App\Services\GestionCommandeService;
+use App\Services\MailService;
 use App\Services\VerificationAdresseService;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,6 +30,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Override;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CommandeCrudController extends AbstractCrudController
 {
@@ -265,10 +267,34 @@ class CommandeCrudController extends AbstractCrudController
             // Valide ensemble le nouveau statut et son historique.
             $connexion->commit();
 
+            // tente l'envoi du mail pour obtenir l'avis (si statut = 7)
+            if($nouveauStatut === 7){
+                $mail = new MailService();
+                $user = $commande->getUser();
+                $prenom = $user->getPrenom();
+                $adresseMail = $user->getEmail();
+                $variables = [
+                    'prenom' => $prenom,
+                    'confirmation_link' => $this->generateUrl('app_avis', ['id' => $commande->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ];
+
+                try{
+                    $mail->envoyerMail($adresseMail, $prenom, '', 8499754, $variables);
+                    // en cas d'erreur
+                } catch(\Exception $exception){
+                    // le statut reste modifié même si l'envoi du mail échoue
+                    $this->addFlash(
+                        'warning',
+                        'Le statut a bien été modifié (\'Commande terminée\').Mais l\'email de demande d\'avis n\'a pas pu être envoyé au client.'
+                    );
+                }
+            }
+
             $this->addFlash(
                 'success',
                 'Le statut de la commande a bien été mis à jour.'
             );
+            
         } catch (\DomainException $exception) {
             // Affiche le message d'erreur
             $this->addFlash('warning', $exception->getMessage());

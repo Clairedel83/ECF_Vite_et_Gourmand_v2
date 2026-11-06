@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vite et Gourmand - Traiteur{% endblock %}
+
+{% block body %}
+<!-- HERO-->
+    {% block hero_img %}
+        <div class ="hero_img" id="hero_avis"></div>
+    {% endblock %}
+
+
+    {% block main %}
+        <section class="avisCommande">
+            {{ form_start(formAvis) }}
+            {{ form_errors(formAvis) }}
+                <div class="data">
+                    {{ form_label(formAvis.note) }}
+                    {{ form_widget(formAvis.note, {
+                        'attr': {'class': 'input'}
+                    }) }}
+                    {{ form_errors(formAvis.note) }}
+                </div>
+
+                <div class="data">
+                    {{ form_label(formAvis.contenu) }}
+                    {{ form_widget(formAvis.contenu, {
+                        'attr': {'class': 'input'}
+                    }) }}
+                    {{ form_errors(formAvis.contenu) }}
+                </div>
+
+                {{ form_widget(formAvis.submit) }}
+            {{ form_end(formAvis) }}
+        </section>
+
+
+    {% endblock %}
+{% endblock %}

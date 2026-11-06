@@ -27,8 +27,8 @@ class Avis
     #[ORM\Column]
     private ?\DateTimeImmutable $dateCreation = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $statut = null;
+    #[ORM\Column]
+    private int $statut = 1;
 
     public function getId(): ?int
     {
@@ -83,12 +83,12 @@ class Avis
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?int
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(int $statut): static
     {
         $this->statut = $statut;
 

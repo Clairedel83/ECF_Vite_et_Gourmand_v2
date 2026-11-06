@@ -2,6 +2,50 @@
 
 Cette actualisation remplace les anciens points ci-dessous, conservés comme archives. Le FormType d'annulation, la modale et son JS sont réalisés : ne pas demander de les recréer.
 
+## Priorités pour le 6 novembre 2026 — préparation demandée le 5 novembre
+
+Cette mise à jour prévaut sur les anciennes tâches ci-dessous. Aucun code applicatif modifié ni test exécuté pendant la revue du 5 novembre. Priorités demandées : points 1 à 3 puis 6 de la liste donnée dans le chat. Responsive (point 5) à finaliser également. NoSQL était le point 4 : apprentissage nécessaire, rechercher ultérieurement des supports surtout vidéos avec l'utilisatrice ; aucune recherche effectuée pour cette préparation.
+
+### 1. Avis clients
+
+- Déjà présents : Avis (commande OneToOne, note, contenu, dateCreation, statut int par défaut 1), AvisCommandeController, AvisClientType, template commande/avisCommande.html.twig vide, AvisCrudController encore généré sans modération. Migration Version20261105101113 du statut entier présente, application non vérifiée.
+- Corriger en premier Commande.avis : attribut OneToOne, mais propriété encore Collection, initialisation ArrayCollection, getter Collection et addAvi/removeAvi hérités de l'ancien OneToMany. Représenter un Avis unique nullable et harmoniser les deux côtés ; vérifier ensuite la migration nécessaire.
+- FormType : remplacer TextareaField EasyAdmin par TextareaType Symfony, conserver note ChoiceType 1 à 5 et contenu obligatoire, prévoir limites et bouton d'envoi. Aucun prénom saisi : récupérer celui du client de la commande.
+- Contrôleur : identifier la commande dans le lien, chercher une commande appartenant au client connecté, refuser absence/statut différent de 7/avis déjà existant. Ne pas confondre objet champ et valeur : get('note') est actuellement passé directement à setNote(int). Formulaire lié à Avis mappe déjà note/contenu.
+- Enregistrer commande, date et statut initial en attente côté serveur ; persist/flush, confirmation et redirection après succès. Conserver saisie et erreurs sur formulaire invalide. Passer la vue du formulaire au Twig et construire la page.
+- CRUD : consultation et choix statut 1 attente / 2 validé / 3 refusé ; auteur/commande/note/contenu non modifiables, pas de création d'avis par l'employé.
+- Accueil : récupérer avis statut 2 et remplacer les témoignages Bruno/Johanna/Laurie écrits en dur. Prévoir cas sans avis. Tests différés.
+
+### 2. Mails des statuts de commande
+
+- modifierStatut() gère transaction et historique, mais aucun envoi MailService aux statuts 6/7 lors de la revue.
+- Après enregistrement et commit : statut 7 invitation avis, modèle déjà créé selon l'utilisatrice ; obtenir son ID et confirmer les noms de variables (prénom et lien absolu vers formulaire lié à la commande). Le mail invite au formulaire du site : note et avis sont saisis ensuite.
+- Statut 6 avec prêt matériel : mail de restitution dix jours ouvrés, information 600 euros, numéro de commande et informations utiles selon modèle. Ne pas ajouter d'automatisation de pénalité non demandée.
+- Éviter un envoi sur simple affichage ou statut identique ; garder le changement de statut enregistré si le mail échoue. Définir si un retour ultérieur au statut doit renvoyer l'invitation avant d'ajouter des champs anti-doublon.
+
+### 3. Gestion des erreurs de MailService
+
+- Service : signature array variables, retour void, success() contrôlé, RuntimeException en cas de refus. Contact : try/catch, formulaire conservé, flash et redirection, contraintes NotBlank/Email/Length correctes au 5 novembre ; désormais implémenté, à tester.
+- Ajouter les blocs try/catch proposés autour du seul envoi dans inscription, confirmation commande, création employé et demande de réinitialisation (non appliqués à la revue).
+- Compte client/employé : création conservée, avertissement mail distinct du succès de création, redirection normale.
+- Commande : envoi après commit, échec mail n'empêche ni vidage panier ni confirmation ; ne pas réexécuter création.
+- Réinitialisation : réponse générique identique que le compte existe ou non ; pas d'avertissement conditionnel révélant son existence. Journalisation sans secret/token à prévoir dans sécurité, ne pas présenter catch silencieux comme suivi complet.
+- Vérifier correspondance de chaque clé avec Mailjet ; ne pas envoyer de mails ni tester sans demande. Aucun bouton renvoi supplémentaire demandé.
+
+### 6. Corrections de cohérence
+
+- CompteController.details : findOneBy(id,user) existe ; traiter commande absente par 404 avant Twig.
+- InformationsUserType : depuis coordonnées nullable pour employés, ajouter NotBlank aux coordonnées du parcours client pour empêcher leur effacement lors d'une modification ; conserver champs admin employés facultatifs. Ce formulaire est aussi accessible via le compte : adapter au public réellement autorisé si nécessaire.
+- Footer : remplacer contact@vite&gourmand.fr par vite.gourmand2027@gmail.com et lien mailto correspondant.
+- Pages légales : identité/responsables, URL/hébergeur après déploiement, durées conservation et cookies, prestataires/transferts à compléter ; tenir compte avis/contact/réinitialisation. Ne pas inventer informations ni refaire toutes les pages.
+- Menus : règle différée à concrétiser, bloquer suppression pour commandes en cours, définir statuts et indisponibilité nouvelles commandes tout en conservant anciens détails. Protéger appels getMenu()->getNbreMin() lorsqu'ancienne commande sans menu. Ne pas ajouter d'entité/journal inutile.
+
+### Suite
+
+- Responsive : double import app.css retiré de assets/app.js ; CSS responsive et lien base présents. Résultat global à vérifier. Burger proposé mais absent du code relu. Tests visuels uniquement sur demande explicite.
+- Statistiques/NoSQL : aucun raccordement trouvé, préparer une recherche de vidéos pédagogiques avant implémentation ; à faire dans un prochain échange.
+- Sécurité déjà différée : sessions désactivées, limitations reset, condensat tokens et journalisation. Petit correctif expiration à reprendre : null avant comparaison puis >=. Pas de nouvelle obligation ECF inférée.
+
 ## Progression actuelle
 
 Modification et annulation des commandes implémentées côté client et employé et relues ; l'utilisatrice indique que l'affichage dynamique fonctionne. Transactions et verrou pessimiste avant vérifications ; annulation partagée dans GestionCommandeService ; interventions employé et informations d'annulation dans historique admin. Bouton Réessayer client réutilise le formulaire d'adresse ouvert. Dernier calculSousTotal JS client fourni avec arrondis intermédiaires : dernière copie à confirmer lors des tests.

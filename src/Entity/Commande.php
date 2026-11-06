@@ -85,11 +85,9 @@ class Commande
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $prix_materiel = null;
 
-    /**
-     * @var Collection<int, Avis>
-     */
-    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'commande')]
-    private Collection $avis;
+
+    #[ORM\OneToOne(targetEntity: Avis::class, mappedBy: 'commande')]
+    private ?Avis $avis = null;
 
     /**
      * @var Collection<int, InterventionCommande>
@@ -100,7 +98,6 @@ class Commande
     public function __construct()
     {
         $this->commandeHistorique = new ArrayCollection();
-        $this->avis = new ArrayCollection();
         $this->interventionCommandes = new ArrayCollection();
     }
 
@@ -379,32 +376,16 @@ class Commande
         return $this;
     }
 
-    /**
-     * @return Collection<int, Avis>
-     */
-    public function getAvis(): Collection
+    public function getAvis(): ?Avis
     {
         return $this->avis;
     }
 
-    public function addAvi(Avis $avi): static
+    public function setAvis(Avis $avis): static
     {
-        if (!$this->avis->contains($avi)) {
-            $this->avis->add($avi);
-            $avi->setCommande($this);
-        }
+        $this->avis = $avis;
 
-        return $this;
-    }
-
-    public function removeAvi(Avis $avi): static
-    {
-        if ($this->avis->removeElement($avi)) {
-            // set the owning side to null (unless already changed)
-            if ($avi->getCommande() === $this) {
-                $avi->setCommande(null);
-            }
-        }
+        $avis->setCommande($this);
 
         return $this;
     }

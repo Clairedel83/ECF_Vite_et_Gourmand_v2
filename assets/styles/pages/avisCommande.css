@@ -1,0 +1,6 @@
+.avisCommande{
+    display: flex;
+    margin-top: 10vh;
+    justify-content: center;
+    min-height: 60vh;
+}

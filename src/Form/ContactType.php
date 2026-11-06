@@ -74,13 +74,13 @@ class ContactType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(
                         message: 'Veuillez préciser votre demande.'
-                    )],
+                    ),
                     new Assert\Length(
                         min: 30,
                         max: 5000,
                         minMessage: 'Le message doit contenir au moins {{ limit }} caractères.',
                         maxMessage: 'Le message doit contenir au maximum {{ limit }} caractères.'
-                    ),
+                    )],
                 ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',

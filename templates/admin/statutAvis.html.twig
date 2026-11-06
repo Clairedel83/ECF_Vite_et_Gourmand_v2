@@ -1,0 +1,7 @@
+{% if field.value == 1 %}
+    <span class="badge jaune">En attente</span>
+{% elseif field.value == 2 %}
+    <span class="badge vert_clair">Validé</span>
+{% elseif field.value == 3 %}
+    <span class="badge rouge">Refusé</span>
+{% endif %}

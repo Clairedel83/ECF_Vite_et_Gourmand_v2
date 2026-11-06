@@ -14,6 +14,7 @@
 @import url('./pages/compte_user.css');
 @import url('./pages/commande.css');
 @import url('./pages/admin.css');
+@import url('./pages/avisCommande.css');
 
 /* =========================== BASE ======================================== */
 *{
@@ -309,6 +310,11 @@ label{
 #hero_compte{
     background-image: url(/images/compte.webp) ;
     background-position:70%;
+}
+
+#hero_avis{
+    background-image: url(/images/avis.webp) ;
+    /* background-position:70%; */
 }
 
 #logo_pages{
