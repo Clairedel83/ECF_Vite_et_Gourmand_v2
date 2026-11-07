@@ -11,6 +11,7 @@ use App\Form\StatutType;
 use App\Services\CalculPrixLivraison;
 use App\Services\GestionCommandeService;
 use App\Services\MailService;
+use App\Services\StatistiquesCommandeService;
 use App\Services\VerificationAdresseService;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,6 +29,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Override;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -167,7 +169,7 @@ class CommandeCrudController extends AbstractCrudController
 
     // PERMET LE CHANGEMENT DE STATUT
     #[AdminRoute(path: '/{entityId}/statut', name: 'statut', options: ['methods' => 'POST'])]
-    public function modifierStatut(AdminContext $context, Request $request, EntityManagerInterface $entityManager)
+    public function modifierStatut(AdminContext $context, Request $request, EntityManagerInterface $entityManager, StatistiquesCommandeService $statistiquesCommandeService, LoggerInterface $logger)
     {
         // Récupère la commande 
         $commande = $context->getEntity()->getInstance();
@@ -267,8 +269,21 @@ class CommandeCrudController extends AbstractCrudController
             // Valide ensemble le nouveau statut et son historique.
             $connexion->commit();
 
+            // Enregistre la commande dans MongoDB après validation de la transaction SQL.
+            try {
+                $statistiquesCommandeService->enregistrerCommande($commande);
+            } catch (\Exception $exception) {
+                // Conserve une trace de l'échec sans interrompre la confirmation de commande.
+                $logger->error(
+                    'La synchronisation MongoDB de la commande a échoué.',
+                    [
+                        'commandeId' => $commande->getId(),
+                    ]
+                );
+            }
+
             // tente l'envoie du mail pour restitution du matériel (si statut = 6)
-            if($nouveauStatut === 6){
+            if ($nouveauStatut === 6) {
                 $mail = new MailService();
                 $user = $commande->getUser();
                 $numero_commande = $commande->getNumeroCommande();
@@ -278,21 +293,21 @@ class CommandeCrudController extends AbstractCrudController
                     'prenom' => $prenom,
                     'numero_commande' => $numero_commande,
                 ];
-                
-                try{
+
+                try {
                     $mail->envoyerMail($adresseMail, $prenom, '', 8503371, $variables);
                     // en cas d'erreur
-                } catch(\Exception $exception){
+                } catch (\Exception $exception) {
                     // le statut reste modifié même si l'envoi du mail échoue
                     $this->addFlash(
                         'warning',
                         'Le statut a bien été modifié (\'En attente de restitution du matériel\').Mais l\'email de demande de restitution n\'a pas pu être envoyée au client.'
-                    );                    
+                    );
                 }
             }
 
             // tente l'envoi du mail pour obtenir l'avis (si statut = 7)
-            if($nouveauStatut === 7){
+            if ($nouveauStatut === 7) {
                 $mail = new MailService();
                 $user = $commande->getUser();
                 $prenom = $user->getPrenom();
@@ -302,10 +317,10 @@ class CommandeCrudController extends AbstractCrudController
                     'confirmation_link' => $this->generateUrl('app_avis', ['id' => $commande->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
                 ];
 
-                try{
+                try {
                     $mail->envoyerMail($adresseMail, $prenom, '', 8499754, $variables);
                     // en cas d'erreur
-                } catch(\Exception $exception){
+                } catch (\Exception $exception) {
                     // le statut reste modifié même si l'envoi du mail échoue
                     $this->addFlash(
                         'warning',
@@ -318,7 +333,6 @@ class CommandeCrudController extends AbstractCrudController
                 'success',
                 'Le statut de la commande a bien été mis à jour.'
             );
-            
         } catch (\DomainException $exception) {
             // Affiche le message d'erreur
             $this->addFlash('warning', $exception->getMessage());
@@ -330,6 +344,8 @@ class CommandeCrudController extends AbstractCrudController
             }
         }
 
+
+
         return $this->redirectToRoute('admin_commande_details', [
             'entityId' => $commande->getId(),
         ]);
@@ -338,7 +354,7 @@ class CommandeCrudController extends AbstractCrudController
 
     // PERMET L'ANNULATION D'UNE COMMANDE PAR UN EMPLOYE VIA UN FORM (POST)
     #[AdminRoute(path: '/{entityId}/annuler', name: 'annuler', options: ['methods' => ['POST']])]
-    public function annulerCommande(AdminContext $context, Request $request, EntityManagerInterface $entityManager, GestionCommandeService $gestionCommandeService)
+    public function annulerCommande(AdminContext $context, Request $request, EntityManagerInterface $entityManager, GestionCommandeService $gestionCommandeService, StatistiquesCommandeService $statistiquesCommandeService, LoggerInterface $logger)
     {
         // RECUPERE LES ELEMENTS
         // récupère l'auteur 
@@ -404,6 +420,19 @@ class CommandeCrudController extends AbstractCrudController
                 'Cette commande a bien été annulée.'
             );
 
+            // Enregistre la commande dans MongoDB après validation de la transaction SQL.
+            try {
+                $statistiquesCommandeService->enregistrerCommande($commande);
+            } catch (\Exception $exception) {
+                // Conserve une trace de l'échec sans interrompre la confirmation de commande.
+                $logger->error(
+                    'La synchronisation MongoDB de la commande a échoué.',
+                    [
+                        'commandeId' => $commande->getId(),
+                    ]
+                );
+            }
+
             return $this->redirectToRoute('admin_commande_details', [
                 'entityId' => $commande->getId(),
             ]);
@@ -447,7 +476,7 @@ class CommandeCrudController extends AbstractCrudController
 
     // PERMET LA MODIFICATION D'UNE COMMANDE PAR UN EMPLOYE VIA UN FORM (POST)
     #[AdminRoute(path: '/{entityId}/modifier', name: 'modifier', options: ['methods' => ['POST']])]
-    public function modifierCommande(AdminContext $context, Request $request, EntityManagerInterface $entityManager, VerificationAdresseService $verificationAdresseService, CalculPrixLivraison $calculPrixLivraison)
+    public function modifierCommande(AdminContext $context, Request $request, EntityManagerInterface $entityManager, VerificationAdresseService $verificationAdresseService, CalculPrixLivraison $calculPrixLivraison, StatistiquesCommandeService $statistiquesCommandeService, LoggerInterface $logger)
     {
         // RECUPERE LES ELEMENTS INITIAUX (avant modification éventuelle)
         // récupère la commande concernée
@@ -503,7 +532,7 @@ class CommandeCrudController extends AbstractCrudController
 
 
 
-            // ------------------------------------------------ FORMULAIRE ------------------------------------------------
+            // ----------------------------- FORMULAIRE -------------------------------------
 
             // Reconstruit le formulaire envoyé depuis la page détails.
             $formModification = $this->createForm(ModifierCommandeType::class, $commande, [
@@ -576,8 +605,6 @@ class CommandeCrudController extends AbstractCrudController
                         'Veuillez choisir un créneau de livraison autorisé.'
                     );
                 }
-
-
 
                 // --------------- ADRESSE DE LIVRAISON ---------------
                 // récupère l'adresse saisie
@@ -687,6 +714,19 @@ class CommandeCrudController extends AbstractCrudController
                     'success',
                     'Cette commande a bien été modifiée.'
                 );
+
+                // Enregistre la commande dans MongoDB après validation de la transaction SQL.
+                try {
+                    $statistiquesCommandeService->enregistrerCommande($commande);
+                } catch (\Exception $exception) {
+                    // Conserve une trace de l'échec sans interrompre la confirmation de commande.
+                    $logger->error(
+                        'La synchronisation MongoDB de la commande a échoué.',
+                        [
+                            'commandeId' => $commande->getId(),
+                        ]
+                    );
+                }
 
                 return $this->redirectToRoute('admin_commande_details', [
                     'entityId' => $commande->getId(),

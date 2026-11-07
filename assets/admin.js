@@ -1,4 +1,5 @@
 import './styles/pages/admin.css';
+import './js/statistiques.js';
 
 // --------------------------------------------- MODIFICATION DE COMMANDE ----------------------------------------------------------
 

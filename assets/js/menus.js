@@ -2,7 +2,7 @@
 
 // Action lors du clic sur Appliquer
 
-let btnApply = document.querySelector('.btn3_apply');
+let btnApply = document.querySelector('.btn4_apply');
 
 btnApply.addEventListener('click', () => {
     // récupère ce qui est indiqué/choisi par l'utilisateur
@@ -74,7 +74,7 @@ btnApply.addEventListener('click', () => {
 
 // Action lors du clic sur Réinitialiser
 
-let btnReset = document.querySelector('.btn3_reset');
+let btnReset = document.querySelector('.btn4_reset');
 
 btnReset.addEventListener("click", () => {
     document.getElementById('theme').value = "";

@@ -19,13 +19,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use App\Services\StatistiquesCommandeService;
+use Psr\Log\LoggerInterface;
 
 final class CommandeController extends AbstractController
 {
     // Sécurisation du formulaire avec utilisation d'un jeton CSRF
     #[IsCsrfTokenValid('valider_commande', tokenKey: 'token', methods: ['POST'])]
     #[Route('/commande', name: 'app_commande', methods: ['POST'])]
-    public function index(MenuRepository $menuRepository, PanierService $panier, Request $request, EntityManagerInterface $entityManager, CalculDistanceService $distanceService, CalculPrixLivraison $prixLivraison, VerificationAdresseService $adresseService): Response
+    public function index(MenuRepository $menuRepository, PanierService $panier, Request $request, EntityManagerInterface $entityManager, CalculDistanceService $distanceService, CalculPrixLivraison $prixLivraison, VerificationAdresseService $adresseService, StatistiquesCommandeService $statistiquesCommandeService, LoggerInterface $logger): Response
     {
         // methods : [POST]
         // La page ne peut être appelée que par l'envoi du formulaire
@@ -363,9 +365,21 @@ final class CommandeController extends AbstractController
             }
             // donne l'erreur
             throw $e;
-            // return $this->redirectToRoute('app_panier');
-
         }
+
+        // Enregistre la commande dans MongoDB après validation de la transaction SQL.
+        try {
+            $statistiquesCommandeService->enregistrerCommande($commande);
+        } catch (\Exception $exception) {
+            // Conserve une trace de l'échec sans interrompre la confirmation de commande.
+            $logger->error(
+                'La synchronisation MongoDB de la commande a échoué.',
+                [
+                    'commandeId' => $commande->getId(),
+                ]
+            );
+        }
+
         // enregistre le numéro de commande
         $request->getSession()->set(
             'numero_commande',

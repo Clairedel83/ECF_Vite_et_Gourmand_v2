@@ -4,6 +4,18 @@ Cette actualisation remplace les anciens points ci-dessous, conservés comme arc
 
 ## Priorités pour le 6 novembre 2026 — préparation demandée le 5 novembre
 
+### Actualisation MongoDB — 7 novembre 2026
+
+Voir ECF_choix_conception.md : service d'écriture MongoDB avec Decimal128/UTCDateTime/upsert et raccordements aux parcours implémentés et relus. Exécution par l'utilisatrice de app:synchroniser-commandes : 7 commandes synchronisées, aucun échec signalé. Reprise automatique reportée par décision explicite à une ouverture du dossier, pas à développer maintenant. Commande manuelle conservée. Prochain travail : tableau de bord José, exploration de Chart.js pour les graphiques.
+
+### Ordre de travail confirmé le 6 novembre 2026
+
+- Prochain chantier : démarrer l'apprentissage puis l'intégration NoSQL pour les statistiques de José. Rechercher des supports pédagogiques, surtout des vidéos, lors du démarrage demandé par l'utilisatrice.
+- Différer le carrousel d'avis jusqu'à la création de 2 à 3 comptes utilisateurs fictifs et au parcours complet de commande, changement de statut, mails, dépôt d'avis et modération. L'utilisatrice prévoit cela pendant les séances de tests. Ne pas démarrer le carrousel avant cette étape.
+- Différer également la finalisation du responsive à cette phase de tests et de données représentatives. Ne pas la présenter comme validée ni terminée.
+- Dernière relecture : 404 détail client, réponse générique reset en cas d'erreur mail, contraintes coordonnées, mails statuts 6/7 et gestion des erreurs, désactivation menus via isActive sont implémentés. Menus conservés en BDD, suppression EasyAdmin désactivée, filtre catalogue et contrôles panier/création ; ancienne règle de refus de suppression selon statut remplacée par désactivation. L'utilisatrice confirme qu'aucune ancienne commande ne référence un menu supprimé : ne pas ajouter maintenant un chantier de gestion de ces données inexistantes. Aucun test exécuté.
+- Petite correction de texte restant à confirmer : maxMessage du nom dans InformationsUserType utilise encore « au moins » au lieu de « au maximum » lors de la dernière lecture.
+
 Actualisation du 6 novembre : dépôt client et invitation statut 7 implémentés et relus, modération configurée avec statut seul modifiable ; action Détails native encore à ajouter si souhaitée et note obligatoire côté serveur à vérifier. Deux migrations identiques de statut Avis confirmées exécutées par captures fournies : conserver les deux, aucun nettoyage nécessaire. Réception mail et parcours restent à tester. Affichage public différé : carrousel conservant cartes actuelles sans Bootstrap, trois avis ordinateur avec flèches dessous, un avis mobile avec glissement tactile horizontal, ordre récent vers ancien, sans lecture automatique, section conservée même vide selon demande. Choix détaillé dans ECF_choix_conception.md. Reprendre d'abord les autres priorités d'hier.
 
 Cette mise à jour prévaut sur les anciennes tâches ci-dessous. Aucun code applicatif modifié ni test exécuté pendant la revue du 5 novembre. Priorités demandées : points 1 à 3 puis 6 de la liste donnée dans le chat. Responsive (point 5) à finaliser également. NoSQL était le point 4 : apprentissage nécessaire, rechercher ultérieurement des supports surtout vidéos avec l'utilisatrice ; aucune recherche effectuée pour cette préparation.

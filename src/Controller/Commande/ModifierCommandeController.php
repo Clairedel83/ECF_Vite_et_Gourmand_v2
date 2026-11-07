@@ -6,6 +6,7 @@ use App\Services\VerificationAdresseService;
 use App\Services\CalculPrixLivraison;
 use App\Form\AdresseLivraisonType;
 use App\Repository\CommandeRepository;
+use App\Services\StatistiquesCommandeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use DateTime;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 
 final class ModifierCommandeController extends AbstractController
@@ -56,7 +58,7 @@ final class ModifierCommandeController extends AbstractController
     // Sécurisation du formulaire avec utilisation d'un jeton CSRF
     #[IsCsrfTokenValid('confirmation_modification_commande', tokenKey: 'token', methods: ['POST'])]
     #[Route('/commande/{id}/confirmation_modification', name: 'app_commande_confirmation_modification', methods: ['POST'])]
-    public function modifier(Request $request, CommandeRepository $commandeRepository, int $id, VerificationAdresseService $adresseService, CalculPrixLivraison $prixLivraison, EntityManagerInterface $entityManager): Response
+    public function modifier(Request $request, CommandeRepository $commandeRepository, int $id, VerificationAdresseService $adresseService, CalculPrixLivraison $prixLivraison, EntityManagerInterface $entityManager, StatistiquesCommandeService $statistiquesCommandeService, LoggerInterface $logger): Response
     {
         // methods : [POST]
         // La page ne peut être appelée que par l'envoi du formulaire
@@ -328,6 +330,19 @@ final class ModifierCommandeController extends AbstractController
             // Valide la transaction
             $connexion->commit();
 
+            // Enregistre la commande dans MongoDB après validation de la transaction SQL.
+            try {
+                $statistiquesCommandeService->enregistrerCommande($commande);
+            } catch (\Exception $exception) {
+                // Conserve une trace de l'échec sans interrompre la confirmation de commande.
+                $logger->error(
+                    'La synchronisation MongoDB de la commande a échoué.',
+                    [
+                        'commandeId' => $commande->getId(),
+                    ]
+                );
+            }
+
             $this->addFlash(
                 'success',
                 'Votre commande a bien été modifiée'
@@ -348,9 +363,6 @@ final class ModifierCommandeController extends AbstractController
                 $entityManager->clear();
             }
         }
-
-
-
 
 
     }

@@ -9,22 +9,98 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
+use App\Services\StatistiquesCommandeService;
+use MongoDB\BSON\UTCDateTime;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class AdministrationController extends AbstractDashboardController
 {
-    public function index(): Response
+    // Rend le service de statistiques disponible dans le contrôleur.
+    public function __construct(private StatistiquesCommandeService $statistiquesCommandeService, private RequestStack $requestStack) 
     {
-        
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        return $this->redirectToRoute('admin_commande_index');
+    }
 
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirectToRoute('...');
-        // }
+        public function index(): Response
+    {
+        // Les employés accèdent directement aux commandes.
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('admin_commande_index');
+        }
 
+        // Récupère les filtres transmis dans l'URL par le formulaire GET.
+        $request = $this->requestStack->getCurrentRequest();
+
+        $dateDebut = $request->query->getString('dateDebut');
+        $dateFin = $request->query->getString('dateFin');
+        $menuId = $request->query->getInt('menuId');
+
+        $filtres = [];
+        $dates = [];
+        $fuseau = new \DateTimeZone('Europe/Paris');
+
+        // Vérifie les deux dates lorsqu'elles ont été renseignées.
+        foreach (['dateDebut' => $dateDebut, 'dateFin' => $dateFin] as $nom => $valeur) {
+            if ($valeur !== '') {
+                $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $valeur, $fuseau);
+
+                if (!$date || $date->format('Y-m-d') !== $valeur) {
+                    $this->addFlash('warning', 'Veuillez sélectionner une date valide.');
+
+                    return $this->redirectToRoute('admin');
+                }
+
+                $dates[$nom] = $date;
+            }
+        }
+
+        // Empêche une période dont la fin précède le début.
+        if (isset($dates['dateDebut'], $dates['dateFin'])
+            && $dates['dateDebut'] > $dates['dateFin']) {
+            $this->addFlash('warning', 'La date de fin doit être postérieure ou égale à la date de début.');
+
+            return $this->redirectToRoute('admin');
+        }
+
+        // Inclut toutes les livraisons à partir du début de la première journée.
+        if (isset($dates['dateDebut'])) {
+            $filtres['dateLivraison']['$gte'] = new UTCDateTime($dates['dateDebut']);
+        }
+
+        // La borne exclusive du lendemain inclut toute la dernière journée.
+        if (isset($dates['dateFin'])) {
+            $filtres['dateLivraison']['$lt'] = new UTCDateTime(
+                $dates['dateFin']->modify('+1 day')
+            );
+        }
+
+        if ($menuId > 0) {
+            $filtres['menuId'] = $menuId;
+        }
+
+        // Applique les mêmes filtres aux graphiques et aux indicateurs.
+        $commandesParMenu = $this->statistiquesCommandeService->compterCommandesParMenu($filtres);
+        $caParMois = $this->statistiquesCommandeService->calculerCaParMois($filtres);
+        $caTotal = $this->statistiquesCommandeService->calculerCaTotal($filtres);
+        $menus = $this->statistiquesCommandeService->recupererMenus();
+
+        // Additionne les commandes comptées pour chaque menu.
+        $nombreCommandes = 0;
+
+        foreach ($commandesParMenu as $resultat) {
+            $nombreCommandes += $resultat['nombreCommandes'];
+        }
+
+        return $this->render('admin/tableau_de_bord.html.twig', [
+            'commandesParMenu' => $commandesParMenu,
+            'caParMois' => $caParMois,
+            'caTotal' => $caTotal,
+            'nombreCommandes' => $nombreCommandes,
+            'menus' => $menus,
+            'dateDebut' => $dateDebut,
+            'dateFin' => $dateFin,
+            'menuId' => $menuId,
+        ]);
     }
 
     public function configureDashboard(): Dashboard

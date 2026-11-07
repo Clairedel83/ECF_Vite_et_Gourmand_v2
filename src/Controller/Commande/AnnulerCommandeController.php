@@ -4,7 +4,9 @@ namespace App\Controller\Commande;
 
 use App\Repository\CommandeRepository;
 use App\Services\GestionCommandeService;
+use App\Services\StatistiquesCommandeService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +18,7 @@ final class AnnulerCommandeController extends AbstractController
     // Sécurisation du formulaire avec utilisation d'un jeton CSRF
     #[IsCsrfTokenValid('annulation_commande', tokenKey: 'token', methods: ['POST'])]
     #[Route('compte/commandes/details/{id}/supprimer', name: 'app_commandes_supprimer', methods: ['POST'])]
-    public function index(CommandeRepository $commandeRepository, int $id, EntityManagerInterface $entityManager, GestionCommandeService $gestionCommandeService, Request $request): Response
+    public function index(CommandeRepository $commandeRepository, int $id, EntityManagerInterface $entityManager, GestionCommandeService $gestionCommandeService, Request $request, StatistiquesCommandeService $statistiquesCommandeService, LoggerInterface $logger): Response
     {
 
         // Récupère la commande appartenant à l'utilisateur
@@ -59,6 +61,19 @@ final class AnnulerCommandeController extends AbstractController
 
             // attention, en cas d'erreur, referer peut être vide donc prévoir redirection fiable
             return $this->redirectToRoute('app_commandes');
+        }
+
+        // Actualise MongoDB après l'annulation enregistrée en SQL.
+        try {
+            $statistiquesCommandeService->enregistrerCommande($commande);
+        } catch (\Exception $exception) {
+            // L'annulation reste effective même si MongoDB est indisponible.
+            $logger->error(
+                'La synchronisation MongoDB de la commande a échoué.',
+                [
+                    'commandeId' => $commande->getId(),
+                ]
+            );
         }
 
         $this->addFlash(
