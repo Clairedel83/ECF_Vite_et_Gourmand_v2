@@ -2,6 +2,14 @@
 
 Référence de reprise : outputs/ECF_reprise.md.
 
+## Responsive et thèmes administration — 10 novembre 2026
+
+Ces décisions prévalent sur l'ancien report du responsive : adaptation par page couvrant mobile, tablette et grand écran, CSS regroupé dans assets/styles/responsive/ et imports centralisés dans responsive.css. Conserver le design ordinateur et ses marges centrées ; pas de header fixe sur ordinateur, header beige clair et menu superposé sur les tailles inférieures. Compte et panier sous forme d'icônes, sans compteur ; téléphone supprimable. Décorations réajustables/masquées sur mobile. Détail des menus : plats en trois colonnes dès 768 px, une colonne en dessous. Filtres repliables sur mobile.
+
+EasyAdmin possède ses propres imports de thème et de responsive, séparés du site public. Boutons principaux beige foncé dans les deux thèmes ; panneau latéral suit le thème, lien Retour au site lisible. Tables larges défilent à l'intérieur de leur conteneur. Les champs de modification de commande doivent recevoir le focus et être amenés dans la zone visible à leur ouverture ; bouton désactivé hors statuts autorisés 1/2.
+
+Prochain chantier demandé : carrousel d'avis, choix de présentation du 6 novembre conservés. Non implémenté au point d'arrêt. Ne pas confondre les tests de présentation réalisés avec les tests de parcours métier restant à mener.
+
 ## MongoDB — synchronisation et tableau de bord (7 novembre 2026)
 
 Montants stockés en BSON Decimal128 depuis les chaînes DECIMAL SQL, dates BSON UTCDateTime. Un document par commande, _id égal à l'ID SQL, updateOne avec $set et upsert. Première écriture réelle confirmée par l'utilisatrice ; commande console app:synchroniser-commandes exécutée avec bilan de 7 commandes synchronisées sans échec signalé. Raccordements création, modifications client/employé, statuts et annulations client/employé relus après corrections de placement, sans tests complets de ces mises à jour. Reprise automatique différée explicitement : ouverture à mentionner dans le dossier pour une évolution future, pas tâche requise pour finir cet ECF. La commande de synchronisation complète manuelle reste disponible ; journalisation seule ne relance pas les échecs. Prochain chantier demandé : tableau de bord José ; Chart.js proposé pour l'affichage des graphiques, choix à préciser avec l'utilisatrice.

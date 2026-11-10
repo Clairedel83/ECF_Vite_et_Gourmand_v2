@@ -24,12 +24,6 @@
 .panel_avis .title {
         margin-top: 0;
     }
-
-.panel_avis .avis {
-        height: auto;
-        margin-top: 2rem;
-    }
-
 }
 
 .engagements {
@@ -256,4 +250,74 @@
 
 }
 
+/* Carrousel sur mobile et tablette. */
+@media (width < 1200px) {
+    .panel_avis {
+        height: auto;
+        min-height: 0;
+        padding-block: 40px;
+        margin-inline: var(--marge-page);
+    }
+
+    .panel_avis .title {
+        margin-top: 0;
+    }
+
+    .panel_avis .avis_container {
+        width: clamp(240px, 72vw, 420px);
+        max-width: 100%;
+        margin: 32px auto 0;
+    }
+
+    .avis_container .avis {
+        flex-basis: 100%;
+    }
+
+    .avis_navigation {
+        display: none;
+    }
+
+        /* Même largeur que le carrousel pour aligner les points à gauche. */
+    .panel_avis .avis_reperes {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        width: clamp(240px, 72vw, 420px);
+        max-width: 100%;
+        margin: 16px auto 0;
+    }
+
+    /* Zone cliquable plus grande que le point visible. */
+    .avis_repere {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 44px;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+    }
+
+    .avis_repere span {
+        display: block;
+        width: 12px;
+        height: 12px;
+        background-color: #dce0e5;
+        border-radius: 50%;
+    }
+
+    .avis_repere.actif span {
+        width: 20px;
+        background-color: #252424;
+        border-radius: 5px;
+    }
+
+    .avis_repere:focus-visible {
+        outline: 2px solid #603b24;
+        outline-offset: 2px;
+        border-radius: 6px;
+    }
+}
 
