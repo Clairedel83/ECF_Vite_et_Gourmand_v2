@@ -52,7 +52,7 @@ btnApply.addEventListener('click', () => {
         
         // vérifie que les filtres correspondent aux éléments des menus
         if (themeCorrect && regimeCorrect && nbreCorrect && priceMinCorrect && priceMaxCorrect){
-            menu.style.display = 'flex';
+            menu.style.display = '';
             nbreResultats++;
             }
 
@@ -86,7 +86,7 @@ btnReset.addEventListener("click", () => {
     let nullMenu = document.querySelector('.null_menu');
 
     for (let menu of menus) {
-        menu.style.display = 'flex'
+        menu.style.display = ''
     }
 
     nullMenu.style.display = 'none';
@@ -146,11 +146,36 @@ for (let btnFermer of btnsFermer) {
         // permet de fermer le menu détaillé ouvert
         menuDetails.style.display = "none";
         // permet de rouvrir la card menu
-        menu.style.display = "flex";
+        menu.style.display = "";
     });
 }
     
+const boutonFiltres = document.querySelector('.filtres_toggle');
+const panneauFiltres = document.querySelector('.filtres_panneau');
+const petitEcranFiltres = window.matchMedia('(width < 768px)');
 
+if (boutonFiltres && panneauFiltres) {
+    function afficherFiltres(ouvert) {
+        panneauFiltres.hidden = !ouvert;
+        boutonFiltres.setAttribute('aria-expanded', String(ouvert));
+        boutonFiltres.textContent = ouvert
+            ? 'Masquer les filtres'
+            : 'Afficher les filtres';
+    }
+
+    function adapterFiltres() {
+        afficherFiltres(!petitEcranFiltres.matches);
+    }
+
+    boutonFiltres.addEventListener('click', () => {
+        afficherFiltres(
+            boutonFiltres.getAttribute('aria-expanded') !== 'true'
+        );
+    });
+
+    petitEcranFiltres.addEventListener('change', adapterFiltres);
+    adapterFiltres();
+}
 
 
 

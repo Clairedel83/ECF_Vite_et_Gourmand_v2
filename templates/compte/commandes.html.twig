@@ -35,24 +35,25 @@
                 <div class="commandes">
                     {% if commandes %}
                         <table>
-                            <tr>
-                                <th>N° commande</th>
-                                <th>Date de la commande</th>
-                                <th>Statut</th>
-                                <th>Prix TTC</th>
-                                <th>Détails</th>
-                            </tr>
-
+                            <thead>
+                                <tr>
+                                    <th>N° commande</th>
+                                    <th>Date de la commande</th>
+                                    <th>Statut</th>
+                                    <th>Prix TTC</th>
+                                    <th>Détails</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 {% for commande in commandes %}
                                     <tr>
-                                        <td>{{ commande.numeroCommande }}</td>
-                                        <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
-                                        <td id="statut_commande">    
+                                        <td data-label="N° commande">{{ commande.numeroCommande }}</td>
+                                        <td data-label="Date">{{ commande.dateCommande|date('d/m/Y') }}</td>
+                                        <td data-label="Statut">
                                             {{ include('admin/statut.html.twig', { field: { value: commande.statut }}) }}
                                         </td>
-                                        <td>{{ commande.prixTotal }}€</td>
-                                        <td>
+                                        <td data-label="Prix TTC">{{ commande.prixTotal }}€</td>
+                                        <td data-label="Détails">
                                             <a href="{{ path('app_commandes_details', {'id': commande.id}) }}">
                                                 {% if commande.statut == 1 %}
                                                     Modifier

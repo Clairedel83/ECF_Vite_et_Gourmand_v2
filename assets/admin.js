@@ -1,4 +1,6 @@
 import './styles/pages/admin.css';
+import './styles/admin-theme.css';
+import './styles/responsive/admin.css';
 import './js/statistiques.js';
 
 // --------------------------------------------- MODIFICATION DE COMMANDE ----------------------------------------------------------
@@ -35,7 +37,7 @@ if (formulaireModification) {
 
     // ------------------------------------------------ ELEMENTS DE LA PAGE ------------------------------------------------
 
-    const btnModifier = document.querySelector('.btn2_modifier');
+    const btnModifier = document.querySelector('.btn3_modifier');
     const btnSauvegarder = document.querySelector('#btn_form_sauvegarder');
     const containerCta = document.querySelector('.btn_form');
 
@@ -83,25 +85,49 @@ if (formulaireModification) {
 
     // ------------------------------------------------ AFFICHAGE ----------------------------------------------------------
 
-    btnModifier.addEventListener('click', () => {
-        // Affiche les boutons Sauvegarder et Abandonner.
-        containerCta.style.display = 'flex';
+btnModifier.addEventListener('click', () => {
+    if (btnModifier.disabled) {
+        return;
+    }
 
-        // Masque le bouton Modifier.
-        btnModifier.style.display = 'none';
+    // Affiche les actions du formulaire.
+    containerCta.style.display = 'flex';
+    btnModifier.style.display = 'none';
 
-        // Masque les anciennes informations
-        anciennesDonnees.forEach(element => {
-            element.style.display = 'none';
-        });
-
-        // Affiche les cellules contenant les champs du formulaire.
-        nouvellesDonnees.forEach(element => {
-            element.style.display = 'table-cell';
-        });
-
-        verifierChangementAdresse();
+    anciennesDonnees.forEach(element => {
+        element.style.display = 'none';
     });
+
+    nouvellesDonnees.forEach(element => {
+        element.style.display = 'table-cell';
+    });
+
+    verifierChangementAdresse();
+
+    // Attend que les cellules ouvertes soient prises en compte dans la mise en page.
+    requestAnimationFrame(() => {
+        const premierChamp = formulaireModification.querySelector(
+            '.nouvelles_donnees input:not([type="hidden"]):enabled, '
+            + '.nouvelles_donnees select:enabled, '
+            + '.nouvelles_donnees textarea:enabled'
+        );
+
+        if (!premierChamp) {
+            return;
+        }
+
+        const mouvementReduit = window.matchMedia(
+            '(prefers-reduced-motion: reduce)'
+        ).matches;
+
+        premierChamp.focus({ preventScroll: true });
+        
+        premierChamp.scrollIntoView({
+            behavior: mouvementReduit ? 'instant' : 'smooth',
+            block: 'center',
+        });
+    });
+});
 
     // ------------------------------------------------ FACTURATION ----------------------------------------------------------
 

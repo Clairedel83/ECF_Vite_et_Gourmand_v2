@@ -1,0 +1,191 @@
+.account > * {
+    min-width: 0;
+}
+
+@media (width < 768px) {
+    .account {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.account .form_user_content {
+    width: min(100%, 32rem);
+}
+.account .form_user_content input {
+    width: 100%;
+    min-width: 0;
+}
+.account .informations_content {
+    flex-wrap: wrap;
+}
+.account .informations_content > ul {
+    flex-basis: 100%;
+}
+.account .commandes_details td,
+.account .commandes_details th {
+    overflow-wrap: anywhere;
+}
+.account .historique_commande th:nth-child(1),
+.account .historique_commande th:nth-child(2) {
+    width: 25%;
+}
+.account .historique_commande th:nth-child(3) {
+    width: 50%;
+}
+
+@media (width < 1200px) {
+    .account {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr);
+        gap: 2rem;
+        min-height: 0;
+    }
+
+    .account_left,
+    .account_right {
+        padding: 2rem var(--marge-page);
+    }
+
+    #bienvenue {
+        padding: 3rem var(--marge-page);
+    }
+
+    .account_left h3,
+    .account_right h3 {
+        margin-bottom: 2rem;
+    }
+
+    .account_link {
+        grid-template-rows: none;
+        gap: 1rem;
+    }
+    .account .form_user {
+        gap: 2rem;
+    }
+
+    .account .form_user_content {
+        width: min(100%, 22rem);
+    }
+}
+@media (width < 1024px) {
+    .account {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+    .account .account_link {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem 2rem;
+    }
+}
+@media (width < 768px) {
+    .account .account_link {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .account .informations_content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    .account .informations_content input,
+    .account .form_user_content {
+        width: 100%;
+        max-width: 100%;
+    }
+    .account
+        input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) {
+        min-height: 2.75rem;
+        font-size: 1rem;
+    }
+    .account .form_footer {
+        margin-block: 2rem;
+    }
+    .account .btn_details {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    .account .btn_details .btn3 {
+        width: 100%;
+        white-space: normal;
+    }
+    .account .commandes_details {
+        margin-bottom: 3rem;
+    }
+    .account .commandes_details table {
+        table-layout: fixed;
+    }
+    .account .commandes_details table th,
+    .account .commandes_details table td {
+        width: 50%;
+        padding: 0.75rem 0.5rem;
+    }
+
+    .account .historique_commande {
+        overflow-x: visible;
+    }
+
+    .account .historique_commande table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    .account .historique_commande th,
+    .account .historique_commande td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.8125rem;
+        text-align: left;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .account .historique_commande :is(th, td):nth-child(1) {
+        width: 30%;
+    }
+
+    .account .historique_commande :is(th, td):nth-child(2) {
+        width: 20%;
+    }
+
+    .account .historique_commande :is(th, td):nth-child(3) {
+        width: 50%;
+    }
+
+    .account .historique_commande td * {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .account .commandes table,
+    .account .commandes tbody,
+    .account .commandes tr,
+    .account .commandes td {
+        display: block;
+        width: 100%;
+    }
+    .account .commandes thead {
+        display: none;
+    }
+    .account .commandes tbody {
+        display: grid;
+        gap: 1rem;
+    }
+    .account .commandes tbody tr {
+        padding: 0.75rem;
+        border: 1px solid #25242451;
+        border-radius: 0.75rem;
+        background: #f7e0c473;
+    }
+    .account .commandes td {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+        gap: 0.75rem;
+        text-align: left;
+        padding: 0.5rem 0;
+        border: 0;
+        overflow-wrap: anywhere;
+    }
+    .account .commandes td::before {
+        content: attr(data-label);
+        font-weight: 500;
+    }
+}

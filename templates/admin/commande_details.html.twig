@@ -4,7 +4,7 @@
     <div class="details_title">
         <div class="details_title_header">
             <h3>Commande N°{{ commande.numeroCommande }}</h3>
-            <a href="" class="btn_retour"><img src="{{ asset('images/logos/Arrow_left.svg') }}" alt="">Retour aux commandes</a>
+            <a href="{{ path('admin_commande_index') }}" class="btn_retour"><img src="{{ asset('images/logos/Arrow_left.svg') }}" alt="">Retour aux commandes</a>
         </div>
         
         <p>Créée le {{ commande.dateCommande|date('d/m/Y') }} à {{ commande.heureCommande|date('H:i') }}</p>
@@ -266,7 +266,7 @@
                 <div class="details_content_sub">
                     <div class="commande_actions">
                         {# Bouton qui ouvre la modale d'annulation #}
-                        <button type="button" class="btn3 btn3_modifier">
+                        <button type="button" class="btn3 btn3_modifier" {% if commande.statut not in [1, 2] %}disabled {% endif %}>
                             <twig:ea:Icon name="fa fa-pen"/>Modifier la commande
                         </button>
 

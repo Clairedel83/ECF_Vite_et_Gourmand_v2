@@ -1,0 +1,42 @@
+/* commun — adaptations regroupées, proposition à vérifier après application. */
+:root {
+    --marge-page: clamp(1rem, 4vw, 3rem);
+    --espace-section: clamp(2.5rem, 6vw, 5rem);
+}
+
+@media (width > 1440px) {
+.all_filtres {
+        width: 71.25rem;
+        margin-inline: auto;
+    }
+
+}
+
+@media (width < 1200px) {
+:root {
+        --hauteur-navigation: 5rem;
+    }
+
+.all_filtres {
+        width: auto;
+        margin-inline: var(--marge-page);
+    }
+
+html {
+        scroll-padding-top: calc(var(--hauteur-navigation) + 1rem);
+    }
+
+}
+
+@media (width < 768px) {
+.data input:not([type="checkbox"]):not([type="radio"]),
+.data textarea,
+.data select {
+        width: 100%;
+        min-width: 0;
+        font-size: 16px;
+    }
+
+}
+
+

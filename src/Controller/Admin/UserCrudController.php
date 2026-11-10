@@ -54,10 +54,10 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('nom')->setLabel('Nom'),
-            TextField::new('prenom')->setLabel('Prénom'),
-            EmailField::new('email')->setLabel('Email'),
-            TextField::new('password')->setLabel('Mot de passe')->setFormType(PasswordType::class)->hideOnIndex()->onlyWhenCreating(),
+            TextField::new('nom')->setLabel('Nom')->hideOnForm(),
+            TextField::new('prenom')->setLabel('Prénom')->hideOnForm(),
+            EmailField::new('email')->setLabel('Email')->hideOnForm(),
+            TextField::new('password')->setLabel('Mot de passe')->setFormType(PasswordType::class)->hideOnIndex()->onlyWhenCreating()->hideOnDetail(),
             TextField::new('telephone')->setLabel('Téléphone')->onlyOnDetail(),
             TextField::new('adresse_postale')->setLabel('Adresse')->onlyOnDetail(),
             TextField::new('code_postal')->setLabel('Code postal')->onlyOnDetail(),

@@ -1,0 +1,75 @@
+/* footer — adaptations regroupées, proposition à vérifier après application. */
+@media (width < 768px) {
+.contact_footer_text a {
+        overflow-wrap: anywhere;
+    }
+
+}
+
+.footer_top > * {
+    min-width: 0;
+}
+
+.footer_top {
+    padding-block: clamp(3rem, 5vw, 5rem);
+}
+
+.footer_top .contact_footer {
+    gap: 2rem;
+}
+
+.footer_top a,
+.footer_bottom p {
+    overflow-wrap: anywhere;
+}
+
+.footer_top .logo_footer {
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.footer_bottom {
+    gap: 1rem;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+
+@media (width > 1440px) {
+.footer_top,
+.footer_bottom {
+        width: 71.25rem;
+        margin-inline: auto;
+    }
+
+}
+
+@media (width < 1400px) {
+.footer_top {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2rem;
+    }
+
+}
+
+@media (width < 1200px) {
+.footer_top,
+.footer_bottom {
+        width: auto;
+        margin-inline: var(--marge-page);
+    }
+
+}
+
+@media (width < 768px) {
+.footer_top {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+.footer_top > :first-child {
+        justify-self: center;
+    }
+
+}
+
+

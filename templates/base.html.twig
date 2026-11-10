@@ -31,7 +31,7 @@
             <div class="header_top">
                 <img src="{{ asset('images/logos/MainLogo2.png') }}" id="logo_header" title="Logo">
 
-                <nav class="navbar">
+                <nav class="navbar" id="navigation-principale">
                     <ul class="st_line">
                         <li><a href="{{ path('app_accueil') }}" class="nav_item"><span>ACCUEIL</span></a></li>
                         <li><a href="{{ path('app_a_propos') }}" class="nav_item"><span>A PROPOS</span></a></li>
@@ -60,17 +60,21 @@
                         {% else %}
                             <a href="{{ path('app_panier') }}" aria-label="lien vers le panier">
                                 <img src="{{ asset('images/logos/shop.svg') }}" id="caddie">
-                                {% if app.session.get('panier') %}
-                                    <span id="caddie-plein">✓</span>
-                                {% endif %}
                             </a>                        
                         {% endif %}
 
                     {% else %}
-                        <a href="{{ path('app_connexion') }}" class="btn2 nav_item">CONNEXION</a>
+                        <a href="{{ path('app_connexion') }}" class="btn2 nav_item connexion_header" aria-label="Se connecter">
+                            <img src="{{ asset('images/logos/account2.svg') }}" alt="">
+                            <span>CONNEXION</span>
+                        </a>
                     {% endif %}
                 </div>
                 
+                {# Menu burger #}
+                <button type="button" class="menu_burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navigation-principale">
+                    <span aria-hidden="true">☰</span>
+                </button>
             </div>
 
             {% block hero_img %}{% endblock %}

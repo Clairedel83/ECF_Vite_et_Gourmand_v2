@@ -94,9 +94,7 @@ body.ea-dark-scheme .content-top {
 /* Retour au site */
 .admin_entete_site {
     padding: 9px 12px;
-    border: 1px solid #faebd8;
     border-radius: 7px;
-    background-color: #faebd8;
     transition: background-color 0.2s ease;
 }
 
@@ -173,7 +171,7 @@ body.ea-dark-scheme .content-top {
     outline-offset: 4px;
 }
 
-/* Sur mobile, EasyAdmin possède déjà son en-tête avec le bouton d’ouverture de la sidebar. */
+
 @media (max-width: 991.98px) {
     .content-top {
         min-height: auto;
@@ -197,19 +195,11 @@ body.ea-dark-scheme .content-top {
 
 .ea-sidebar {
     box-shadow: none;
-    --sidebar-bg: #faebd8;
-    --sidebar-item-hover-bg: #daa481;
 }
 
 .ea-sidebar-group-label-text {
     letter-spacing: 1px;
     font-family: "Roboto";
-    color: rgb(124, 130, 139);
-}
-
-.ea-sidebar-item-icon,
-.ea-sidebar-item-label {
-    color: #252424;
 }
 
 .ea-sidebar-item-label {
@@ -248,12 +238,6 @@ body.ea-dark-scheme .content-top {
 
 .ea-sidebar-footer {
     box-shadow: none;
-}
-
-.is-active {
-    background-color: #daa481;
-    border: 0.5px solid #daa481;
-    border-radius: 5px;
 }
 
 /* --------------------------------------------------------------- STATUT --------------------------------------------------------- */
@@ -553,6 +537,13 @@ body.ea-dark-scheme .content-top {
     color: white;
 }
 
+.btn3_modifier:disabled,.btn3_modifier:disabled:hover {
+    opacity: .5;
+    cursor: not-allowed;
+    color: #aa3333;
+    background-color: transparent;
+}
+
 #btn_form_sauvegarder{
     border:none;
 }
@@ -585,11 +576,6 @@ body.ea-dark-scheme .content-top {
 }
 
 /* ---------------------------------------- MODAL --------------------------------- */
-
-#annulationCommandeModal {
-    --bs-modal-width: 30vw;
-    
-}
 
 .modal-content {
     gap: 0;
@@ -858,37 +844,4 @@ padding-right: 10px;
 
 .statistiques_ca .statistiques_precision {
     margin-top: 16px;
-}
-
-@media (max-width: 1200px) {
-    .tableau_bord .statistiques_filtres {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .statistiques_actions {
-        flex-wrap: wrap;
-    }
-
-    .statistiques_resume {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 600px) {
-    .tableau_bord .statistiques_filtres {
-        grid-template-columns: 1fr;
-    }
-
-    .tableau_bord .statistiques_carte {
-        padding: 16px;
-    }
-
-    .tableau_bord .statistiques_valeur {
-        font-size: 1.6rem;
-    }
-
-    .statistiques_icone {
-        width: 48px;
-        height: 48px;
-    }
 }
