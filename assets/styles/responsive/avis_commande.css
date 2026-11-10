@@ -1,0 +1,29 @@
+/* avis_commande — adaptations regroupées, proposition à vérifier après application. */
+
+/* Formulaire de dépôt d'avis, distinct du carrousel de l'accueil. */
+.avisCommande {
+    min-height: 0;
+    margin: 3rem var(--marge-page);
+}
+.avisCommande form {
+    width: min(100%, 36rem);
+    min-width: 0;
+}
+.avisCommande .data input,
+.avisCommande .data select,
+.avisCommande .data textarea {
+    width: 100%;
+    min-width: 0;
+    font-size: 1rem;
+}
+.avisCommande .data textarea.input {
+    height: auto;
+    min-height: 10rem;
+    padding: .75rem;
+    resize: vertical;
+}
+.avisCommande button { min-height: 2.75rem; }
+@media (width < 768px) {
+    .avisCommande button { width: 100%; }
+}
+

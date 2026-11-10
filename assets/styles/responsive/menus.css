@@ -1,0 +1,406 @@
+/* menus — adaptations regroupées, proposition à vérifier après application. */
+.small_menu > * {
+    min-width: 0;
+}
+
+@media (width > 1440px) {
+.all_menus_content {
+        width: 71.25rem;
+        margin-inline: auto;
+    }
+
+}
+
+@media (width < 1200px) {
+.all_menus_content {
+        width: auto;
+        margin-inline: var(--marge-page);
+    }
+
+.filtres {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.25rem;
+    }
+
+}
+
+.filtres_toggle {
+    display: none;
+}
+
+.filtres_panneau[hidden] {
+    display: none;
+}
+
+@media (width < 1200px) {
+.filtres_content,
+.price_range {
+        min-width: 0;
+    }
+
+.filtres_content select,
+.filtres_content > input {
+        width: 100%;
+        min-width: 0;
+    }
+
+.price_range input {
+        flex: 1;
+        width: 0;
+        min-width: 0;
+    }
+
+}
+
+@media (width < 768px) {
+.filtres_toggle {
+        display: block;
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 20px;
+        border: 0;
+        border-radius: 25px;
+        color: #252424;
+        background: transparent;
+        font: inherit;
+        cursor: pointer;
+    }
+
+.filtres {
+        padding: 16px;
+        gap: 16px;
+    }
+
+.filtres_content label {
+        font-size: 12px;
+        letter-spacing: 0;
+        flex-wrap: wrap;
+    }
+
+.filtres_content select,
+.filtres_content input {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+.btn_filtres {
+        flex-direction: column;
+        gap: 12px;
+        padding: 0 16px 16px;
+    }
+
+.btn_filtres .btn4 {
+        width: 100%;
+        min-height: 44px;
+    }
+
+}
+
+@media (width < 380px) {
+.filtres {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+}
+
+.all_menus .menu_details {
+    min-width: 0;
+}
+
+.all_menus .menu_details_top h3 {
+    padding-inline: 2rem;
+    overflow-wrap: anywhere;
+}
+
+.all_menus .legende {
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.all_menus .legende_content {
+    flex-wrap: wrap;
+    align-items: center;
+    min-width: 0;
+}
+
+.all_menus .legende_content img {
+    flex: 0 0 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.all_menus .menu_details_middle {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.all_menus .menu_details_element {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.all_menus .menu_details_element img {
+    object-fit: cover;
+    height: clamp(8rem, 12vw, 12rem);
+}
+
+.all_menus .menu_details_bottom {
+    gap: 2rem;
+}
+
+.all_menus .bottom_conditions,
+.all_menus .bottom_cta {
+    min-width: 0;
+}
+
+@media (width < 768px) {
+.all_menus .menu_details {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+.all_menus .menu_details_top {
+        gap: 1rem;
+    }
+
+.all_menus .menu_details .btn_fermer {
+        top: .5rem;
+        right: .5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+.all_menus .btn_fermer img {
+        width: 1.5rem;
+    }
+
+.all_menus .legende {
+        flex-direction: column;
+        align-items: stretch;
+        gap: .625rem;
+        text-align: left;
+    }
+
+.all_menus .legende_content {
+        justify-content: flex-start;
+        column-gap: .5rem;
+    }
+
+.all_menus .menu_details_middle {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        gap: 1.25rem;
+        margin: 1.25rem 0;
+        padding: 0;
+        background: transparent;
+        border-radius: 0;
+    }
+
+.all_menus .menu_details_element {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+        grid-template-areas:
+            "titre titre"
+            "image description"
+            "allergenes allergenes";
+        align-items: center;
+        gap: .75rem 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: .875rem;
+    }
+
+.all_menus .menu_details_element h5 {
+        grid-area: titre;
+        padding: 0;
+        font-size: 1rem;
+    }
+
+.all_menus .menu_details_element > p {
+        grid-area: description;
+    }
+
+.all_menus .menu_details_element > span {
+        grid-area: allergenes;
+    }
+
+.all_menus .menu_details_element > img {
+        grid-area: image;
+        width: 100%;
+        max-width: 16rem;
+        height: auto;
+        aspect-ratio: 3 / 2;
+        justify-self: center;
+        margin: 0;
+        border-radius: .5rem;
+    }
+
+.all_menus .menu_details_bottom {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0;
+        gap: 1.5rem;
+        background: transparent;
+        border-radius: 0;
+    }
+
+.all_menus .bottom_conditions {
+        margin-left: 1rem;
+        text-align: left;
+    }
+
+.all_menus .bottom_cta {
+        gap: .75rem;
+        text-align: center;
+    }
+
+.all_menus .bottom_cta .btn2 {
+        max-width: 100%;
+        min-height: 2.75rem;
+        text-align: center;
+    }
+
+}
+
+@media (width < 380px) {
+.all_menus .menu_details {
+        padding: 1rem;
+    }
+
+.all_menus .menu_details_element {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "titre"
+            "image"
+            "description"
+            "allergenes";
+    }
+
+}
+
+.all_menus .small_menu {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.all_menus .small_menu .menu {
+    min-width: 0;
+}
+
+.all_menus .small_menu .visuel_menu {
+    object-fit: cover;
+}
+
+.all_menus .small_menu .menu_content_text,
+.all_menus .small_menu .regime,
+.all_menus .small_menu .min_pers {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.all_menus .small_menu .regime p {
+    flex-wrap: wrap;
+}
+
+@media (width < 1200px) {
+.all_menus .small_menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+    }
+
+}
+
+@media (width < 768px) {
+.all_menus .small_menu {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+.all_menus .small_menu .menu {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+            "image theme"
+            "image regime"
+            "image minimum"
+            "texte texte"
+            "ligne ligne"
+            "prix bouton";
+        align-items: center;
+        gap: .75rem 1rem;
+        padding: 1rem;
+    }
+
+.all_menus .small_menu .menu_content_top,
+.all_menus .small_menu .menu_content_bottom,
+.all_menus .small_menu .conditions {
+        display: contents;
+    }
+
+.all_menus .small_menu .visuel_menu {
+        grid-area: image;
+        width: 100%;
+        height: 8rem;
+        border-radius: .75rem;
+    }
+
+.all_menus .small_menu .theme {
+        grid-area: theme;
+        position: static;
+        justify-self: start;
+        max-width: 100%;
+        padding: .25rem .5rem;
+        background: #daa481;
+    }
+
+.all_menus .small_menu .theme p {
+        overflow-wrap: anywhere;
+    }
+
+.all_menus .small_menu .regime {
+        grid-area: regime;
+    }
+
+.all_menus .small_menu .regime p {
+        gap: .25rem;
+    }
+
+.all_menus .small_menu .min_pers {
+        grid-area: minimum;
+        flex-wrap: wrap;
+    }
+
+.all_menus .small_menu .menu_content_text {
+        grid-area: texte;
+        padding: .5rem 0;
+        text-align: left;
+    }
+
+.all_menus .small_menu .menu_line {
+        grid-area: ligne;
+        margin: 0;
+    }
+
+.all_menus .small_menu .price {
+        grid-area: prix;
+    }
+
+.all_menus .small_menu .btn_menu {
+        grid-area: bouton;
+        justify-self: end;
+        max-width: 100%;
+        height: auto;
+        min-height: 2.75rem;
+        padding: .5rem;
+    }
+
+.all_menus .null_menu {
+        min-height: 0;
+        margin: 0;
+        padding-block: 2rem;
+    }
+
+}
+
+

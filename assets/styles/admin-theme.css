@@ -1,0 +1,106 @@
+/* À créer dans assets/styles/admin-theme.css.
+   Charger dans admin.js après pages/admin.css, avant responsive/admin.css.
+   Proposition à contrôler après application, en clair et en sombre. */
+
+body.ea {
+    --admin-accent: #daa481;
+    --admin-accent-hover: #c88f6c;
+    --admin-accent-active: #b77c58;
+    --admin-accent-texte: #252424;
+    --admin-sidebar-fond: #faebd8;
+    --admin-sidebar-texte: #252424;
+    --admin-sidebar-secondaire: #696968;
+    --admin-sidebar-survol: #efd8bd;
+    --admin-sidebar-survol-texte: #252424;
+
+    /* Variables utilisées par les boutons natifs de la version installée. */
+    --button-primary-bg: var(--admin-accent);
+    --button-primary-color: var(--admin-accent-texte);
+    --button-primary-icon-color: var(--admin-accent-texte);
+    --button-primary-border-color: var(--admin-accent);
+    --button-primary-hover-bg: var(--admin-accent-hover);
+    --button-primary-hover-color: var(--admin-accent-texte);
+    --button-primary-hover-border-color: var(--admin-accent-hover);
+    --button-primary-active-bg: var(--admin-accent-active);
+    --button-primary-active-color: var(--admin-accent-texte);
+    --button-primary-active-border-color: var(--admin-accent-active);
+    --button-focus-outline-color: var(--admin-accent-hover);
+}
+
+body.ea.ea-dark-scheme {
+    --admin-sidebar-fond: #252424;
+    --admin-sidebar-texte: #f5efe8;
+    --admin-sidebar-secondaire: #bbb2a8;
+    --admin-sidebar-survol: #40352e;
+    --admin-sidebar-survol-texte: #fff4e6;
+}
+
+/* Retour au site : texte sombre sur le fond beige dans les deux thèmes. */
+body.ea .admin_entete_site,
+body.ea .admin_entete_site:hover,
+body.ea .admin_entete_site:focus-visible {
+    color: #252424;
+}
+
+body.ea .admin_entete_site {
+    background-color: #faebd8;
+    border-color: #faebd8;
+}
+
+body.ea .admin_entete_site:hover {
+    background-color: var(--admin-accent);
+    border-color: var(--admin-accent);
+}
+
+/* Sidebar : variables locales, communes au panneau desktop et mobile. */
+body.ea .ea-sidebar {
+    --sidebar-bg: var(--admin-sidebar-fond);
+    --sidebar-logo-color: var(--admin-sidebar-texte);
+    --sidebar-menu-color: var(--admin-sidebar-texte);
+    --sidebar-menu-submenu-color: var(--admin-sidebar-texte);
+    --sidebar-menu-icon-color: var(--admin-sidebar-texte);
+    --sidebar-menu-header-color: var(--admin-sidebar-secondaire);
+    --sidebar-item-hover-bg: var(--admin-sidebar-survol);
+    --sidebar-menu-hover-color: var(--admin-sidebar-survol-texte);
+    --sidebar-menu-active-item-bg: var(--admin-accent);
+    --sidebar-menu-active-item-color: var(--admin-accent-texte);
+}
+
+body.ea .ea-sidebar .ea-sidebar-group-label-text {
+    color: var(--sidebar-menu-header-color);
+}
+
+body.ea .ea-sidebar .ea-sidebar-item-label {
+    color: inherit;
+}
+
+body.ea .ea-sidebar .ea-sidebar-item-icon {
+    color: var(--sidebar-menu-icon-color);
+}
+
+body.ea .ea-sidebar .ea-sidebar-item.is-active {
+    background-color: var(--sidebar-menu-active-item-bg);
+    border: 1px solid transparent;
+    border-radius: .3125rem;
+}
+
+body.ea .ea-sidebar .ea-sidebar-item.is-active > .ea-sidebar-item-link,
+body.ea .ea-sidebar .ea-sidebar-item.is-active > .ea-sidebar-item-link .ea-sidebar-item-label,
+body.ea .ea-sidebar .ea-sidebar-item.is-active > .ea-sidebar-item-link .ea-sidebar-item-icon {
+    color: var(--sidebar-menu-active-item-color);
+}
+
+body.ea .ea-sidebar .ea-sidebar-item:not(.is-active) > .ea-sidebar-item-link:hover,
+body.ea .ea-sidebar .ea-sidebar-item:not(.is-active) > .ea-sidebar-item-link:hover .ea-sidebar-item-icon {
+    color: var(--sidebar-menu-hover-color);
+}
+
+/* Encadré beige du détail et bouton d'abandon sur fond clair/sombre. */
+body.ea .details_body .infos {
+    color: #252424;
+}
+
+body.ea .btn_abandonner {
+    color: var(--text-primary-color);
+    border-color: var(--border-color);
+}

@@ -1,0 +1,18 @@
+/* legal — adaptations regroupées, proposition à vérifier après application. */
+@media (width > 1440px) {
+.legal {
+        width: 77.5rem;
+        margin-inline: auto;
+    }
+
+}
+
+@media (width < 1200px) {
+.legal {
+        width: auto;
+        margin-inline: var(--marge-page);
+    }
+
+}
+
+

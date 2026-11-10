@@ -1,0 +1,46 @@
+/* commande — adaptations regroupées, proposition à vérifier après application. */
+.recap_commande > * {
+    min-width: 0;
+}
+
+@media (width < 768px) {
+.recap_commande {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+.commande_right .sticky {
+        position: static;
+    }
+
+}
+
+
+/* Récapitulatif : garder une largeur de lecture utile sur tablette. */
+@media (width < 1200px) {
+    .recap_commande {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+        min-height: 0;
+        margin: 3rem var(--marge-page);
+    }
+    .commande_right .sticky { position: static; }
+    .commande_right_prix { min-height: 0; padding: 2rem; }
+    .recap_commande .panier,
+    .recap_commande .livraison,
+    .recap_commande .materiel,
+    .recap_commande .commande { padding: 1.5rem; }
+    .recap_commande .livraison_content { flex-wrap: wrap; gap: .5rem; }
+    .recap_commande .livraison_content input { min-width: 0; max-width: 100%; }
+    .recap_commande .commande_checkbox,
+    .recap_commande .materiel_radio { gap: .75rem; align-items: flex-start; }
+}
+@media (width < 768px) {
+    .recap_commande .livraison_content { flex-direction: column; align-items: stretch; }
+    .recap_commande .livraison_content input { width: 100%; font-size: 1rem; }
+    .recap_commande .panier_content { flex-wrap: wrap; gap: .5rem; }
+    .recap_commande .panier_content_menu { padding-right: 2rem; }
+    .recap_commande .commande_right_prix { padding: 1.5rem; }
+    .success { margin: 3rem var(--marge-page); min-height: 0; }
+    .success_content { min-width: 0; overflow-wrap: anywhere; }
+}
+

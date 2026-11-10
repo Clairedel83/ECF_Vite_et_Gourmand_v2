@@ -1,0 +1,47 @@
+/* authentification — adaptations regroupées, proposition à vérifier après application. */
+@media (width < 1200px) {
+.form_connexion {
+        width: min(480px, calc(100% - 2 * var(--marge-page)));
+    }
+
+.formulaire_inscription {
+        width: min(720px, calc(100% - 2 * var(--marge-page)));
+    }
+
+}
+
+@media (width < 768px) {
+.formulaire-flex {
+        flex-direction: column;
+        gap: 0;
+    }
+
+.formulaire-flex .data {
+        min-width: 0;
+    }
+
+.form_connexion,
+.formulaire_inscription {
+        padding: 24px 16px;
+    }
+
+.data_connexion {
+        width: 100%;
+    }
+
+.form_connexion button,
+#inscription_user_submit {
+        width: 100%;
+        min-height: 44px;
+    }
+
+}
+
+@media (width >= 1200px) {
+.form_connexion {
+        width: 25%;
+    }
+
+}
+
+

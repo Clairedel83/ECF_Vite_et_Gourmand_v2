@@ -1,0 +1,340 @@
+/* Proposition : assets/styles/responsive/admin.css.
+   Charger uniquement dans assets/admin.js, APRÈS pages/admin.css.
+   Règles regroupées par écran, toutes tailles comprises.
+   À vérifier après application ; aucun fichier du site modifié. */
+
+/* ===== Structure et listes natives ===== */
+body.ea .main-content,
+body.ea .content-wrapper,
+body.ea .content,
+body.ea .content-body {
+    min-width: 0;
+}
+
+/* Le défilement éventuel reste dans la liste, pas sur toute la page.
+   Ne pas ajouter overflow-x:hidden sur body : cela cacherait des actions. */
+body.ea.ea-index #main {
+    position: relative;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+body.ea .content-header-title,
+body.ea .page-actions,
+body.ea .admin_entete_nom_role {
+    min-width: 0;
+}
+
+body.ea .admin_entete_nom {
+    overflow-wrap: anywhere;
+}
+
+@media (width < 1200px) {
+    body.ea .content-header {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    body.ea .page-actions {
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+
+    body.ea .list-pagination {
+        flex-wrap: wrap;
+        gap: .75rem;
+    }
+
+    body.ea .pagination {
+        flex-wrap: wrap;
+    }
+}
+
+@media (width < 768px) {
+    body.ea .content-header .page-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    body.ea .page-actions .btn {
+        max-width: 100%;
+        white-space: normal;
+        min-height: 2.75rem;
+    }
+
+    body.ea .page-actions .dropdown-menu {
+        max-width: calc(100vw - 2rem);
+    }
+}
+
+/* ===== Formulaires CRUD ===== */
+body.ea :is(.ea-fileupload-card, .ea-fileupload-card-body, .ts-wrapper) {
+    min-width: 0;
+    max-width: 100%;
+}
+
+body.ea .ea-fileupload-card-filename {
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+body.ea .ts-control > .item {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+@media (width < 768px) {
+    body.ea :is(.form-control, .form-select, .ts-control) {
+        max-width: 100%;
+        font-size: 1rem;
+    }
+}
+
+/* ===== Détail personnalisé de commande ===== */
+body.ea .details_body {
+    grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+}
+
+body.ea .details_body > *,
+body.ea .details_content,
+body.ea .details_content_sub {
+    min-width: 0;
+}
+
+body.ea .details_title_header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+body.ea .details_title_header h3,
+body.ea .details_content td {
+    overflow-wrap: anywhere;
+}
+
+body.ea .details_content h5 {
+    color: #252424;
+}
+
+body.ea .details_content_left {
+    gap: 2rem;
+}
+
+body.ea .details_content .client {
+    width: 2rem;
+}
+
+body.ea #form_modification_commande :is(input, select, textarea) {
+    min-width: 0;
+    max-width: 100%;
+}
+
+body.ea #form_modification_commande :is(input[type="date"], input[type="time"]) {
+    width: min(100%, 14rem);
+}
+
+body.ea #form_modification_commande input[type="number"] {
+    width: min(100%, 8rem);
+}
+
+body.ea .details_body .btn_form {
+    flex-wrap: wrap;
+}
+
+body.ea .details_body .btn3 {
+    white-space: normal;
+    min-height: 2.75rem;
+    gap: .5rem;
+}
+
+body.ea .details_content .historique {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+body.ea .historique .badge {
+    white-space: normal;
+}
+
+@media (width < 1200px) {
+    body.ea .details_body {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+    }
+}
+
+@media (width < 768px) {
+    body.ea .details_title {
+        margin-bottom: 2rem;
+    }
+
+    body.ea .details_content_sub {
+        padding: 0 .75rem .75rem;
+    }
+
+    body.ea .details_content table {
+        table-layout: fixed;
+    }
+
+    body.ea .details_content .prestation {
+        width: 30%;
+    }
+
+    body.ea .details_body :is(th, td) {
+        overflow-wrap: anywhere;
+    }
+
+    body.ea .details_content .badge {
+        max-width: 100%;
+        padding: .25rem .5rem;
+        white-space: normal;
+    }
+
+    body.ea .commande_actions {
+        gap: 1rem;
+        margin-block: 1.5rem;
+    }
+
+    body.ea #form_modification_commande :is(input, select, textarea) {
+        font-size: 1rem;
+    }
+}
+
+/* ===== Modale d'annulation : largeur utile et défilement du corps ===== */
+body.ea #annulationCommandeModal {
+    --bs-modal-width: 36rem;
+}
+
+body.ea #annulationCommandeModal .modal-dialog {
+    width: min(36rem, calc(100% - 2rem));
+    max-width: none;
+    margin: 1rem auto;
+}
+
+body.ea #annulationCommandeModal .modal-content {
+    max-height: calc(100dvh - 2rem);
+}
+
+body.ea #annulationCommandeModal .modal-header {
+    color: #252424;
+    flex-shrink: 0;
+    gap: 1rem;
+}
+
+body.ea #annulationCommandeModal .modal-body {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+}
+
+body.ea #annulationCommandeModal .modal-client table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+body.ea #annulationCommandeModal .modal-client th {
+    width: 2rem;
+}
+
+body.ea #annulationCommandeModal .modal-textarea {
+    min-height: 6rem;
+    height: auto;
+    resize: vertical;
+}
+
+body.ea #annulationCommandeModal :is(.modal-select, .modal-textarea) {
+    width: 100%;
+    min-width: 0;
+}
+
+body.ea #annulationCommandeModal .modal-form-checkbox {
+    align-items: flex-start;
+    gap: .75rem;
+}
+
+body.ea #annulationCommandeModal .modal-cta {
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+@media (width < 768px) {
+    body.ea #annulationCommandeModal :is(.modal-select, .modal-textarea) {
+        font-size: 1rem;
+    }
+
+    body.ea #annulationCommandeModal .modal-cta {
+        flex-direction: column;
+    }
+
+    body.ea #annulationCommandeModal .btn_modal {
+        min-height: 2.75rem;
+    }
+}
+
+/* ===== Tableau de bord ===== */
+body.ea .tableau_bord .statistiques_filtres {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr) auto;
+}
+
+body.ea .statistiques_resume > *,
+body.ea .statistiques_indicateur > * {
+    min-width: 0;
+}
+
+body.ea .statistiques_valeur {
+    overflow-wrap: anywhere;
+}
+
+@media (width < 1440px) {
+    body.ea .tableau_bord .statistiques_filtres {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.ea .statistiques_actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (width < 1200px) {
+    body.ea .statistiques_resume {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (width < 768px) {
+    body.ea .tableau_bord .statistiques_filtres {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.ea .tableau_bord .statistiques_carte {
+        padding: 1rem;
+    }
+
+    body.ea .tableau_bord .statistiques_valeur {
+        font-size: 1.6rem;
+    }
+
+    body.ea .statistiques_icone {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    body.ea .statistiques_actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.ea .statistiques_actions :is(button, a) {
+        width: 100%;
+        min-height: 2.75rem;
+    }
+
+    body.ea .statistiques_canvas {
+        height: 20rem;
+    }
+
+    body.ea .statistiques_ca .statistiques_canvas {
+        height: 20rem;
+    }
+}

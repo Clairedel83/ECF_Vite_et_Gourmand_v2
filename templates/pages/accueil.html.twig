@@ -24,12 +24,12 @@
 
                 <div class="flex boxes">
                     <div class="flex box2">
-                        <img class="visuel" src="{{ asset('/images/julie_jose.webp') }}" alt="Les fondateurs de Vite & Gourmand : Julie et José" class="img img-julie-jose">
-                        <img class="visuel" src="{{ asset('images/assiette.webp') }}" alt="Assiette d’entrée élégante composée de salade fraîche, foie gras et pain, dressée sur une table de restaurant avec ambiance chaleureuse en arrière-plan." class="img img-assiettes">
+                        <img src="{{ asset('/images/julie_jose.webp') }}" alt="Les fondateurs de Vite & Gourmand : Julie et José" class="visuel img img-julie-jose">
+                        <img src="{{ asset('images/assiette.webp') }}" alt="Assiette d’entrée élégante composée de salade fraîche, foie gras et pain, dressée sur une table de restaurant avec ambiance chaleureuse en arrière-plan." class="visuel img img-assiettes">
                     </div>
                     
                     <div class="flex box3">
-                        <img class="visuel" src="{{ asset('images/verrines.webp') }}" alt="Verrines apéritives élégantes de crème salée garnies de crackers et d’herbes fraîches, présentées en série sur un plateau blanc." class="img img-verrines">
+                        <img src="{{ asset('images/verrines.webp') }}" alt="Verrines apéritives élégantes de crème salée garnies de crackers et d’herbes fraîches, présentées en série sur un plateau blanc." class="visuel img img-verrines">
                     </div>
                 </div>
             </div>
@@ -128,15 +128,11 @@
                                         <p>Min : {{ menu.nbreMin }} pers.</p>
                                     </div>
                                 </div>
-
-                                <button href="" class="btn2 btn_menu" data-menu-id='{{ menu.id }}'>Voir le menu</button>
                             </div>
                         </div>
                     {% endif %}
                     
                 {% endfor %}
-                
-            </div>
             </div>
 
             <a href="{{ path('app_menus')}}" class="btn1 nav_item">

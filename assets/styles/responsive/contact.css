@@ -1,0 +1,92 @@
+/* contact — adaptations regroupées, proposition à vérifier après application. */
+@media (width < 1200px) {
+.contact {
+        flex-direction: column;
+        gap: 32px;
+        margin-block: var(--espace-section);
+    }
+
+.contact_visuel,
+.formulaire_contact {
+        width: min(720px, calc(100% - 2 * var(--marge-page)));
+        height: auto;
+    }
+
+.contact_visuel_content {
+        height: auto;
+        padding: 20px;
+    }
+
+.contact_visuel .beige_container {
+        position: static;
+        width: 100%;
+        gap: 32px;
+    }
+
+}
+
+@media (width < 768px) {
+.formulaire_contact {
+        padding: 24px 16px;
+    }
+
+.formulaire_contact button {
+        width: 100%;
+        min-height: 44px;
+    }
+
+.contact_visuel .beige_container {
+        padding: 20px 16px;
+    }
+
+.contact_visuel .icon {
+        flex-wrap: wrap;
+    }
+
+.contact_visuel a {
+        overflow-wrap: anywhere;
+    }
+
+}
+
+@media (width >= 1200px) {
+.contact {
+        min-height: 0;
+        margin-block: 6rem;
+        align-items: stretch;
+    }
+
+.contact .contact_visuel {
+        height: auto;
+    }
+
+.contact_visuel,
+.formulaire_contact {
+        width:25%;
+    }
+
+.contact .contact_visuel_content {
+        height: 100%;
+        padding: 2rem;
+    }
+
+.contact .beige_container {
+        position: static;
+        width: 100%;
+        min-height: 30rem;
+        height: 100%;
+        padding: 1.5rem;
+        gap: 2rem;
+    }
+
+.contact .data {
+        margin-bottom: 1.5rem;
+    }
+
+.contact .data label {
+        margin-bottom: 0.5rem;
+    }
+
+}
+
+
