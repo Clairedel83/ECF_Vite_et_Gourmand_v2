@@ -135,7 +135,7 @@
                 {% endfor %}
             </div>
 
-            <a href="{{ path('app_menus')}}" class="btn1 nav_item">
+            <a href="{{ path('app_menus') }}" class="btn1 nav_item">
                 <span>VOIR LES MENUS</span>
             </a>
 
@@ -147,40 +147,47 @@
                 <p>Chaque événement est une expérience unique, voici ce qu’ils en ont pensé.</p>
             </div>
 
-            <div class="avis_container">
-                <div class="avis">
-                    <div class="avis_top">
-                        <h5>Bruno A.</h5>
-                        <p>10/10</p>
-                    </div>
+            {# CAROUSEL DES AVIS #}
+            <div class="avis_container" id="carousel_avis" tabindex="0" role="region" aria-label="Avis clients">
+                {% for avi in avis %}
+                    <div class="avis">
+                        <div class="avis_top">
+                            <h5>{{ avi.commande.user.prenom }}</h5>
+                            <p>{{ avi.note }}/5</p>
+                        </div>
 
-                    <div class="avis_bottom">
-                        <p>“Service impeccable et cuisine raffinée, tout était savoureux et parfaitement présenté. L’équipe a su s’adapter à nos besoins avec professionnalisme. Une prestation au-delà de nos attentes.”</p>
+                        <div class="avis_bottom">
+                            <p>{{ avi.contenu }}</p>
+                        </div>
                     </div>
-                </div>
-
-                <div class="avis">
-                    <div class="avis_top">
-                        <h5>Johanna B.</h5>
-                        <p>10/10</p>
-                    </div>
-
-                    <div class="avis_bottom">
-                        <p>“Une expérience parfaite du début à la fin, des plats délicieux et une organisation irréprochable. Nous avons été conquis, tout comme nos invités. Vite & Gourmand porte vraiment bien son nom.”</p>
-                    </div>
-                </div>
-
-                <div class="avis">
-                    <div class="avis_top">
-                        <h5>Laurie T.</h5>
-                        <p>9.5/10</p>
-                    </div>
-
-                    <div class="avis_bottom">
-                        <p>“Nous avons fait appel à ce traiteur pour un baptême et tout était absolument réussi. Qualité des produits, ponctualité et gentillesse étaient au rendez-vous. Nous recommandons sans hésiter.”</p>
-                    </div>
-                </div>
+                {% else %}
+                    <p>Aucun avis publié pour le moment.</p>
+                {% endfor %}
             </div>
+
+            {# Repères de navigation sur mobile et tablette. #}
+            {% if avis|length > 1 %}
+                <div class="avis_reperes" role="group" aria-label="Choisir un avis">
+                    {% for avi in avis %}
+                        <button type="button" class="avis_repere{% if loop.first %} actif{% endif %}" data-index="{{ loop.index0 }}" aria-label="Afficher l’avis {{ loop.index }} sur {{ avis|length }}" aria-controls="carousel_avis" aria-current="{{ loop.first ? 'true' : 'false' }}">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {# Commandes de défilement, placées sous les cartes. #}
+            {% if avis|length > 3 %}
+                <div class="avis_navigation">
+                    <button type="button" id="avis_precedent" aria-label="Afficher les avis précédents" aria-controls="carousel_avis">
+                        <span aria-hidden="true">←</span>
+                    </button>
+
+                    <button type="button" id="avis_suivant" aria-label="Afficher les avis suivants" aria-controls="carousel_avis">
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+            {% endif %}
 
         </section>
         </div>

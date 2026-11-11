@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\AvisRepository;
 use App\Repository\MenuRepository;
 use App\Services\MailService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,15 +13,22 @@ final class PagesController extends AbstractController
 {
   
     #[Route('/', name: 'app_accueil')]
-    public function accueil(MenuRepository $menuRepository): Response
+    public function accueil(MenuRepository $menuRepository, AvisRepository $avisRepository): Response
     {
         // récupère uniquement les menus actifs
         $menus = $menuRepository->findBy([
             'isActive' => true,
         ]);
 
+        // récupère les avis validés
+        $avis = $avisRepository->findBy(
+            ['statut' => 2],
+            ['dateCreation' => 'DESC', 'id' => 'DESC']
+        );
+
         return $this->render('pages/accueil.html.twig', [
             'menus' => $menus,
+            'avis' => $avis,
         ]);
     }
 

@@ -104,3 +104,10 @@ body.ea .btn_abandonner {
     color: var(--text-primary-color);
     border-color: var(--border-color);
 }
+
+body.ea #flash-messages .alert-warning {
+    color: #b42318;
+    background-color: #fde3e3;
+    border-color: #e7a1a1;
+    font-weight: 600;
+}

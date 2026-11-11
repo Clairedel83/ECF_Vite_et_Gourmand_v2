@@ -53,3 +53,10 @@
 #reset_pass_submit{
     margin: 0;
 }
+
+.form_connexion .form_error {
+    color: #b42318;
+    font-weight: 600;
+    text-align: center;
+}
+

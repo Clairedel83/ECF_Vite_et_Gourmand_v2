@@ -163,18 +163,72 @@
     text-align: center;
 }
 
-.avis_container{
+/* Carrousel des avis */
+.avis_container {
     display: flex;
-    justify-content: space-between;
+    align-items: stretch;
+    gap: 24px;
+    width: 100%;
+    min-width: 0;
+    margin-top: 40px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
 }
 
-.avis{
+/* Masque la barre de défilement sur les navigateurs concernés. */
+.avis_container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Trois cartes visibles, en tenant compte des deux espaces de 24 px. */
+.avis_container .avis {
+    flex: 0 0 calc((100% - 48px) / 3);
+    min-width: 0;
+    margin: 0;
+    padding-bottom: 20px;
     background-color: #F7E0C4;
-    width:30%;
-    height:90%;
-    margin-top:40px;
     border-radius: 10px;
-    /* padding-bottom: 20px; */
+    scroll-snap-align: start;
+    overflow-wrap: anywhere;
+}
+
+/* Boutons placés sous le carrousel. */
+.avis_navigation {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.avis_navigation button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: #603b24;
+    background-color: #F7E0C4;
+    border: 1px solid #daa481;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.avis_navigation button:hover {
+    background-color: #daa481;
+}
+
+.avis_navigation button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.avis_container:focus-visible,
+.avis_navigation button:focus-visible {
+    outline: 2px solid #603b24;
+    outline-offset: 4px;
 }
 
 .avis_top{
@@ -187,4 +241,9 @@
 .avis_bottom{
     margin: 10px 20px;
     text-align:justify;
+}
+
+/* réservés aux tailles mobile et tablette */
+.avis_reperes {
+    display: none;
 }

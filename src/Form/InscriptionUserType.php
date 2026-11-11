@@ -28,6 +28,10 @@ class InscriptionUserType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(
                         message: 'Veuillez renseigner votre adresse email.'
+                    ),
+
+                    new Assert\Email(
+                        message: 'Veuillez renseigner une adresse email valide.'
                     )],
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -39,6 +43,10 @@ class InscriptionUserType extends AbstractType
                     new Assert\Length(
                         min:10,
                         minMessage:'Le mot de passe doit contenir au moins 10 caractères.'
+                    ),
+
+                    new Assert\NotBlank(
+                        message: 'Veuillez renseigner votre mot de passe.'
                     ),
 
                     new Assert\Regex(

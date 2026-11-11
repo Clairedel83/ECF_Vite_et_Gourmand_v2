@@ -31,16 +31,16 @@ final class AvisCommandeController extends AbstractController
         // Vérifie que le statut de commande permet d'ajouter un avis
         $statutCommande = $commande->getStatut();
 
-        if($statutCommande !== 7){
+        if ($statutCommande !== 7) {
             $this->addFlash(
                 'warning',
-                'Cette commande est toujours en cours. Attendez qu\'elle soit terminée pour envoyer votre avis.'
+                'Vous pouvez déposer un avis uniquement pour une commande terminée.'
             );
             return $this->redirectToRoute('app_accueil');
         }
 
         // Vérifie que cette commande n'a pas déjà un avis
-        if($commande->getAvis() !== null){
+        if ($commande->getAvis() !== null) {
             $this->addFlash(
                 'warning',
                 'Cette commande possède déjà un avis.'
@@ -60,7 +60,7 @@ final class AvisCommandeController extends AbstractController
         $formAvis->handleRequest($request);
 
 
-        if($formAvis->isSubmitted() && $formAvis->isValid()){
+        if ($formAvis->isSubmitted() && $formAvis->isValid()) {
             // rattache l'avis à la commande
             $commande->setAvis($avis);
 

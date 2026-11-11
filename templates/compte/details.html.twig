@@ -83,7 +83,13 @@
                         </tr>
                         <tr>
                             <th>Prêt de matériel</th>
-                            <td>{{commande.pretMateriel}}</td>
+                            <td>
+                                {% if commande.pretMateriel %}
+                                    Oui
+                                {% else %}
+                                    Non
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <th>Prix matériel</th>
