@@ -71,7 +71,8 @@ final class ConnexionController extends AbstractController
                 $prenom = $user->getPrenom();
                 // génère l'url envoyé par mail
                 $variables = [
-                    'confirmation_link' => $this->generateUrl('app_mdp_nouveau', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL)
+                    'confirmation_link' => $this->generateUrl('app_mdp_nouveau', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'prenom' => $prenom,
                 ];
 
                 try {

@@ -43,12 +43,12 @@
 
 }
 
-@media (width < 1400px) {
+@media (width < 1200px) {
 .footer_top {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 2rem;
-    }
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+}
 
 }
 

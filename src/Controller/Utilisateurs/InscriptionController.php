@@ -48,11 +48,13 @@ final class InscriptionController extends AbstractController
             // Envoi du mail automatique de bienvenue
             $mail = new MailService();
             $prenom = $user->getPrenom();
-            $nom = $user->getNom();
             $adresseMail = $user->getEmail(); 
+            $variables = [
+                'prenom' => $prenom,
+            ];
 
             try{
-                $mail->envoyerMail($adresseMail, $prenom.' '.$nom, '', 8482760);
+                $mail->envoyerMail($adresseMail, $prenom, '', 8482760, $variables);
             } catch(\Exception $exception){
                 $this->addFlash(
                     'warning',

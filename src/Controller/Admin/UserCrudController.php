@@ -54,21 +54,21 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('nom')->setLabel('Nom')->hideOnForm(),
-            TextField::new('prenom')->setLabel('Prénom')->hideOnForm(),
-            EmailField::new('email')->setLabel('Email')->hideOnForm(),
-            TextField::new('password')->setLabel('Mot de passe')->setFormType(PasswordType::class)->hideOnIndex()->onlyWhenCreating()->hideOnDetail(),
+            TextField::new('nom')->setLabel('Nom')->hideWhenUpdating(),
+            TextField::new('prenom')->setLabel('Prénom')->hideWhenUpdating(),
+            EmailField::new('email')->setLabel('Email')->hideWhenUpdating(),
+            TextField::new('password')->setLabel('Mot de passe')->setFormType(PasswordType::class)->onlyWhenCreating(),
             TextField::new('telephone')->setLabel('Téléphone')->onlyOnDetail(),
             TextField::new('adresse_postale')->setLabel('Adresse')->onlyOnDetail(),
             TextField::new('code_postal')->setLabel('Code postal')->onlyOnDetail(),
             TextField::new('ville')->setLabel('Ville')->onlyOnDetail(),
             AssociationField::new('Role')->setLabel('Rôle')->setQueryBuilder(
-                // fonction pour filtrer les rôles et ne proposer que 'Utilisateur' et 'Employé'
+                // La création concerne uniquement les employés
                 fn(QueryBuilder $qb) => $qb
-                    ->andWhere('entity.code != :admin')
-                    ->setParameter('admin', 'ROLE_ADMIN')
-            )->hideWhenCreating(),
-            BooleanField::new('isActive')->setLabel('Compte actif')->hideOnIndex(),
+                    ->andWhere('entity.code = :employe')
+                    ->setParameter('employe', 'ROLE_EMPLOYE')
+            )->hideWhenUpdating(),
+            BooleanField::new('isActive')->setLabel('Compte actif'),
         ];
     }
 
@@ -105,9 +105,12 @@ class UserCrudController extends AbstractCrudController
         // Envoi du mail automatique de bienvenue
         $mail = new MailService();
         $adresseMail = $user->getEmail();
+        $variables = [
+            'prenom' => $prenom . ' ' . $nom,
+        ];
 
         try {
-            $mail->envoyerMail($adresseMail, $prenom . ' ' . $nom, '', 8484212);
+            $mail->envoyerMail($adresseMail, $prenom, '', 8484212, $variables);
         } catch (\Exception $exception) {
             $this->addFlash(
                 'warning',
