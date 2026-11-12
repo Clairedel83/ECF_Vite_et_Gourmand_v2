@@ -11,7 +11,7 @@ services:
     working_dir: /var/www/html
     environment:
       # Connexion de Symfony au service MySQL nommé database
-      DATABASE_URL: "mysql://ecf_app:ecf_dev_2026@database:3306/vite_et_gourmand?serverVersion=8.4&charset=utf8mb4"
+      DATABASE_URL: "mysql://ecf_app:${MYSQL_PASSWORD}@database:3306/vite_et_gourmand?serverVersion=8.4&charset=utf8mb4"
       # Connexion de Symfony au service MongoDB nommé mongodb
       MONGODB_URI: "mongodb://mongodb:27017"
   
@@ -30,9 +30,9 @@ services:
       # utilisateur créé pour que symfony accède à la BDD
       MYSQL_USER: ecf_app    
       # mot de passe de l'utilisateur ecf_app
-      MYSQL_PASSWORD: ecf_dev_2026     
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       # mot de passe du compte administrateur root de mySQL
-      MYSQL_ROOT_PASSWORD: ecf_root_dev_2026  
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
     # volume géré par docker:dossier dans lequel MySQL va stocker ses données
       - database_data:/var/lib/mysql
