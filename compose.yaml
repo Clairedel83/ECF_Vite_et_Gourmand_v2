@@ -1,25 +1,42 @@
 
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-    healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
-      timeout: 5s
-      retries: 5
-      start_period: 60s
+  web:
+    # Construis l’image du service web en utilisant le Dockerfile situé dans ce dossier (php + apache + extensions)
+    build: .
+    ports:
+    # 8080 = port local ; 80 = port apache dans le conteneur
+      - "8080:80"
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - .:/var/www/html
+    working_dir: /var/www/html
+    environment:
+      # Connexion de Symfony au service MySQL nommé database
+      DATABASE_URL: "mysql://ecf_app:ecf_dev_2026@database:3306/vite_et_gourmand?serverVersion=8.4&charset=utf8mb4"
+      # Connexion de Symfony au service MongoDB nommé mongodb
+      MONGODB_URI: "mongodb://mongodb:27017"
+  
+  mongodb:
+    image: mongo:8.0
+    volumes:
+      # dossier dans lequel mongoDB va stocker ses données
+      - mongodb_data:/data/db
+
+  database:
+    image: mysql:8.4
+    restart: always
+    environment:
+      # nom de la BDD
+      MYSQL_DATABASE: vite_et_gourmand
+      # utilisateur créé pour que symfony accède à la BDD
+      MYSQL_USER: ecf_app    
+      # mot de passe de l'utilisateur ecf_app
+      MYSQL_PASSWORD: ecf_dev_2026     
+      # mot de passe du compte administrateur root de mySQL
+      MYSQL_ROOT_PASSWORD: ecf_root_dev_2026  
+    volumes:
+    # volume géré par docker:dossier dans lequel MySQL va stocker ses données
+      - database_data:/var/lib/mysql
 
 volumes:
-###> doctrine/doctrine-bundle ###
   database_data:
-###< doctrine/doctrine-bundle ###
+  mongodb_data:
