@@ -1,0 +1,8 @@
+# Récupère le domaine fourni au conteneur.
+{$SITE_DOMAIN} {
+    # Compresse les réponses lorsque c'est possible.
+    encode zstd gzip
+
+    # Transmet les demandes au service Apache nommé web.
+    reverse_proxy web:80
+}

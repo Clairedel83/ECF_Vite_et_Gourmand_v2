@@ -1,0 +1,18 @@
+# Historique Git
+.git/
+
+# Configuration et secrets fournis séparément en production (via OVH)
+.env*
+
+# Dépendances réinstallées pendant la construction de l'image
+vendor/
+
+# Cache et journaux locaux
+var/
+
+# Ressources réinstallées pendant la préparation de l'image
+public/bundles/
+assets/vendor/
+
+# Les assets de production sont générés pendant la construction.
+public/assets/

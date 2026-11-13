@@ -1,0 +1,72 @@
+FROM php:8.5.0-apache
+
+# Active la configuration PHP fournie pour la production.
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# Applique les réglages propres à l'application.
+COPY docker/php.prod.ini /usr/local/etc/php/conf.d/production.ini
+
+# Installe unzip pour extraire les dépendances téléchargées par Composer
+# apt-get update : actualise la liste des paquets disponibles.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# pars de l'image php+apache et ajoute le pilote php nécessaire à la connexion mySQL
+RUN docker-php-ext-install pdo_mysql
+
+# pars de l'image php+apache et ajoute le pilote php nécessaire à la connexion mongoDB
+RUN pecl install mongodb-2.5.0 \
+    && docker-php-ext-enable mongodb
+
+# Copie la configuration Apache du projet dans l’image pour servir uniquement le dossier public de Symfony au navigateur (sécurité)
+COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Ajoute Composer pour gérer les dépendances PHP du projet
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+
+
+
+# Définit le dossier de travail de l'application dans le conteneur
+WORKDIR /var/www/html
+
+# Copie le projet dans l'image, en respectant les exclusions du .dockerignore
+COPY . .
+
+# Configure Symfony pour fonctionner en production, sans mode debug.
+# utilise l'environnement de production
+ENV APP_ENV=prod
+# désactive le mode debug
+ENV APP_DEBUG=0
+# Lit les paramètres fournis au conteneur, sans chercher les fichiers .env.
+ENV APP_RUNTIME_OPTIONS='{"disable_dotenv":true}'
+
+# Installe les dépendances PHP nécessaires à l'application
+# retire les outils de développement
+# Autorise les plugins Composer pendant la construction dans le conteneur.
+# Les scripts Symfony seront exécutés séparément lors des prochaines étapes.
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install \
+    --no-dev \
+    --no-interaction \
+    --optimize-autoloader \
+    --no-scripts
+
+# Fournit des paramètres provisoires pour préparer les assets.
+# Ces valeurs ne sont utilisées que pendant cette instruction RUN.
+RUN export APP_SECRET=construction-sans-secret \
+    DATABASE_URL='mysql://construction:construction@database:3306/vite_et_gourmand?serverVersion=8.4&charset=utf8mb4' \
+    DEFAULT_URI='https://construction.invalid' \
+    MONGODB_URI='mongodb://mongodb:27017' \
+    MONGODB_DATABASE=vite_et_gourmand \
+    GOOGLE_ROUTES_API_KEY=construction \
+    MAILER_DSN='null://null' \
+    MESSENGER_TRANSPORT_DSN='doctrine://default?auto_setup=0' \
+    && php bin/console importmap:install --no-interaction \
+    && php bin/console assets:install public --no-interaction \
+    && php bin/console asset-map:compile --no-interaction \
+    && rm -rf var/cache/prod
+
+# Crée les dossiers nécessaires, même s'ils sont absents du projet copié.
+RUN mkdir -p var/cache var/log public/uploads \
+    && chown -R www-data:www-data var public/uploads
+

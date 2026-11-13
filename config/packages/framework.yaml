@@ -13,3 +13,14 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+
+when@prod:
+    framework:
+        # Accepte les informations transmises par le proxy du réseau privé.
+        trusted_proxies: 'private_ranges'
+
+        # Reconnaît l'adresse du visiteur, le protocole et le port d'origine.
+        trusted_headers:
+            - 'x-forwarded-for'
+            - 'x-forwarded-proto'
+            - 'x-forwarded-port'

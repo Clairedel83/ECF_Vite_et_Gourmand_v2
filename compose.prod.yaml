@@ -1,0 +1,99 @@
+# Distingue les conteneurs et volumes de production de ceux du développement.
+name: vite_gourmand_prod
+
+services:
+  web:
+    # Construit l'image à partir du Dockerfile de production.
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+
+    # Relance le service après un arrêt imprévu ou un redémarrage du VPS, sauf si je l'arrête volontairement.
+    restart: unless-stopped
+
+    # Charge les paramètres et secrets propres à la production.
+    env_file:
+      - .env.prod.local
+
+    environment:
+      # Impose le fonctionnement de Symfony en production.
+      APP_ENV: prod
+      APP_DEBUG: "0"
+
+    volumes:
+      # Conserve les images téléversées lors du remplacement du conteneur.
+      - uploads_data:/var/www/html/public/uploads
+  
+  database:
+    # Conserve la même version majeure de MySQL qu'en local
+    image: mysql:8.4
+
+    # Redémarre automatiquement, sauf après un arrêt volontaire
+    restart: unless-stopped
+
+    environment:
+      # Crée la base et l'utilisateur lors de la première initialisation
+      MYSQL_DATABASE: vite_et_gourmand
+      MYSQL_USER: ecf_app
+
+      # Récupère les mots de passe fournis à Docker Compose.
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Mot de passe MySQL manquant}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Mot de passe root MySQL manquant}
+
+    volumes:
+      # Conserve les données lors du remplacement du conteneur.
+      - database_data:/var/lib/mysql
+  
+  mongodb:
+    # Conserve la même version majeure de MongoDB qu'en local.
+    image: mongo:8.0
+
+    # Redémarre automatiquement, sauf après un arrêt volontaire.
+    restart: unless-stopped
+
+    environment:
+      # Crée le compte administrateur lors de la première initialisation.
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:?Utilisateur MongoDB manquant}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Mot de passe MongoDB manquant}
+
+      # Paramètres utilisés par le script de création du compte applicatif.
+      MONGODB_DATABASE: ${MONGODB_DATABASE:?Nom de base MongoDB manquant}
+      MONGO_APP_USERNAME: ${MONGO_APP_USERNAME:?Utilisateur applicatif MongoDB manquant}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?Mot de passe applicatif MongoDB manquant}
+
+    volumes:
+      # Conserve les données lors du remplacement du conteneur.
+      - mongodb_data:/data/db
+      # Fournit le script d'initialisation en lecture seule.
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  
+  caddy:
+    # Serveur chargé de l'accès HTTPS.
+    image: caddy:2-alpine
+    restart: unless-stopped
+
+    ports:
+      # Accès HTTP, notamment pour la redirection vers HTTPS.
+      - "80:80"
+
+      # Accès HTTPS.
+      - "443:443"
+
+    environment:
+      # Domaine public du site, sans https://.
+      SITE_DOMAIN: ${SITE_DOMAIN:?Domaine du site manquant}
+
+    volumes:
+      # Configuration de Caddy, accessible en lecture seule.
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+
+      # Conserve notamment les certificats entre les redémarrages.
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  uploads_data:
+  database_data:
+  mongodb_data:
+  caddy_data:
+  caddy_config:
