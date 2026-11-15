@@ -2,12 +2,13 @@ FROM php:8.5.0-apache
 
 # Installe unzip pour extraire les dépendances téléchargées par Composer
 # apt-get update : actualise la liste des paquets disponibles.
+# Installe les outils nécessaires à Composer, MongoDB et intl.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends unzip \
+    && apt-get install -y --no-install-recommends unzip libssl-dev pkg-config libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# pars de l'image php+apache et ajoute le pilote php nécessaire à la connexion mySQL
-RUN docker-php-ext-install pdo_mysql
+# Installe les extensions MySQL et de gestion des langues et des dates.
+RUN docker-php-ext-install pdo_mysql intl
 
 # pars de l'image php+apache et ajoute le pilote php nécessaire à la connexion mongoDB
 RUN pecl install mongodb-2.5.0 \
