@@ -115,8 +115,14 @@
                     <div class="data">
                         {{ form_label(inscriptionForm.adresse_postale) }}
                         {{ form_widget(inscriptionForm.adresse_postale, {
-                            'attr': {'class': 'input'}
+                            'attr': {
+                                'class': 'input',
+                                'list': 'suggestions_adresse',
+                                'autocomplete': 'off'
+                            }
                         }) }}
+
+                        <datalist id="suggestions_adresse"></datalist>
                         {{ form_errors(inscriptionForm.adresse_postale, {
                             'attr': {'class': 'form_error'}
                         }) }}

@@ -113,7 +113,14 @@
                             </div>
                             <div class="livraison_content">
                                 <span>Adresse :</span>
-                                {{ form_widget(adresseLivraisonForm.adresse_postale) }}
+                                {{ form_widget(informationsForm.adresse_postale, {
+                                    'attr': {
+                                        'list': 'suggestions_adresse',
+                                        'autocomplete': 'off'
+                                    }
+                                }) }}
+
+                                <datalist id="suggestions_adresse"></datalist>
                                 {{ form_errors(adresseLivraisonForm.adresse_postale) }}
                             </div>
                             <div class="livraison_content">

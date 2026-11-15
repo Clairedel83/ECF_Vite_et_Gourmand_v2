@@ -1,4 +1,5 @@
 import './js/avis.js';
+import './js/autocompletion_adresse.js';
 
 const barreNavigation = document.querySelector('.header_top');
 const boutonMenu = document.querySelector('.menu_burger');
