@@ -234,6 +234,9 @@ final class ModifierCommandeController extends AbstractController
                 // RECUPERE L'ADRESSE DE LIVRAISON (user OU adresse modifiée)
                 $adresse_livraison = $request->request->get('form_adresse_choisie');
 
+                // RECUPERE LE COMPLEMENT D'ADRESSE
+                $complementAdresse = $request->request->get('form_complement_adresse', '');                
+
                 // RECUPERE L'ADRESSE FORMAT GOOGLE
                 $adresseGoogle = $request->request->get('form_adresse_google');
 
@@ -250,7 +253,8 @@ final class ModifierCommandeController extends AbstractController
                     (!is_string($codePostal) || trim($codePostal)=== '')  || 
                     (!is_string($ville) || trim($ville) === '') ||
                     (!is_string($nom) || trim($nom) === '') ||
-                    (!is_string($prenom) || trim($prenom) === '')
+                    (!is_string($prenom) || trim($prenom) === '') ||
+                    (!is_string($complementAdresse) || mb_strlen($complementAdresse) > 255)
                 )
                 {
                     return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]); 
@@ -273,7 +277,18 @@ final class ModifierCommandeController extends AbstractController
                 }
 
                 // attribue l'adresse de livraison
-                $commande->setAdresseLivraison($nom.' '.$prenom.' - '.$adresseVerifiee);
+                // Construit l'adresse complète à conserver dans la commande.
+                $adresseCompleteLivraison = $nom . ' ' . $prenom . ' - ' . $adresseVerifiee;
+
+                // Ajoute le complément uniquement s'il est renseigné.
+                $complementAdresse = trim($complementAdresse);
+
+                if ($complementAdresse !== '') {
+                    $adresseCompleteLivraison .= ' - ' . $complementAdresse;
+                }
+
+                // Conserve une copie de l'adresse pour cette commande.
+                $commande->setAdresseLivraison($adresseCompleteLivraison);
 
                 // attribue le prix de livraison
                 $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);

@@ -23,7 +23,8 @@ class InscriptionUserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email :',
                 'attr' => [
-                    'placeholder' => "Adresse email"
+                    'placeholder' => "Adresse email",
+                    'maxlength' => 180,
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
@@ -32,17 +33,23 @@ class InscriptionUserType extends AbstractType
 
                     new Assert\Email(
                         message: 'Veuillez renseigner une adresse email valide.'
-                    )],
+                    ),
+
+                    new Assert\Length(
+                        max: 180,
+                        maxMessage: 'L’adresse email ne doit pas dépasser {{ limit }} caractères.'
+                    ),
+                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class, 
+                'type' => PasswordType::class,
 
                 'invalid_message' => 'Les mots de passe saisis ne correspondent pas.',
 
                 'constraints' => [
                     new Assert\Length(
-                        min:10,
-                        minMessage:'Le mot de passe doit contenir au moins 10 caractères.'
+                        min: 10,
+                        minMessage: 'Le mot de passe doit contenir au moins 10 caractères.'
                     ),
 
                     new Assert\NotBlank(
@@ -51,10 +58,11 @@ class InscriptionUserType extends AbstractType
 
                     new Assert\Regex(
                         pattern: '/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[+!@#$%^&*]).+$/',
-                        message:'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et caractère spécial.'
-                    )],
+                        message: 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et caractère spécial.'
+                    )
+                ],
                 'first_options' => [
-                    'label' => 'Mot de passe :', 
+                    'label' => 'Mot de passe :',
                     'hash_property_path' => 'password',
                     'attr' => [
                         'placeholder' => "**************"
@@ -65,7 +73,7 @@ class InscriptionUserType extends AbstractType
                     'attr' => [
                         'placeholder' => "**************"
                     ]
-                ], 
+                ],
                 'mapped' => false,
             ])
 
@@ -73,14 +81,15 @@ class InscriptionUserType extends AbstractType
                 'label' => 'Nom :',
                 'constraints' => [
                     new Assert\Length(
-                        min:2,
-                        max:30,
-                        minMessage:"Le nom doit contenir au moins {{ limit }} caractères.",
-                        maxMessage:"Le nom doit contenir au moins {{ limit }} caractères."
+                        min: 2,
+                        max: 30,
+                        minMessage: "Le nom doit contenir au moins {{ limit }} caractères.",
+                        maxMessage: "Le nom doit contenir au maximum {{ limit }} caractères."
                     ),
                     new Assert\NotBlank(
                         message: 'Veuillez renseigner votre nom.'
-                    )],
+                    )
+                ],
                 'attr' => [
                     'placeholder' => "Nom",
                     'minlength' => 2,
@@ -92,14 +101,15 @@ class InscriptionUserType extends AbstractType
                 'label' => 'Prénom :',
                 'constraints' => [
                     new Assert\Length(
-                        min:2,
-                        max:30,
-                        minMessage:"Le prénom doit contenir au moins {{ limit }} caractères.",
-                        maxMessage:"Le prénom doit contenir au maximum {{ limit }} caractères."
+                        min: 2,
+                        max: 30,
+                        minMessage: "Le prénom doit contenir au moins {{ limit }} caractères.",
+                        maxMessage: "Le prénom doit contenir au maximum {{ limit }} caractères."
                     ),
                     new Assert\NotBlank(
                         message: 'Veuillez renseigner votre prénom.'
-                    )],
+                    )
+                ],
                 'attr' => [
                     'placeholder' => "Prénom",
                     'minlength' => 2,
@@ -114,19 +124,29 @@ class InscriptionUserType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(
                         message: 'Veuillez renseigner votre numéro de téléphone.'
-                    )
+                    ),
+                    new Assert\Regex(
+                        pattern: '/^[0-9]{10}$/',
+                        message: 'Le téléphone doit contenir 10 chiffres.'
+                    ),
                 ],
             ])
             ->add('ville', TextType::class, [
                 'label' => 'Ville :',
                 'attr' => [
                     'placeholder' => "Ville",
-                    'class' => 'input'
+                    'class' => 'input',
+                    'maxlength' => 50,
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
                         message: 'Veuillez renseigner votre ville.'
-                    )
+                    ),
+
+                    new Assert\Length(
+                        max: 50,
+                        maxMessage: 'La ville ne doit pas dépasser {{ limit }} caractères.'
+                    ),
                 ],
             ])
 
@@ -151,13 +171,33 @@ class InscriptionUserType extends AbstractType
             ->add('adresse_postale', TextType::class, [
                 'label' => 'Adresse postale :',
                 'attr' => [
-                    'placeholder' => "Adresse postale"
+                    'placeholder' => "Adresse postale",
+                    'maxlength' => 255,
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
                         message: 'Veuillez renseigner votre adresse postale.'
-                    )
+                    ),
+                    new Assert\Length(
+                        max: 255,
+                        maxMessage: 'L’adresse postale ne doit pas dépasser {{ limit }} caractères.'
+                    ),
                 ],
+            ])
+
+            ->add('complement_adresse', TextType::class, [
+                'label' => 'Complément d\'adresse (facultatif) : ',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Bâtiment, appartement, résidence...',
+                    'maxlength' => 255,
+                ],
+                'constraints' => [
+                    new Assert\Length(
+                        max: 255,
+                        maxMessage: 'L’adresse postale ne doit pas dépasser {{ limit }} caractères.'
+                    )
+                ]
             ])
 
             ->add('submit', SubmitType::class, [

@@ -31,7 +31,8 @@ class Commande
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTime $heure_livraison = null;
 
-    #[ORM\Column(length: 255)]
+    // Conserve l'adresse complète de livraison, avec le destinataire et le complément.
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $adresse_livraison = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]

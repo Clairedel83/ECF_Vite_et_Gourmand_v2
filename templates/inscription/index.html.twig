@@ -121,6 +121,16 @@
                             'attr': {'class': 'form_error'}
                         }) }}
                     </div>
+
+                     <div class="data">
+                        {{ form_label(inscriptionForm.complement_adresse) }}
+                        {{ form_widget(inscriptionForm.complement_adresse, {
+                            'attr': {'class': 'input'}
+                        }) }}
+                        {{ form_errors(inscriptionForm.complement_adresse, {
+                            'attr': {'class': 'form_error'}
+                        }) }}
+                    </div>                   
                     
                     {{ form_widget(inscriptionForm.submit) }}
                 {{ form_end(inscriptionForm) }}

@@ -98,6 +98,11 @@
                                 {{ form_errors(adresseLivraisonForm.adresse_postale) }}
                             </div>
                             <div class="livraison_content">
+                                <span>Complément d'adresse (facultatif) :</span>
+                                {{ form_widget(adresseLivraisonForm.complement_adresse) }}
+                                {{ form_errors(adresseLivraisonForm.complement_adresse) }}
+                            </div>
+                            <div class="livraison_content">
                                 <span>Code postal :</span>
                                 {{ form_widget(adresseLivraisonForm.code_postal) }}
                                 {{ form_errors(adresseLivraisonForm.code_postal) }}
@@ -117,6 +122,7 @@
                         <p><strong>Adresse de livraison :</strong>   (<a href="#" class="modifier_adresse">Modifier</a>)</p>
                         <p id="nom_new"></p>
                         <p id="adresse_new"></p>
+                        <p id="complement_new" hidden></p>
                         <p id="ville_new"></p>
                     </div>
 
@@ -269,6 +275,8 @@
                 <input type="hidden" name="form_nom" id="form_nom" value="{{ commande.user.nom }}">
                 {# prénom si modifié #}
                 <input type="hidden" name="form_prenom" id="form_prenom" value="{{ commande.user.prenom }}">
+                {# Renseigné par JavaScript lorsqu'une nouvelle adresse est choisie. #}
+                <input type="hidden" name="form_complement_adresse" id="form_complement_adresse" value="">
                 {# adresse au format google #}
                 <input type="hidden" name="form_adresse_google" id="form_adresse_google" value="{{ commande.user.adressePostale }} , {{ commande.user.codePostal }} {{ commande.user.ville }}">
                 {# code postal (pour vérification) #}

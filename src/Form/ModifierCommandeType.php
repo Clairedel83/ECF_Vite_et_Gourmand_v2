@@ -66,6 +66,22 @@ class ModifierCommandeType extends AbstractType
                 ],
             ])
 
+            ->add('complementAdresseLivraison', TextType::class, [
+                'label' => 'Complément d\'adresse (facultatif)',
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Bâtiment, appartement, résidence...',
+                    'maxlength' => 255,
+                ],
+                'constraints' => [
+                    new Assert\Length(
+                        max: 255,
+                        maxMessage: 'Le complément ne doit pas dépasser {{ limit }} caractères.'
+                    ),
+                ],
+            ])
+
             // Eléments non enregistrés en BDD mais qui permettent de calculer les frais de livraison 
             ->add('codePostalLivraison', TextType::class, [
                 'label' => 'Code postal : ',

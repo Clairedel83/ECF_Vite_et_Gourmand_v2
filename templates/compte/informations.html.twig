@@ -3,11 +3,11 @@
 {% block body %}
     <!-- HERO-->
     {% block hero_img %}
-        <div class = "hero_img" id="hero_compte"></div>
+        <div class="hero_img" id="hero_compte"></div>
     {% endblock %}
 
     {% block hero_title %}
-        <div class = "header_bottom header_bottom_classic">
+        <div class="header_bottom header_bottom_classic">
             <h1>MON COMPTE</h1>
         </div>
     {% endblock %}
@@ -55,8 +55,15 @@
                         <div class="informations_content">
                             <span>Adresse postale : </span>
                             <p>{{ user.adressePostale }}</p> 
-                        </div>                    
+                        </div>
 
+                        {% if user.complementAdresse %}
+                            <div class="informations_content">
+                                <span>Complément d'adresse (facultatif) : </span>
+                                <p>{{ user.complementAdresse }}</p> 
+                            </div>                              
+                        {% endif %}
+                 
                         <div class="informations_content">
                             <span>Code postal : </span>
                             <p>{{ user.codePostal }}</p> 

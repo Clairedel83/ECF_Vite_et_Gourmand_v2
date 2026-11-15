@@ -80,6 +80,8 @@
                                 {{ form_widget(modificationForm.adresseLivraison) }}
                                 {{ form_errors(modificationForm.adresseLivraison) }}
 
+                                {{ form_row(modificationForm.complementAdresseLivraison) }}
+
                                 {# champs cachés, utiles pour le calcul des frais de livraison avec JS #}
                                 <div id="complement_adresse" hidden>
                                     {{ form_row(modificationForm.codePostalLivraison) }}

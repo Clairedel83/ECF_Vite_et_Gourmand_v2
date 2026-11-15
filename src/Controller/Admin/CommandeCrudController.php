@@ -147,14 +147,22 @@ class CommandeCrudController extends AbstractCrudController
         ]);
 
         // concernant la modification des informations (livraison)
-        // Sépare le destinataire de l'adresse enregistrée : conserve toute l'adresse après l" - ".
+        // Sépare le destinataire du reste de l'adresse.
         $elementsAdresse = explode(' - ', $commande->getAdresseLivraison(), 2);
 
-        // Si aucun séparateur n'est présent, conserve l'adresse entière.
-        $adresseLivraison = $elementsAdresse[1] ?? $elementsAdresse[0];
+        // Conserve l'adresse entière si aucun destinataire n'est présent.
+        $adresseSansDestinataire = $elementsAdresse[1] ?? $elementsAdresse[0];
 
-        // Affiche uniquement l'adresse dans le champ du formulaire : permettra un recalcul plus facile
+        // Sépare l'adresse principale du complément éventuel.
+        // La limite de 2 conserve les éventuels séparateurs présents dans le complément.
+        $elementsLivraison = explode(' - ', $adresseSansDestinataire, 2);
+
+        $adresseLivraison = $elementsLivraison[0];
+        $complementLivraison = $elementsLivraison[1] ?? '';
+
+        // Préremplit les deux champs séparément.
         $formModification->get('adresseLivraison')->setData($adresseLivraison);
+        $formModification->get('complementAdresseLivraison')->setData($complementLivraison);
 
         // crée la vue de cet affichage
         return $this->render('admin/commande_details.html.twig', [
@@ -454,14 +462,22 @@ class CommandeCrudController extends AbstractCrudController
             'minimum_convives' => $commande->getMenu()->getNbreMin(),
         ]);
 
-        // Sépare le destinataire de l'adresse de livraison.
+        // Sépare le destinataire du reste de l'adresse.
         $elementsAdresse = explode(' - ', $commande->getAdresseLivraison(), 2);
 
-        // Conserve l'adresse entière si aucun séparateur n'est présent.
-        $adresseLivraison = $elementsAdresse[1] ?? $elementsAdresse[0];
+        // Conserve l'adresse entière si aucun destinataire n'est présent.
+        $adresseSansDestinataire = $elementsAdresse[1] ?? $elementsAdresse[0];
 
-        // Prépare le champ avec uniquement l'adresse géographique.
+        // Sépare l'adresse principale du complément éventuel.
+        // La limite de 2 conserve les éventuels séparateurs présents dans le complément.
+        $elementsLivraison = explode(' - ', $adresseSansDestinataire, 2);
+
+        $adresseLivraison = $elementsLivraison[0];
+        $complementLivraison = $elementsLivraison[1] ?? '';
+
+        // Préremplit les deux champs séparément.
         $formModification->get('adresseLivraison')->setData($adresseLivraison);
+        $formModification->get('complementAdresseLivraison')->setData($complementLivraison);
 
         return $this->render('admin/commande_details.html.twig', [
             'commande' => $commande,
@@ -523,12 +539,18 @@ class CommandeCrudController extends AbstractCrudController
             $elementsAdresse = explode(' - ', $adresseCompleteInitiale, 2);
 
             $destinataire = '';
-            $adresseInitialeLivraison = $elementsAdresse[0];
+            $adresseSansDestinataire = $elementsAdresse[0];
 
             if (isset($elementsAdresse[1])) {
                 $destinataire = $elementsAdresse[0];
-                $adresseInitialeLivraison = $elementsAdresse[1];
+                $adresseSansDestinataire = $elementsAdresse[1];
             }
+
+            // Sépare l'adresse géographique du complément éventuel
+            $elementsLivraison = explode(' - ', $adresseSansDestinataire, 2);
+
+            $adresseInitialeLivraison = $elementsLivraison[0];
+            $complementInitialLivraison = $elementsLivraison[1] ?? '';
 
 
 
@@ -545,6 +567,9 @@ class CommandeCrudController extends AbstractCrudController
 
             // Prépare la valeur initiale du champ sans le destinataire.
             $formModification->get('adresseLivraison')->setData($adresseInitialeLivraison);
+
+            // Prépare le complément avant de récupérer la nouvelle saisie.
+            $formModification->get('complementAdresseLivraison')->setData($complementInitialLivraison);
 
             // récupère les données envoyées dans le formulaire
             $formModification->handleRequest($request);
@@ -607,44 +632,53 @@ class CommandeCrudController extends AbstractCrudController
                 }
 
                 // --------------- ADRESSE DE LIVRAISON ---------------
-                // récupère l'adresse saisie
+
+                // Récupère séparément l'adresse principale et son complément.
                 $adresseSaisie = trim($formModification->get('adresseLivraison')->getData());
+                $complementSaisi = trim((string) $formModification->get('complementAdresseLivraison')->getData());
 
-                // si l'adresse saisie et l'adresse initiale sont les mêmes :
+                // Si seule une autre information, comme le complément, a changé,
+                // conserve l'adresse géographique et les frais de livraison initiaux.
                 if ($adresseSaisie === trim($adresseInitialeLivraison)) {
-                    // Conserve l'adresse complète et les frais initiaux.
-                    $adresseComplete = $adresseCompleteInitiale;
+                    $adresseVerifiee = $adresseInitialeLivraison;
                     $prixLivraison = (float) $prixLivraisonInitial;
-
-                    // si l'adresse saisie est différente :
                 } else {
-                    // Récupère les champs non mappés du formulaire.
+                    // Récupère les informations nécessaires à la vérification.
                     $codePostal = trim((string) $formModification->get('codePostalLivraison')->getData());
-
                     $ville = trim((string) $formModification->get('villeLivraison')->getData());
 
-                    // récupère le code postal et la ville (utiles pour vérifier l'adresse si la nouvelle est différente)
                     if ($codePostal === '' || $ville === '') {
                         throw new \DomainException(
                             'Veuillez renseigner le code postal et la ville.'
                         );
                     }
 
-                    // Appelle le service de vérification d'adresse
-                    $resultatAdresse = $verificationAdresseService->verifierAdresse($adresseSaisie, $codePostal, $ville);
+                    // Vérifie uniquement l'adresse principale, sans le complément.
+                    $resultatAdresse = $verificationAdresseService->verifierAdresse(
+                        $adresseSaisie,
+                        $codePostal,
+                        $ville
+                    );
 
                     $adresseVerifiee = $resultatAdresse['adresse'];
                     $villeVerifiee = $resultatAdresse['ville'];
 
-                    // Recalcule les frais de livraison
-                    $prixLivraison = $calculPrixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
+                    // Recalcule les frais uniquement lorsque l'adresse principale change.
+                    $prixLivraison = $calculPrixLivraison->calculPrixLivraison(
+                        $villeVerifiee,
+                        $adresseVerifiee
+                    );
+                }
 
-                    // Réintroduit le destinataire devant l'adresse vérifiée.
-                    $adresseComplete = $adresseVerifiee;
+                // Reconstruit l'adresse complète à conserver dans la commande.
+                $adresseComplete = $adresseVerifiee;
 
-                    if ($destinataire !== '') {
-                        $adresseComplete = $destinataire . ' - ' . $adresseVerifiee;
-                    }
+                if ($destinataire !== '') {
+                    $adresseComplete = $destinataire . ' - ' . $adresseComplete;
+                }
+
+                if ($complementSaisi !== '') {
+                    $adresseComplete .= ' - ' . $complementSaisi;
                 }
 
                 $commande->setAdresseLivraison($adresseComplete);

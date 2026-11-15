@@ -37,7 +37,7 @@ class AdresseLivraisonType extends AbstractType
                         min:2,
                         max:30,
                         minMessage:"Le prénom doit contenir au moins {{ limit }} caractères.",
-                        maxMessage:"Le prénom doit contenir au moins {{ limit }} caractères."
+                        maxMessage:"Le prénom doit contenir au maximum {{ limit }} caractères."
                     )],
                 'attr' => [
                     'placeholder' => "Prénom",
@@ -50,7 +50,14 @@ class AdresseLivraisonType extends AbstractType
                 'label' => 'Ville :',
                 'attr' => [
                     'placeholder' => "Ville",
-                    'class' => 'input'
+                    'class' => 'input',
+                    'maxlength' => 50,
+                ],
+                'constraints' => [
+                    new Assert\Length(
+                        max: 50,
+                        maxMessage: 'La ville ne doit pas dépasser {{ limit }} caractères.'
+                    ),
                 ]
             ])
 
@@ -72,7 +79,32 @@ class AdresseLivraisonType extends AbstractType
             ->add('adresse_postale', TextType::class, [
                 'label' => 'Adresse postale :',
                 'attr' => [
-                    'placeholder' => "Adresse postale"
+                    'placeholder' => "Adresse postale",
+                    'maxlength' => 255,
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message : 'Veuillez renseigner votre adresse postale.'
+                    ),
+                    new Assert\Length(
+                        max: 255,
+                        maxMessage: 'L’adresse postale ne doit pas dépasser {{ limit }} caractères.'
+                    )
+                ],
+            ])
+
+            ->add('complement_adresse', TextType::class, [
+                'label' => 'Complément d\'adresse (facultatif) : ',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Bâtiment, appartement, résidence...',
+                    'maxlength' => 255,
+                ],
+                'constraints' => [
+                    new Assert\Length(
+                        max: 255,
+                        maxMessage: 'L’adresse postale ne doit pas dépasser {{ limit }} caractères.'
+                    )
                 ]
             ])
 

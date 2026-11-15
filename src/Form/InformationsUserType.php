@@ -61,18 +61,30 @@ class InformationsUserType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(
                         message : 'Veuillez renseigner votre téléphone.'
-                    )],
+                    ),
+                    new Assert\Regex(
+                        pattern: '/^[0-9]{10}$/',
+                        message: 'Le téléphone doit contenir 10 chiffres.'
+                    )
+                ],
             ])
             ->add('ville', TextType::class, [
                 'label' => 'Ville :',
                 'attr' => [
                     'placeholder' => "Ville",
-                    'class' => 'input'
+                    'class' => 'input',
+                    'maxlength' => 50,
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
                         message : 'Veuillez renseigner votre ville.'
-                )],
+                    ),
+
+                    new Assert\Length(
+                        max: 50,
+                        maxMessage: 'La ville ne doit pas dépasser {{ limit }} caractères.'
+                    ),
+                ]
             ])
 
             ->add('code_postal', TextType::class, [
@@ -95,12 +107,33 @@ class InformationsUserType extends AbstractType
             ->add('adresse_postale', TextType::class, [
                 'label' => 'Adresse postale :',
                 'attr' => [
-                    'placeholder' => "Adresse postale"
+                    'placeholder' => "Adresse postale",
+                    'maxlength' => 255,
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
                         message : 'Veuillez renseigner votre adresse postale.'
-                )],
+                    ),
+                    new Assert\Length(
+                        max: 255,
+                        maxMessage: 'L’adresse postale ne doit pas dépasser {{ limit }} caractères.'
+                    )
+                ],
+            ])
+
+            ->add('complement_adresse', TextType::class, [
+                'label' => 'Complément d\'adresse (facultatif) : ',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Bâtiment, appartement, résidence...',
+                    'maxlength' => 255,
+                ],
+                'constraints' => [
+                    new Assert\Length(
+                        max: 255,
+                        maxMessage: 'L’adresse postale ne doit pas dépasser {{ limit }} caractères.'
+                    )
+                ]
             ])
 
             ->add('submit', SubmitType::class, [

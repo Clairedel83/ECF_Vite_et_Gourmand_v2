@@ -47,6 +47,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $adresse_postale = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    private ?string $complement_adresse = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $code_postal = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
@@ -328,6 +331,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getComplementAdresse(): ?string
+    {
+        return $this->complement_adresse;
+    }
+
+    public function setComplementAdresse(?string $complement_adresse): static
+    {
+        $this->complement_adresse = $complement_adresse;
 
         return $this;
     }

@@ -86,17 +86,20 @@ const formVille = document.querySelector('#form_ville');
 const inputNom = document.querySelector('#adresse_livraison_nom');
 const inputPrenom = document.querySelector('#adresse_livraison_prenom');
 const inputAdresse = document.querySelector('#adresse_livraison_adresse_postale');
+const inputComplement = document.querySelector('#adresse_livraison_complement_adresse');
 const inputPostal = document.querySelector('#adresse_livraison_code_postal');
 const inputVille = document.querySelector('#adresse_livraison_ville');
 
 const nomNew = document.querySelector('#nom_new');
 const adresseNew = document.querySelector('#adresse_new');
+const complementNew = document.querySelector('#complement_new');
 const villeNew = document.querySelector('#ville_new');
 
 const formAdresseChoisie = document.querySelector('#form_adresse_choisie');
 const formAdresseGoogle = document.querySelector('#form_adresse_google');
 const formNom = document.querySelector('#form_nom');
 const formPrenom = document.querySelector('#form_prenom');
+const formComplementAdresse = document.querySelector('#form_complement_adresse');
 const formAdresseModifiee = document.querySelector('#form_adresse_modifiee');
 
 const prixLivraison = document.querySelector('#prix_livraison');
@@ -153,6 +156,7 @@ formAdresse.addEventListener('submit', async (event) => {
         formVille.value = inputVille.value;
         formNom.value = inputNom.value;
         formPrenom.value = inputPrenom.value;
+        formComplementAdresse.value = inputComplement.value.trim();
 
         // dans la vue de modification de commande UNIQUEMENT (car champ inexistant dans le panier), attribue la valeur oui qui indique que l'adresse de livraison a été modifiée
         if (formAdresseModifiee){
@@ -162,6 +166,16 @@ formAdresse.addEventListener('submit', async (event) => {
         // Actualise l'affichage de la nouvelle adresse
         nomNew.textContent = inputNom.value + ' ' + inputPrenom.value;
         adresseNew.textContent = inputAdresse.value;
+
+        // Affiche le complément uniquement s'il est renseigné.
+        complementNew.textContent = formComplementAdresse.value;
+
+        if (formComplementAdresse.value !== '') {
+            complementNew.hidden = false;
+        } else {
+            complementNew.hidden = true;
+        }
+
         villeNew.textContent = inputPostal.value + ' ' + inputVille.value;
 
         // Ferme le formulaire de modification
