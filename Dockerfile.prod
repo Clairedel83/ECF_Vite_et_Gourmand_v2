@@ -8,15 +8,15 @@ COPY docker/php.prod.ini /usr/local/etc/php/conf.d/production.ini
 
 # Installe unzip pour extraire les dépendances téléchargées par Composer
 # apt-get update : actualise la liste des paquets disponibles.
-# Installe les outils nécessaires à Composer et au support SSL du pilote MongoDB.
+# Installe les outils nécessaires à Composer, au pilote MongoDB et à intl.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends unzip libssl-dev pkg-config \
+    && apt-get install -y --no-install-recommends unzip libssl-dev pkg-config libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# pars de l'image php+apache et ajoute le pilote php nécessaire à la connexion mySQL
-RUN docker-php-ext-install pdo_mysql
+# Installe le pilote MySQL nécessaire à la connexion mySQL() et l'extension de gestion des langues et des dates.
+RUN docker-php-ext-install pdo_mysql intl
 
-# pars de l'image php+apache et ajoute le pilote php nécessaire à la connexion mongoDB
+# ajoute le pilote php nécessaire à la connexion mongoDB
 RUN pecl install mongodb-2.5.0 \
     && docker-php-ext-enable mongodb
 
