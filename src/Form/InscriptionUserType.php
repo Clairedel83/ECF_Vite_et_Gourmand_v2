@@ -21,7 +21,7 @@ class InscriptionUserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'Adresse email :',
+                'label' => 'Adresse email : (*)',
                 'attr' => [
                     'placeholder' => "Adresse email",
                     'maxlength' => 180,
@@ -62,14 +62,14 @@ class InscriptionUserType extends AbstractType
                     )
                 ],
                 'first_options' => [
-                    'label' => 'Mot de passe :',
+                    'label' => 'Mot de passe : (*)',
                     'hash_property_path' => 'password',
                     'attr' => [
                         'placeholder' => "**************"
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Confirmez le mot de passe :',
+                    'label' => 'Confirmez le mot de passe : (*)',
                     'attr' => [
                         'placeholder' => "**************"
                     ]
@@ -78,7 +78,7 @@ class InscriptionUserType extends AbstractType
             ])
 
             ->add('nom', TextType::class, [
-                'label' => 'Nom :',
+                'label' => 'Nom : (*)',
                 'constraints' => [
                     new Assert\Length(
                         min: 2,
@@ -98,7 +98,7 @@ class InscriptionUserType extends AbstractType
             ])
 
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom :',
+                'label' => 'Prénom : (*)',
                 'constraints' => [
                     new Assert\Length(
                         min: 2,
@@ -117,7 +117,7 @@ class InscriptionUserType extends AbstractType
                 ]
             ])
             ->add('telephone', TelType::class, [
-                'label' => 'Téléphone :',
+                'label' => 'Téléphone : (*)',
                 'attr' => [
                     'placeholder' => "Téléphone"
                 ],
@@ -132,7 +132,7 @@ class InscriptionUserType extends AbstractType
                 ],
             ])
             ->add('ville', TextType::class, [
-                'label' => 'Ville :',
+                'label' => 'Ville : (*)',
                 'attr' => [
                     'placeholder' => "Ville",
                     'class' => 'input',
@@ -151,7 +151,7 @@ class InscriptionUserType extends AbstractType
             ])
 
             ->add('code_postal', TextType::class, [
-                'label' => 'Code postal :',
+                'label' => 'Code postal : (*)',
                 'attr' => [
                     'placeholder' => "33000",
                     'pattern' => '[0-9]{5}',
@@ -169,7 +169,7 @@ class InscriptionUserType extends AbstractType
             ])
 
             ->add('adresse_postale', TextType::class, [
-                'label' => 'Adresse postale :',
+                'label' => 'Adresse postale : (*)',
                 'attr' => [
                     'placeholder' => "Adresse postale",
                     'maxlength' => 255,
@@ -186,7 +186,7 @@ class InscriptionUserType extends AbstractType
             ])
 
             ->add('complement_adresse', TextType::class, [
-                'label' => 'Complément d\'adresse (facultatif) : ',
+                'label' => 'Complément d\'adresse (facultatif) :',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Bâtiment, appartement, résidence...',

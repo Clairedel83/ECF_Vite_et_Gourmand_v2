@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use App\Services\StatistiquesCommandeService;
 use Psr\Log\LoggerInterface;
 
@@ -188,21 +188,14 @@ final class CommandeController extends AbstractController
             $adresseVerifiee = $resultatVerification['adresse'];
             $codePostalVerifie = $resultatVerification['codePostal'];
             $villeVerifiee = $resultatVerification['ville'];
-        } catch (\InvalidArgumentException $e) {
-            // Le service a répondu, mais l'adresse ne satisfait pas ses critères : conserve la saisie pour permettre à l'employé de la vérifier
+        } catch (\InvalidArgumentException | ExceptionInterface $e) {
+            // Adresse non reconnue ou service indisponible :
+            // conserve la saisie pour une vérification par l'employé.
             $livraisonAVerifier = true;
             $adresseVerifiee = trim($adresseGoogle);
             $codePostalVerifie = trim($codePostal);
             $villeVerifiee = trim($ville);
-        } catch (HttpExceptionInterface $e) {
-            $this->addFlash(
-                'error',
-                'Le service de vérification des adresses est temporairement indisponible.'
-            );
-            return $this->redirectToRoute('app_panier');
         }
-
-
 
         // RECUPERE L'ACCEPTATION DES CGV
         $cgv = $request->request->get('cgv');
@@ -289,7 +282,15 @@ final class CommandeController extends AbstractController
         $prixCalcule = 0;
 
         if (!$livraisonAVerifier) {
-            $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
+            try {
+                $prixCalcule = $prixLivraison->calculPrixLivraison(
+                    $villeVerifiee,
+                    $adresseVerifiee
+                );
+            } catch (ExceptionInterface | \UnexpectedValueException $e) {
+                // Le calcul a échoué : la commande devra être vérifiée.
+                $livraisonAVerifier = true;
+            }
         }
 
         $commande->setPrixLivraison(number_format($prixCalcule, 2, '.', ''));

@@ -46,7 +46,15 @@ class CalculDistanceService
         $data = $response->toArray();
 
         // permet de sélectionner uniquement la partie distance en mètres (dans la réponse)
-        $distanceMetres = $data['routes'][0]['distanceMeters'];
+        // rend le retour du service nullable
+        $distanceMetres = $data['routes'][0]['distanceMeters'] ?? null;
+
+        // si le service google ne fournie pas une distance exploitable
+        if (!is_int($distanceMetres) || $distanceMetres < 0) {
+            throw new \UnexpectedValueException(
+                'Le service de calcul n’a pas fourni de distance valide.'
+            );
+        }
 
         return $distanceMetres;
     }

@@ -3,13 +3,13 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-<!-- HERO-->
+    <!-- HERO-->
     {% block hero_img %}
-        <div class = "hero_img" id="hero_connexion"></div>
+        <div class="hero_img" id="hero_connexion"></div>
     {% endblock %}
 
     {% block hero_title %}
-        <div class = "header_bottom header_bottom_classic">
+        <div class="header_bottom header_bottom_classic">
             <h1>INSCRIPTION</h1>
             <h3>Créez votre espace personnel</h3>
             <h4><i>Commandez facilement et profitez d’un accompagnement sur mesure.</i></h4>
@@ -57,20 +57,24 @@
                         }) }}
                     </div>
 
-                    <div class="formulaire-flex">
-                        <div class="data">
-                            {{ form_label(inscriptionForm.plainPassword.first) }}
-                            {{ form_widget(inscriptionForm.plainPassword.first, {
-                                'attr': {'class': 'input'}
-                            }) }}
-                        </div>
+                    <div class="data">
+                        <div class="formulaire-flex">
+                            <div class="data">
+                                {{ form_label(inscriptionForm.plainPassword.first) }}
+                                {{ form_widget(inscriptionForm.plainPassword.first, {
+                                    'attr': {'class': 'input'}
+                                }) }}
+                            </div>
 
-                        <div class="data">
-                            {{ form_label(inscriptionForm.plainPassword.second) }}
-                            {{ form_widget(inscriptionForm.plainPassword.second, {
-                                'attr': {'class': 'input'}
-                            }) }}
+                            <div class="data">
+                                {{ form_label(inscriptionForm.plainPassword.second) }}
+                                {{ form_widget(inscriptionForm.plainPassword.second, {
+                                    'attr': {'class': 'input'}
+                                }) }}
+                            </div>
                         </div>
+                        <p><span class="alert_inscription">Le mot de passe doit contenir au moins 10 caractères, un caractère spécial (+ ! @ # $ % ^ &amp; *), une majuscule, une minuscule et un chiffre.</span></p>
+
                     </div>
 
                     <div class="mdp_error">
@@ -91,25 +95,25 @@
 
                     <div class="formulaire-flex">
                         <div class="data">
-                        {{ form_label(inscriptionForm.code_postal) }}
-                        {{ form_widget(inscriptionForm.code_postal, {
+                            {{ form_label(inscriptionForm.code_postal) }}
+                            {{ form_widget(inscriptionForm.code_postal, {
                             'attr': {'class': 'input'}
                         }) }}
-                        {{ form_errors(inscriptionForm.code_postal, {
+                            {{ form_errors(inscriptionForm.code_postal, {
                             'attr': {'class': 'form_error'}
                         }) }}
 
-                    </div>
+                        </div>
 
-                    <div class="data">
-                        {{ form_label(inscriptionForm.ville) }}
-                        {{ form_widget(inscriptionForm.ville, {
+                        <div class="data">
+                            {{ form_label(inscriptionForm.ville) }}
+                            {{ form_widget(inscriptionForm.ville, {
                             'attr': {'class': 'input'}
                         }) }}
-                        {{ form_errors(inscriptionForm.ville, {
+                            {{ form_errors(inscriptionForm.ville, {
                             'attr': {'class': 'form_error'}
                         }) }}
-                    </div>
+                        </div>
                     </div>
 
                     <div class="data">
@@ -128,7 +132,7 @@
                         }) }}
                     </div>
 
-                     <div class="data">
+                    <div class="data">
                         {{ form_label(inscriptionForm.complement_adresse) }}
                         {{ form_widget(inscriptionForm.complement_adresse, {
                             'attr': {'class': 'input'}
@@ -136,6 +140,10 @@
                         {{ form_errors(inscriptionForm.complement_adresse, {
                             'attr': {'class': 'form_error'}
                         }) }}
+                    </div>
+
+                    <div class="data">
+                        <p><span class="alert_inscription">Les champs suivis d’un astérisque (*) sont obligatoires.</span></p>
                     </div>                   
                     
                     {{ form_widget(inscriptionForm.submit) }}

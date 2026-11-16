@@ -8,42 +8,63 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
-// reçoit la demande de JavaScript, appelle le service et renvoie le prix au format JSON pour affichage
+// Fournit au JavaScript les frais calculés ou leur caractère provisoire.
 final class CalculPrixLivraisonController extends AbstractController
 {
     #[Route('/calcul/prix/livraison', name: 'app_calcul_prix_livraison', methods: ['POST'])]
-    public function index(Request $request, CalculPrixLivraison $calculPrixLivraison, VerificationAdresseService $verificationAdresseService): JsonResponse
-    {
-        // Récupère l'adresse de livraison et le code postal donnés par l'utilisateur depuis JS
+    public function index(
+        Request $request,
+        CalculPrixLivraison $calculPrixLivraison,
+        VerificationAdresseService $verificationAdresseService
+    ): JsonResponse {
+        // Récupère les informations transmises par JavaScript.
         $adresseGoogle = $request->request->get('adresse');
         $codePostal = $request->request->get('codePostal');
         $ville = $request->request->get('ville');
 
-        // appelle verifierAdresse de AdresseService pour vérifier cette adresse par géocodage
-        try{
-            $resultatAdresse = $verificationAdresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
-        // en cas d'erreur (400 = données invalides : renvoie message)
-        } catch (\InvalidArgumentException $e) {
-            // Le service a répondu, mais l'adresse n'a pas été reconnue : permet de poursuivre avec une vérification ultérieure par l'employé.
+        // Refuse une demande incomplète avant d'appeler les services.
+        if (
+            !is_string($adresseGoogle) || trim($adresseGoogle) === ''
+            || !is_string($codePostal) || trim($codePostal) === ''
+            || !is_string($ville) || trim($ville) === ''
+        ) {
+            return $this->json([
+                'erreur' => 'Veuillez renseigner l’adresse, le code postal et la ville.',
+            ], 400);
+        }
+
+        try {
+            // Vérifie l'adresse principale.
+            $resultatAdresse = $verificationAdresseService->verifierAdresse(
+                $adresseGoogle,
+                $codePostal,
+                $ville
+            );
+
+            // Calcule les frais à partir de l'adresse reconnue.
+            $prixCalcule = $calculPrixLivraison->calculPrixLivraison(
+                $resultatAdresse['ville'],
+                $resultatAdresse['adresse']
+            );
+
+            return $this->json([
+                'prixLivraison' => $prixCalcule,
+                'livraisonAVerifier' => false,
+            ]);
+        } catch (
+            \InvalidArgumentException
+            | ExceptionInterface
+            | \UnexpectedValueException $e
+        ) {
+            // Adresse non reconnue ou calcul indisponible :
+            // permet au client de poursuivre avec des frais provisoires.
             return $this->json([
                 'prixLivraison' => 0,
                 'livraisonAVerifier' => true,
-                'message' => 'Votre adresse n’a pas pu être reconnue. Les frais de livraison sont temporairement fixés à 0 €. Notre équipe vous contactera pour vérifier l’adresse et ajuster ces frais si nécessaire. Vous pouvez confirmer votre commande.',
+                'message' => 'Les frais de livraison n’ont pas pu être calculés. Ils sont provisoirement fixés à 0 €. Notre équipe vous contactera pour vérifier la livraison et ajuster ces frais si nécessaire. Vous pouvez confirmer votre commande.',
             ]);
         }
-
-        
-        $villeVerifiee = $resultatAdresse['ville'];
-        $adresseCompleteVerifiee = $resultatAdresse['adresse'];
-
-        $prixCalcule = $calculPrixLivraison->calculPrixLivraison($villeVerifiee, $adresseCompleteVerifiee);
-
-        return $this->json([
-            'prixLivraison' => $prixCalcule,
-            'livraisonAVerifier' => false,
-        ]);
     }
-
-    
 }

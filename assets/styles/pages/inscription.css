@@ -80,3 +80,9 @@
     justify-self: center;
     margin-top: 6vh;
 }
+
+.alert_inscription{
+    color:red;
+    font-weight: 500;
+    font-size:12px;
+}

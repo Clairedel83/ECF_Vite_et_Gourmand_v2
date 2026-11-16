@@ -16,7 +16,7 @@ use DateTime;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use App\Entity\CommandeHistorique;
 
 final class ModifierCommandeController extends AbstractController
@@ -43,8 +43,8 @@ final class ModifierCommandeController extends AbstractController
         if (!in_array($statut, [1, 9], true)) {
             return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
         }
-        
-        
+
+
         // AFFICHE LE FORMULAIRE DE MODIFICATION D'ADRESSE (livraison)
         // crée le formulaire temporaire (non sauvegardé en BDD) de l'adresse de livraison
         $formAdresse = $this->createForm(AdresseLivraisonType::class);
@@ -52,7 +52,7 @@ final class ModifierCommandeController extends AbstractController
 
         return $this->render('commande/modifierCommande.html.twig', [
             'commande' => $commande,
-            'adresseLivraisonForm' =>$formAdresse->createView()
+            'adresseLivraisonForm' => $formAdresse->createView()
         ]);
     }
 
@@ -82,7 +82,7 @@ final class ModifierCommandeController extends AbstractController
         $connexion = $entityManager->getConnection();
         $connexion->beginTransaction();
 
-        try{
+        try {
             // Recharge et verrouille avant de démarrer les vérifications
             $entityManager->refresh($commande, LockMode::PESSIMISTIC_WRITE);
 
@@ -99,7 +99,7 @@ final class ModifierCommandeController extends AbstractController
             // Récupère le nombre saisi
             $nbreConvivesSaisi = $request->request->get('form_nbre_convives');
             // Vérifie que le nombre saisi est bien un int
-            if(filter_var($nbreConvivesSaisi, FILTER_VALIDATE_INT) === false){
+            if (filter_var($nbreConvivesSaisi, FILTER_VALIDATE_INT) === false) {
                 return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
             }
             // Convertis ce qui est saisi en int pour enregistrer en format compatible en BDD
@@ -112,12 +112,12 @@ final class ModifierCommandeController extends AbstractController
             if (!is_string($date_choisie) || $date_choisie === '') {
                 return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
             }
-            
+
             // Transforme la date en objet DateTime
             $date_livraison = DateTime::createFromFormat('!Y-m-d', $date_choisie);
 
             // si le formatage ne réussit pas OU si la date conversion est inexacte :
-            if(!$date_livraison || $date_livraison->format('Y-m-d') !== $date_choisie){
+            if (!$date_livraison || $date_livraison->format('Y-m-d') !== $date_choisie) {
                 return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
             }
 
@@ -125,10 +125,10 @@ final class ModifierCommandeController extends AbstractController
             $delai_min = null;
 
             // pour toutes les conditions du menu
-                // si le delai_min de la condition n'est pas null
+            // si le delai_min de la condition n'est pas null
             $menu = $commande->getMenu();
-            foreach($menu->getConditions() as $condition){
-                if ($condition->getDelaiMin() !== null &&  $condition->getDelaiMin() > 0){
+            foreach ($menu->getConditions() as $condition) {
+                if ($condition->getDelaiMin() !== null &&  $condition->getDelaiMin() > 0) {
                     $delai_min = $condition->getDelaiMin();
                 }
             }
@@ -141,29 +141,29 @@ final class ModifierCommandeController extends AbstractController
             }
 
             $dateJour = new DateTime(('today'));
-            $date_min = $dateJour->modify('+'.$delai_min.' days');
+            $date_min = $dateJour->modify('+' . $delai_min . ' days');
 
 
-            if(($date_livraison->format('Y-m-d') !== $date_enregistree->format('Y-m-d'))  && ($date_livraison < $date_min)){
+            if (($date_livraison->format('Y-m-d') !== $date_enregistree->format('Y-m-d'))  && ($date_livraison < $date_min)) {
                 return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
-            } 
+            }
 
             // VERIFICATION DE LA DISPONIBILITE DU MENU 
             $disponibilite_debut = $menu->getDisponibiliteDebut();
             $disponibilite_fin = $menu->getDisponibiliteFin();
 
             // si menu est saisonnier
-            if($disponibilite_debut && $disponibilite_fin){
+            if ($disponibilite_debut && $disponibilite_fin) {
                 // les disponibilités sont au format JJ-MM. Pour les comparer à la date_livraison, il faut les transformer en MM-JJ
                 [$jourDebut, $moisDebut] = explode('-', $disponibilite_debut);
-                $disponibilite_debut_formatee = $moisDebut.'-'.$jourDebut;
+                $disponibilite_debut_formatee = $moisDebut . '-' . $jourDebut;
 
                 [$jourFin, $moisFin] = explode('-', $disponibilite_fin);
-                $disponibilite_fin_formatee = $moisFin.'-'.$jourFin;
+                $disponibilite_fin_formatee = $moisFin . '-' . $jourFin;
 
                 $date_livraison_formatee = $date_livraison->format('m-d');
 
-                if (($disponibilite_debut_formatee > $date_livraison_formatee) || ($date_livraison_formatee > $disponibilite_fin_formatee)){
+                if (($disponibilite_debut_formatee > $date_livraison_formatee) || ($date_livraison_formatee > $disponibilite_fin_formatee)) {
                     return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
                 }
             }
@@ -173,10 +173,10 @@ final class ModifierCommandeController extends AbstractController
             $heure_dispo = ['10:00', '10:30', '11:00', '11:30', '17:00', '17:30', '18:00'];
 
             // si l'heure choisie n'est pas compatible avec les horaires disponibles :
-            if(!in_array($heure_choisie, $heure_dispo, true)){
+            if (!in_array($heure_choisie, $heure_dispo, true)) {
                 return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
             }
-            
+
             // transforme l'heure validée en DateTime
             $heure_livraison = new \DateTime($heure_choisie);
 
@@ -185,7 +185,7 @@ final class ModifierCommandeController extends AbstractController
             $choix_pret_materiel = $request->request->get('form_materiel');
 
             // si l'input de pret du materiel indique autre chose que 'oui' ou 'non':
-            if(!in_array($choix_pret_materiel, ['oui', 'non'], true)){
+            if (!in_array($choix_pret_materiel, ['oui', 'non'], true)) {
                 return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
             }
 
@@ -196,7 +196,7 @@ final class ModifierCommandeController extends AbstractController
             $cgv = $request->request->get('cgv');
 
             // si les CGV ne sont pas cochées :
-            if($cgv !== 'on'){
+            if ($cgv !== 'on') {
                 return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
             }
 
@@ -208,7 +208,7 @@ final class ModifierCommandeController extends AbstractController
             $prixMenu = $nbreConvives * $prixPerPers;
             $montant_reduction = 0;
 
-            if($nbreConvives >= $nbrePromo) {
+            if ($nbreConvives >= $nbrePromo) {
                 $montant_reduction = round(0.1 * $prixMenu, 2);
             }
 
@@ -222,12 +222,12 @@ final class ModifierCommandeController extends AbstractController
             // SI MODIFICATION DE LA LIVRAISON :
             $adresseModifiee = $request->request->get('form_adresse_modifiee');
             // adresseModifier doit renvoyer uniquement 'oui' ou 'non
-            if (!in_array($adresseModifiee, ['oui', 'non'], true)){
+            if (!in_array($adresseModifiee, ['oui', 'non'], true)) {
                 return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
             }
 
 
-            if($adresseModifiee == 'oui'){
+            if ($adresseModifiee == 'oui') {
                 // RECUPERE LE NOM FOURNI POUR LIVRAISON (user ou modifié)
                 $nom = $request->request->get('form_nom');
 
@@ -238,7 +238,7 @@ final class ModifierCommandeController extends AbstractController
                 $adresse_livraison = $request->request->get('form_adresse_choisie');
 
                 // RECUPERE LE COMPLEMENT D'ADRESSE
-                $complementAdresse = $request->request->get('form_complement_adresse', '');                
+                $complementAdresse = $request->request->get('form_complement_adresse', '');
 
                 // RECUPERE L'ADRESSE FORMAT GOOGLE
                 $adresseGoogle = $request->request->get('form_adresse_google');
@@ -254,35 +254,28 @@ final class ModifierCommandeController extends AbstractController
                 $livraisonAVerifier = false;
 
                 // les adresses, code postal et villes doivent être des chaînes de caractères et non vides
-                if(
-                    (!is_string($adresseGoogle) || trim($adresseGoogle) === '') || 
-                    (!is_string($codePostal) || trim($codePostal)=== '')  || 
+                if (
+                    (!is_string($adresseGoogle) || trim($adresseGoogle) === '') ||
+                    (!is_string($codePostal) || trim($codePostal) === '')  ||
                     (!is_string($ville) || trim($ville) === '') ||
                     (!is_string($nom) || trim($nom) === '') ||
                     (!is_string($prenom) || trim($prenom) === '') ||
                     (!is_string($complementAdresse) || mb_strlen($complementAdresse) > 255)
-                )
-                {
-                    return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]); 
+                ) {
+                    return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
                 }
 
                 // Appel à AdresseService pour vérifier
-                try{
+                try {
                     $resultatVerification = $adresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
                     $adresseVerifiee = $resultatVerification['adresse'];
                     $villeVerifiee = $resultatVerification['ville'];
-
-                } catch(\InvalidArgumentException $e){
-                        // Conserve la saisie si l'adresse n'est pas reconnue.
-                        $livraisonAVerifier = true;
-                        $adresseVerifiee = trim($adresseGoogle);
-                        $villeVerifiee = trim($ville);
-                } catch(HttpExceptionInterface $e){
-                    $this->addFlash(
-                        'error',
-                        'Le service de vérification des adresses est temporairement indisponible.'
-                    );
-                    return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
+                } catch (\InvalidArgumentException | ExceptionInterface $e) {
+                    // Adresse non reconnue ou service indisponible :
+                    // conserve la saisie pour une vérification par l'employé.
+                    $livraisonAVerifier = true;
+                    $adresseVerifiee = trim($adresseGoogle);
+                    $villeVerifiee = trim($ville);
                 }
 
                 // attribue l'adresse de livraison
@@ -303,26 +296,33 @@ final class ModifierCommandeController extends AbstractController
                 // Applique zéro euro tant que la nouvelle livraison reste à vérifier.
                 $prixCalcule = 0;
 
+                if (!$livraisonAVerifier) {
+                    try {
+                        $prixCalcule = $prixLivraison->calculPrixLivraison(
+                            $villeVerifiee,
+                            $adresseVerifiee
+                        );
+                    } catch (ExceptionInterface | \UnexpectedValueException $e) {
+                        // Le calcul a échoué : la livraison reste à vérifier.
+                        $livraisonAVerifier = true;
+                    }
+                }
+
+                // Revient au statut normal uniquement après un calcul réussi.
                 if ($livraisonAVerifier) {
                     $commande->setStatut(9);
                 } else {
-                    // Une adresse reconnue revient au parcours normal de validation.
-                    $prixCalcule = $prixLivraison->calculPrixLivraison(
-                        $villeVerifiee,
-                        $adresseVerifiee
-                    );
-
                     $commande->setStatut(1);
                 }
 
                 $commande->setPrixLivraison(number_format($prixCalcule, 2, '.', ''));
-            } else{
+            } else {
                 // récupère le prix non modifié de la commande
                 $prixCalcule = $commande->getPrixLivraison();
             }
 
-            
-        // -------------------------------------------MODIFICATION DE LA COMMANDE--------------------------------------------------------
+
+            // -------------------------------------------MODIFICATION DE LA COMMANDE--------------------------------------------------------
 
             // attribue la date de livraison
             $commande->setDateLivraison($date_livraison);
@@ -403,10 +403,9 @@ final class ModifierCommandeController extends AbstractController
             return $this->redirectToRoute('app_commandes_details', [
                 'id' => $id
             ]);
-
         } finally {
             // S'exécute si le try réussit, si un return redirige, si une exception survient
-            
+
             // Si aucun commit n'a eu lieu, abandonne la transaction.
             if ($connexion->isTransactionActive()) {
                 $connexion->rollBack();
@@ -415,7 +414,5 @@ final class ModifierCommandeController extends AbstractController
                 $entityManager->clear();
             }
         }
-
-
     }
 }

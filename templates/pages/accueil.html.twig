@@ -88,7 +88,7 @@
 
             <div class="incontournables_content">
                 {% for menu in menus %}
-                    {% if menu.id < 4 %}
+                    {% if menu.id < 4 and menu.stock > 0 %}
                         <div class="menu">
                             <div class="menu_content_top">
                                 <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="">

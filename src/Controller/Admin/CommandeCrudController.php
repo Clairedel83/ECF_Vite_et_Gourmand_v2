@@ -16,6 +16,7 @@ use App\Services\VerificationAdresseService;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -806,6 +807,21 @@ class CommandeCrudController extends AbstractCrudController
             } else {
                 // si le formulaire ne s'est pas ouvert, affiche le message d'erreur associé
                 $this->addFlash('warning', $exception->getMessage());
+            }
+        } catch (ExceptionInterface | \UnexpectedValueException $exception) {
+            // Annule les modifications si le service de livraison échoue.
+            if ($connexion->isTransactionActive()) {
+                $connexion->rollBack();
+            }
+
+            $entityManager->refresh($commande);
+
+            $message = 'Le calcul des frais de livraison est temporairement indisponible. Aucune modification n’a été enregistrée. Veuillez réessayer.';
+
+            if ($formModification !== null) {
+                $formModification->addError(new FormError($message));
+            } else {
+                $this->addFlash('warning', $message);
             }
         } catch (\Throwable $exception) {
             // stop transaction si toujours active

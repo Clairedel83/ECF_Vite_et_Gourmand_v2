@@ -223,59 +223,61 @@
                 <!-- GRILLE DE MENUS REPLIES -->
                 <section class="small_menu">
                     {% for menu in menus %}
-                        <div
-                            class="menu"
-                            {#permet d'obtenir les informations de chaque menu pour être utilisables dans JS  #}
-                            data-menu-id="{{ menu.id }}"
-                            data-theme-id="{{ menu.theme.id }}"
-                            data-prix-per-pers="{{ menu.prixPerPers }}"
-                            data-nbre-min="{{ menu.nbreMin }}"
-                            {# relation ManyToMany #}
-                            data-regime-ids="{% for regime in menu.regimes %}{{ regime.id }}{% if not loop.last %},{% endif %}{% endfor %}"
-                        >
+                        {% if menu.stock > 0 %}
+                            <div
+                                class="menu"
+                                {#permet d'obtenir les informations de chaque menu pour être utilisables dans JS  #}
+                                data-menu-id="{{ menu.id }}"
+                                data-theme-id="{{ menu.theme.id }}"
+                                data-prix-per-pers="{{ menu.prixPerPers }}"
+                                data-nbre-min="{{ menu.nbreMin }}"
+                                {# relation ManyToMany #}
+                                data-regime-ids="{% for regime in menu.regimes %}{{ regime.id }}{% if not loop.last %},{% endif %}{% endfor %}"
+                            >
 
-                            <div class="menu_content_top">
-                                <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="Photo illustrant le menu {{ menu.nom }}">
+                                <div class="menu_content_top">
+                                    <img class="visuel_menu" src="/uploads/{{ menu.illustration }}" alt="Photo illustrant le menu {{ menu.nom }}">
 
-                                <div class="theme">
-                                    <img src="{{ asset('images/logos/Shopicons_Light_Pin2.svg') }}" alt="">
-                                    <p>{{ menu.theme }}</p>
-                                </div>
-                            </div>
-
-                            <div class="menu_content_text">
-                                <h5>{{ menu.nom }}</h5>
-                                <p>{{ menu.description }}</p>
-                            </div>
-
-                            <div class="menu_content_bottom">
-                                <div class="regime">
-                                    <p>
-                                        <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt=""> 
-                                        {% for regime in menu.regimes %}
-                                            {{ regime.nom }}
-                                            {# pour mettre une virgule entre les régimes #}
-                                            {% if not loop.last %}, {% endif %}
-                                        {% endfor %}
-                                    </p>
-                                </div>
-
-                                <div class="menu_line"></div>
-
-                                <div class="conditions">
-                                    <div class="price">
-                                        <h5>{{ menu.prixPerPers }} €</h5>
-                                    </div>
-
-                                    <div class="min_pers">
-                                        <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
-                                        <p>Min : {{ menu.nbreMin }} pers.</p>
+                                    <div class="theme">
+                                        <img src="{{ asset('images/logos/Shopicons_Light_Pin2.svg') }}" alt="">
+                                        <p>{{ menu.theme }}</p>
                                     </div>
                                 </div>
 
-                                <button type="button" class="btn2 btn_menu" data-menu-id='{{ menu.id }}'>Voir le menu</button>
+                                <div class="menu_content_text">
+                                    <h5>{{ menu.nom }}</h5>
+                                    <p>{{ menu.description }}</p>
+                                </div>
+
+                                <div class="menu_content_bottom">
+                                    <div class="regime">
+                                        <p>
+                                            <img src="{{ asset('images/logos/Shopicons_Light_Eco1.svg') }}" alt=""> 
+                                            {% for regime in menu.regimes %}
+                                                {{ regime.nom }}
+                                                {# pour mettre une virgule entre les régimes #}
+                                                {% if not loop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+
+                                    <div class="menu_line"></div>
+
+                                    <div class="conditions">
+                                        <div class="price">
+                                            <h5>{{ menu.prixPerPers }} €</h5>
+                                        </div>
+
+                                        <div class="min_pers">
+                                            <img src="{{ asset('images/logos/Shopicons_Light_Account.svg') }}" alt="">
+                                            <p>Min : {{ menu.nbreMin }} pers.</p>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn2 btn_menu" data-menu-id='{{ menu.id }}'>Voir le menu</button>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     {% endfor %}
                 </section>
 

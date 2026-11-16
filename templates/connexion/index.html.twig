@@ -2,11 +2,11 @@
 
 {% block body %}
     {% block hero_img %}
-        <div class = "hero_img" id="hero_connexion"></div>
+        <div class="hero_img" id="hero_connexion"></div>
     {% endblock %}
 
     {% block hero_title %}
-        <div class = "header_bottom header_bottom_classic">
+        <div class="header_bottom header_bottom_classic">
             <h1>CONNEXION</h1>
             <h3>Accédez à votre espace personnel</h3>
             <h4><i>Suivez vos commandes et retrouvez vos prestations en toute simplicité.</i></h4>
@@ -17,6 +17,7 @@
     {% block main %}
         <section class="contact">
             <form action="{{ path('app_connexion') }}" method="post" class="form_connexion">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 {% if error %}
                     <p class="form_error" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
                 {% endif %}
