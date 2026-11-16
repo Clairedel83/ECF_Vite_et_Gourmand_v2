@@ -51,7 +51,7 @@ final class CommandeController extends AbstractController
         // si le panier est vide ou que le menu est indisponible, il est redirigé
         if (!$menu || !$menu->isActive()) {
             $panier->remove();
-            
+
             $this->addFlash(
                 'warning',
                 'Ce menu n’est plus disponible. Veuillez choisir un autre menu.'
@@ -179,6 +179,9 @@ final class CommandeController extends AbstractController
         }
 
         // Appel à AdresseService pour vérifier
+        // Par défaut, la livraison suit le parcours habituel.
+        $livraisonAVerifier = false;
+
         try {
             $resultatVerification = $adresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
 
@@ -186,7 +189,11 @@ final class CommandeController extends AbstractController
             $codePostalVerifie = $resultatVerification['codePostal'];
             $villeVerifiee = $resultatVerification['ville'];
         } catch (\InvalidArgumentException $e) {
-            return $this->redirectToRoute('app_panier');
+            // Le service a répondu, mais l'adresse ne satisfait pas ses critères : conserve la saisie pour permettre à l'employé de la vérifier
+            $livraisonAVerifier = true;
+            $adresseVerifiee = trim($adresseGoogle);
+            $codePostalVerifie = trim($codePostal);
+            $villeVerifiee = trim($ville);
         } catch (HttpExceptionInterface $e) {
             $this->addFlash(
                 'error',
@@ -278,7 +285,13 @@ final class CommandeController extends AbstractController
         }
 
         // // attribue le prix de livraison
-        $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
+        // Laisse les frais à zéro lorsque la livraison nécessite une vérification
+        $prixCalcule = 0;
+
+        if (!$livraisonAVerifier) {
+            $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
+        }
+
         $commande->setPrixLivraison(number_format($prixCalcule, 2, '.', ''));
 
         // attribue le prix du matériel si location
@@ -303,8 +316,12 @@ final class CommandeController extends AbstractController
         $prixTotal = $sous_total + $prixCalcule + $prixMateriel;
         $commande->setPrixTotal(number_format($prixTotal, 2, '.', ''));
 
-        // attribue le statut
-        $commande->setStatut(1);
+        // attribue le statut : si la livraison doit être vérifiée par l'employé (9) sinon (1)
+        if ($livraisonAVerifier) {
+            $commande->setStatut(9);
+        } else {
+            $commande->setStatut(1);
+        }
 
         // attribue le booleen de prêt de matériel
         $commande->setPretMateriel($pret_materiel);
@@ -409,15 +426,15 @@ final class CommandeController extends AbstractController
             'numero_commande' => $commande->getNumeroCommande()
         ];
 
-        try{
+        try {
             $mail->envoyerMail($adresseMail, $prenom, '', 8483040, $variables);
-        } catch(\Exception $exception){
+        } catch (\Exception $exception) {
             $this->addFlash(
                 'warning',
                 'Votre commande a bien été envoyée à notre équipe mais le mail de confirmation n\'a pas pu être envoyé.'
             );
         }
-        
+
 
         // Vide le panier pour éviter un rechargement de page et une seconde commande créée (si transaction effectuée)
         $panier->remove();

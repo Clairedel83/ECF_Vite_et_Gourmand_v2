@@ -78,6 +78,7 @@ class CommandeCrudController extends AbstractCrudController
                 '6 - En attente du retour de matériel' => 6,
                 '7 - Commande terminée' => 7,
                 '8 - Commande annulée' => 8,
+                '9 - Livraison à vérifier' => 9,
             ]))
             ->add(EntityFilter::new('user', 'Client'));
     }
@@ -106,6 +107,7 @@ class CommandeCrudController extends AbstractCrudController
                     '6 - En attente du retour de matériel' => 6,
                     '7 - Commande terminée' => 7,
                     '8 - Commande annulée' => 8,
+                    '9 - Livraison à vérifier' => 9,
                 ])
                 ->setTemplatePath('admin/statut.html.twig'),
             TextField::new('menu_nom')->setLabel('Menu')->hideOnForm(),
@@ -191,6 +193,13 @@ class CommandeCrudController extends AbstractCrudController
             $entityManager->refresh($commande, LockMode::PESSIMISTIC_WRITE);
 
             $ancienStatut = $commande->getStatut();
+
+            // L'adresse doit être corrigée avant de poursuivre la commande.
+            if ($ancienStatut === 9) {
+                throw new \DomainException(
+                    'Veuillez corriger l’adresse de livraison dans le formulaire de modification avant de changer le statut.'
+                );
+            }
 
             // Reconstruit le formulaire envoyé depuis details(vue twig)
             $formStatut = $this->createForm(StatutType::class, $commande, [
@@ -404,7 +413,7 @@ class CommandeCrudController extends AbstractCrudController
 
             // appelle le service pour annuler la commande
             try {
-                $gestionCommandeService->annulerCommande($commande, $entityManager, [1, 2, 3], $interventionCommande);
+                $gestionCommandeService->annulerCommande($commande, $entityManager, [1, 2, 3, 9], $interventionCommande);
             } catch (\DomainException $exception) {
                 // affiche le message d'erreur
                 $this->addFlash('warning', $exception->getMessage());
@@ -513,8 +522,8 @@ class CommandeCrudController extends AbstractCrudController
             // Recharge et verrouille la commande AVANT de traiter le formulaire.
             $entityManager->refresh($commande, LockMode::PESSIMISTIC_WRITE);
 
-            // Vérifie que le statut permet la modification (= 1 ou 2)
-            if (!in_array($commande->getStatut(), [1, 2], true)) {
+            // Vérifie que le statut permet la modification (= 1 ou 2 ou 9)
+            if (!in_array($commande->getStatut(), [1, 2, 9], true)) {
                 throw new \DomainException(
                     'Le statut de cette commande ne permet plus sa modification.'
                 );
@@ -523,11 +532,6 @@ class CommandeCrudController extends AbstractCrudController
             // récupère les éléments du menu
             $menu = $commande->getMenu();
 
-            // if ($menu === null) {
-            //     throw new \DomainException(
-            //         'Le menu associé à cette commande ne permet plus sa modification.'
-            //     );
-            // }
 
             // récupère l'adresse de livraison, la date de livraison et le prix avant modification
             $adresseCompleteInitiale = $commande->getAdresseLivraison();
@@ -664,10 +668,23 @@ class CommandeCrudController extends AbstractCrudController
                     $villeVerifiee = $resultatAdresse['ville'];
 
                     // Recalcule les frais uniquement lorsque l'adresse principale change.
-                    $prixLivraison = $calculPrixLivraison->calculPrixLivraison(
-                        $villeVerifiee,
-                        $adresseVerifiee
-                    );
+                    $prixLivraison = $calculPrixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
+
+                    // L'adresse est reconnue et les frais ont été recalculés : statut passe à 1
+                    if ($commande->getStatut() === 9) {
+                        $commande->setStatut(1);
+
+                        // Conserve le retour au statut « En attente » dans l'historique.
+                        $dateModification = new \DateTime();
+
+                        $historiqueCommande = new CommandeHistorique();
+                        $historiqueCommande->setStatut(1);
+                        $historiqueCommande->setDateModification($dateModification);
+                        $historiqueCommande->setHeureModification($dateModification);
+
+                        $commande->addCommandeHistorique($historiqueCommande);
+                        $entityManager->persist($historiqueCommande);
+                    }
                 }
 
                 // Reconstruit l'adresse complète à conserver dans la commande.

@@ -247,18 +247,24 @@
                 
                 <div class="details_content_sub">
                     <p class="statut">{{ include('admin/statut.html.twig', { field: { 'value': commande.statut } }) }}</p>
-
-                    <div class="form_statut">
-                        {{ form_start(statutForm) }}
-                        <div class="statut_champ">
-                            {{ form_label(statutForm.statut) }}
-                            {{ form_widget(statutForm.statut) }}
-                            {{ form_errors(statutForm.statut) }}                            
+                    
+                    {% if commande.statut == 9 %}
+                        <p>
+                            Contactez le client puis corrigez l’adresse de livraison avec le bouton « Modifier la commande ». Les frais seront recalculés automatiquement et la commande reviendra en attente de validation.
+                        </p>
+                    {% else %}
+                        <div class="form_statut">
+                            {{ form_start(statutForm) }}
+                            <div class="statut_champ">
+                                {{ form_label(statutForm.statut) }}
+                                {{ form_widget(statutForm.statut) }}
+                                {{ form_errors(statutForm.statut) }}                            
+                            </div>
+                                
+                            <button type="submit" class="btn3 btn3_statut">Mettre à jour le statut</button>
+                            {{ form_end(statutForm) }}    
                         </div>
-                            
-                        <button type="submit" class="btn3 btn3_statut">Mettre à jour le statut</button>
-                        {{ form_end(statutForm) }}    
-                    </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -268,7 +274,7 @@
                 <div class="details_content_sub">
                     <div class="commande_actions">
                         {# Bouton qui ouvre la modale d'annulation #}
-                        <button type="button" class="btn3 btn3_modifier" {% if commande.statut not in [1, 2] %}disabled {% endif %}>
+                        <button type="button" class="btn3 btn3_modifier" {% if commande.statut not in [1, 2, 9] %}disabled {% endif %}>
                             <twig:ea:Icon name="fa fa-pen"/>Modifier la commande
                         </button>
 

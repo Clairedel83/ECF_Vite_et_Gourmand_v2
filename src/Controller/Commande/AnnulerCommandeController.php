@@ -35,7 +35,7 @@ final class AnnulerCommandeController extends AbstractController
         // Vérifie que le statut de la commande permet une modification
         $statut = $commande->getStatut();
 
-        if ($statut !== 1) {
+        if (!in_array($statut, [1, 9], true)) {
             $this->addFlash(
                 'warning',
                 'Cette commande ne peut plus être annulée. Contactez-nous si vous souhaitez l\'annuler avant préparation.'
@@ -45,8 +45,8 @@ final class AnnulerCommandeController extends AbstractController
 
         // appelle le service pour annuler la commande
         try {
-            // précise au service que le client ne peut intervenir que si le statut == 1
-            $gestionCommandeService->annulerCommande($commande, $entityManager, [1]);
+            // précise au service que le client ne peut intervenir que si le statut == 1 ou 9
+            $gestionCommandeService->annulerCommande($commande, $entityManager, [1, 9]);
         } catch (\DomainException $exception) {
             // affiche le message d'erreur
             $this->addFlash('warning', $exception->getMessage());

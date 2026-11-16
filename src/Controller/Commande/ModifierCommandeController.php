@@ -17,6 +17,7 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use App\Entity\CommandeHistorique;
 
 final class ModifierCommandeController extends AbstractController
 {
@@ -38,7 +39,8 @@ final class ModifierCommandeController extends AbstractController
         // Vérifie que le statut de la commande permet une modification
         $statut = $commande->getStatut();
 
-        if ($statut !== 1){
+        // Autorise les commandes en attente ou dont la livraison reste à vérifier.
+        if (!in_array($statut, [1, 9], true)) {
             return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
         }
         
@@ -88,7 +90,8 @@ final class ModifierCommandeController extends AbstractController
             // Vérifie que le statut de la commande permet une modification
             $statut = $commande->getStatut();
 
-            if ($statut !== 1){
+            // Autorise les commandes en attente ou dont la livraison reste à vérifier.
+            if (!in_array($statut, [1, 9], true)) {
                 return $this->redirectToRoute('app_commandes_details', ['id' => $id]);
             }
 
@@ -247,6 +250,9 @@ final class ModifierCommandeController extends AbstractController
                 $ville = $request->request->get('form_ville');
 
                 // VERIFICATION DE L'ADRESSE
+                // La nouvelle adresse suit par défaut le parcours habituel.
+                $livraisonAVerifier = false;
+
                 // les adresses, code postal et villes doivent être des chaînes de caractères et non vides
                 if(
                     (!is_string($adresseGoogle) || trim($adresseGoogle) === '') || 
@@ -267,7 +273,10 @@ final class ModifierCommandeController extends AbstractController
                     $villeVerifiee = $resultatVerification['ville'];
 
                 } catch(\InvalidArgumentException $e){
-                    return $this->redirectToRoute('app_commandes_modifier', ['id' => $id]);
+                        // Conserve la saisie si l'adresse n'est pas reconnue.
+                        $livraisonAVerifier = true;
+                        $adresseVerifiee = trim($adresseGoogle);
+                        $villeVerifiee = trim($ville);
                 } catch(HttpExceptionInterface $e){
                     $this->addFlash(
                         'error',
@@ -291,7 +300,21 @@ final class ModifierCommandeController extends AbstractController
                 $commande->setAdresseLivraison($adresseCompleteLivraison);
 
                 // attribue le prix de livraison
-                $prixCalcule = $prixLivraison->calculPrixLivraison($villeVerifiee, $adresseVerifiee);
+                // Applique zéro euro tant que la nouvelle livraison reste à vérifier.
+                $prixCalcule = 0;
+
+                if ($livraisonAVerifier) {
+                    $commande->setStatut(9);
+                } else {
+                    // Une adresse reconnue revient au parcours normal de validation.
+                    $prixCalcule = $prixLivraison->calculPrixLivraison(
+                        $villeVerifiee,
+                        $adresseVerifiee
+                    );
+
+                    $commande->setStatut(1);
+                }
+
                 $commande->setPrixLivraison(number_format($prixCalcule, 2, '.', ''));
             } else{
                 // récupère le prix non modifié de la commande
@@ -337,6 +360,20 @@ final class ModifierCommandeController extends AbstractController
 
             // attribue le booleen de restitution de matériel
             $commande->setRestitutionMateriel(false);
+
+            // Enregistre un historique uniquement si la modification a changé le statut.
+            // $statut contient le statut récupéré après le verrouillage de la commande.
+            if ($commande->getStatut() !== $statut) {
+                $dateModification = new \DateTime();
+
+                $historiqueCommande = new CommandeHistorique();
+                $historiqueCommande->setDateModification($dateModification);
+                $historiqueCommande->setHeureModification($dateModification);
+                $historiqueCommande->setStatut($commande->getStatut());
+
+                $commande->addCommandeHistorique($historiqueCommande);
+                $entityManager->persist($historiqueCommande);
+            }
 
             // enregistre les modifications en BDD
             $entityManager->flush();

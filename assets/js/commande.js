@@ -247,6 +247,12 @@ async function calculLivraison(adresse = formAdresseGoogle.value, codePostal = f
         // Affiche le prix de livraison avec deux décimales
         prixLivraison.textContent = data.prixLivraison.toFixed(2);
 
+        // Informe le client lorsqu'une vérification de livraison sera nécessaire.
+        if (data.livraisonAVerifier === true) {
+            erreurLivraison.textContent = data.message;
+            erreurLivraison.style.display = 'block';
+        }
+
         // Actualise le prix total de la commande
         calculTotal();
 

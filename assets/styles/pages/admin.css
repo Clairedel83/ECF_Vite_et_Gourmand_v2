@@ -35,8 +35,6 @@ body.ea-dark-scheme .content-top {
     --admin-entete-beige: #daa48125;
 }
 
-
-
 .admin_entete_legende {
     color: var(--admin-entete-secondaire);
     font-family: "Plus Jakarta Sans", sans-serif;
@@ -78,7 +76,9 @@ body.ea-dark-scheme .content-top {
 }
 
 /* Liens et bouton du compte */
-.admin_entete_site, .admin_entete_deconnexion, .admin_entete_identite {
+.admin_entete_site,
+.admin_entete_deconnexion,
+.admin_entete_identite {
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -87,7 +87,9 @@ body.ea-dark-scheme .content-top {
     text-decoration: none;
 }
 
-.admin_entete_site:hover, .admin_entete_deconnexion:hover, .admin_entete_identite:hover {
+.admin_entete_site:hover,
+.admin_entete_deconnexion:hover,
+.admin_entete_identite:hover {
     color: var(--admin-entete-texte);
 }
 
@@ -171,7 +173,6 @@ body.ea-dark-scheme .content-top {
     outline-offset: 4px;
 }
 
-
 @media (max-width: 991.98px) {
     .content-top {
         min-height: auto;
@@ -182,12 +183,9 @@ body.ea-dark-scheme .content-top {
     }
 }
 
-
-
 .logo {
     padding: 16px 0;
 }
-
 
 .resizer-handler-right {
     display: none;
@@ -283,6 +281,11 @@ body.ea-dark-scheme .content-top {
     color: rgba(49, 116, 49);
 }
 
+.badge.violet {
+    background-color: rgba(158, 7, 158, 0.2);
+    color: rgb(90, 4, 90);
+}
+
 #statut_commande {
     font-family: "Roboto" !important;
     font-size: 14px !important;
@@ -321,8 +324,8 @@ body.ea-dark-scheme .content-top {
     gap: 2vw;
 }
 
-.details_content{
-    border:1px solid #faebd8;
+.details_content {
+    border: 1px solid #faebd8;
     border-radius: 5px;
 }
 
@@ -351,8 +354,8 @@ body.ea-dark-scheme .content-top {
     border-collapse: collapse;
 }
 
-.details_content_sub{
-    padding: 0 15px 15px ;
+.details_content_sub {
+    padding: 0 15px 15px;
 }
 
 .client,
@@ -424,13 +427,11 @@ body.ea-dark-scheme .content-top {
     padding: 5px !important;
 }
 
-
 .historique .historique_annulation {
     margin-top: 8px;
     font-size: 12px;
     line-height: 1.5;
 }
-
 
 .statut_champ {
     display: flex;
@@ -463,8 +464,8 @@ body.ea-dark-scheme .content-top {
     border-radius: 10px;
     cursor: pointer;
     transition: 0.2s ease;
-    font-family: 'Roboto';
-    font-size:14px;
+    font-family: "Roboto";
+    font-size: 14px;
     letter-spacing: 0.3px;
 }
 
@@ -481,9 +482,9 @@ body.ea-dark-scheme .content-top {
     color: #daa481;
 }
 
-.btn_form{
-    display:none;
-    gap:10px;
+.btn_form {
+    display: none;
+    gap: 10px;
 }
 
 .commande_actions {
@@ -493,37 +494,39 @@ body.ea-dark-scheme .content-top {
     margin: 4vh 0;
 }
 
-.nouvelles_donnees{
+.nouvelles_donnees {
     display: none;
 }
 
-.nouvelleDate{
-    width:20%;
+.nouvelleDate {
+    width: 20%;
 }
 
-.nouvelleAdresse{
-    width:100%;
-    resize:none;
+.nouvelleAdresse {
+    width: 100%;
+    resize: none;
 }
 
-.nouveauNbre{
-    width:10%;
+.nouveauNbre {
+    width: 10%;
 }
 
-#complement_adresse, #message_livraison, #reessayer_livraison{
+#complement_adresse,
+#message_livraison,
+#reessayer_livraison {
     margin-top: 2vh;
 }
 
-#message_livraison{
+#message_livraison {
     font-weight: 500;
 }
 
-#reessayer_livraison{
+#reessayer_livraison {
     padding: 5px 12px;
     font-weight: 500;
     border-radius: 10px;
     cursor: pointer;
-    border:none;
+    border: none;
 }
 
 .btn3_modifier {
@@ -532,20 +535,23 @@ body.ea-dark-scheme .content-top {
     background-color: transparent;
 }
 
-.btn3_modifier:hover, #btn_form_sauvegarder, #reessayer_livraison {
+.btn3_modifier:hover,
+#btn_form_sauvegarder,
+#reessayer_livraison {
     background-color: #aa3333cc;
     color: white;
 }
 
-.btn3_modifier:disabled,.btn3_modifier:disabled:hover {
-    opacity: .5;
+.btn3_modifier:disabled,
+.btn3_modifier:disabled:hover {
+    opacity: 0.5;
     cursor: not-allowed;
     color: #aa3333;
     background-color: transparent;
 }
 
-#btn_form_sauvegarder{
-    border:none;
+#btn_form_sauvegarder {
+    border: none;
 }
 
 .btn3_annuler {
@@ -582,92 +588,95 @@ body.ea-dark-scheme .content-top {
     padding: 0;
 }
 
-.modal-body{
+.modal-body {
     padding: 15px;
 }
 
-.modal-header{
+.modal-header {
     background-color: #faebd8;
     border: 1 solid #faebd8;
     border-radius: 10px 10px 0 0;
     padding: 15px;
 }
 
-.modal-header-title p{
+.modal-header-title p {
     margin-bottom: 0;
 }
 
-.modal-form{
-    margin-top:4vh ;
+.modal-form {
+    margin-top: 4vh;
 }
 
-.modal-client table th{
-padding-right: 10px;
+.modal-client table th {
+    padding-right: 10px;
 }
 
-.modal-form-content, .modal-form-checkbox{
+.modal-form-content,
+.modal-form-checkbox {
     margin-top: 2vh;
 }
 
-.modal-form-content{
+.modal-form-content {
     display: flex;
     flex-direction: column;
-    gap:1vh;
+    gap: 1vh;
 }
 
-.modal-form-checkbox{
+.modal-form-checkbox {
     display: flex;
     align-items: center;
-    gap:1vw;
+    gap: 1vw;
 }
 
-.modal-label{
-    font-weight:500;
+.modal-label {
+    font-weight: 500;
 }
 
-.modal-select{
-    height:1.75rem;
+.modal-select {
+    height: 1.75rem;
 }
 
-.modal-textarea{
-    resize:none;
-    height:3rem;
+.modal-textarea {
+    resize: none;
+    height: 3rem;
 }
 
-.modal-select, .modal-textarea{
+.modal-select,
+.modal-textarea {
     border: 0.6px solid #696968a4;
 }
 
-.info-warning, .info-warning p{
-    color:rgba(245, 61, 61)
+.info-warning,
+.info-warning p {
+    color: rgba(245, 61, 61);
 }
 
-.info-warning{
+.info-warning {
     display: flex;
-    gap:1vw;
+    gap: 1vw;
 }
 
-.btn_modal{
+.btn_modal {
     border-radius: 10px;
     padding: 10px;
 }
 
-.btn_annuler{
+.btn_annuler {
     color: white;
     background-color: rgba(245, 61, 61, 0.829);
-    border:1px solid rgba(245, 61, 61, 0.829);
+    border: 1px solid rgba(245, 61, 61, 0.829);
 }
 
-.btn_abandonner{
+.btn_abandonner {
     background-color: transparent;
-    border:1px solid #252424;
-    color:#252424;
+    border: 1px solid #252424;
+    color: #252424;
 }
 
-.modal-cta{
+.modal-cta {
     display: flex;
     justify-content: end;
-    gap:1vw;
+    gap: 1vw;
 }
 
 /* -------------------------- TABLEAU DE BORD DE L'ADMIN --------------------------------- */

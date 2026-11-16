@@ -24,10 +24,13 @@ final class CalculPrixLivraisonController extends AbstractController
         try{
             $resultatAdresse = $verificationAdresseService->verifierAdresse($adresseGoogle, $codePostal, $ville);
         // en cas d'erreur (400 = données invalides : renvoie message)
-        } catch (\InvalidArgumentException $e){
-            return $this ->json([
-                'erreur'=> $e->getMessage()
-             ], 400);
+        } catch (\InvalidArgumentException $e) {
+            // Le service a répondu, mais l'adresse n'a pas été reconnue : permet de poursuivre avec une vérification ultérieure par l'employé.
+            return $this->json([
+                'prixLivraison' => 0,
+                'livraisonAVerifier' => true,
+                'message' => 'Votre adresse n’a pas pu être reconnue. Les frais de livraison sont temporairement fixés à 0 €. Notre équipe vous contactera pour vérifier l’adresse et ajuster ces frais si nécessaire. Vous pouvez confirmer votre commande.',
+            ]);
         }
 
         
@@ -37,7 +40,8 @@ final class CalculPrixLivraisonController extends AbstractController
         $prixCalcule = $calculPrixLivraison->calculPrixLivraison($villeVerifiee, $adresseCompleteVerifiee);
 
         return $this->json([
-            'prixLivraison' => $prixCalcule
+            'prixLivraison' => $prixCalcule,
+            'livraisonAVerifier' => false,
         ]);
     }
 

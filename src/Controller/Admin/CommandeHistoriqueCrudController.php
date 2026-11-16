@@ -53,6 +53,7 @@ class CommandeHistoriqueCrudController extends AbstractCrudController
                     '6 - En attente du retour de matériel' => 6,
                     '7 - Commande terminée' => 7,
                     '8 - Commande annulée' => 8,
+                    '9 - Livraison à vérifier' => 9,
                 ])
                 ->setTemplatePath('admin/statut.html.twig'),
         ];

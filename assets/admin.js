@@ -306,6 +306,13 @@ btnModifier.addEventListener('click', () => {
 
             const resultat = await response.json();
 
+            // Une adresse non reconnue nécessite un traitement spécifique par l'employé.
+            if (resultat.livraisonAVerifier === true) {
+                throw new Error(
+                    'Cette adresse reste à vérifier. Les frais proposés à 0 € ne constituent pas un tarif de livraison validé.'
+                );
+            }
+
             // Vérifie que le serveur a bien renvoyé un prix.
             if (
                 typeof resultat.prixLivraison !== 'number'

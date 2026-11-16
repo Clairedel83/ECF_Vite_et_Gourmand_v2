@@ -55,7 +55,7 @@
                                         <td data-label="Prix TTC">{{ commande.prixTotal }}€</td>
                                         <td data-label="Détails">
                                             <a href="{{ path('app_commandes_details', {'id': commande.id}) }}">
-                                                {% if commande.statut == 1 %}
+                                                {% if commande.statut in [1, 9] %}
                                                     Modifier
                                                 {% else %}
                                                     Voir plus
