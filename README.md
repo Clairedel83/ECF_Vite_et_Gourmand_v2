@@ -5,10 +5,12 @@
 # Présentation du projet : Vite & Gourmand
 Vite & Gourmand est une entreprise de restauration située à Bordeaux depuis 25 ans. L’application demandée permet de consulter les menus du moment, de commander un menu et de suivre l'historique de ses commandes. Des espaces employé et administrateur permettent de gérer le catalogue, les commandes, les avis et les statistiques. 
 
+
 ## Liens
 - Application déployée : https://vite-gourmand.claire-delmau.fr/
 Les identifiants sont disponibles dans la documentation (cf dossier de rendu de l'ECF).
 - Gestion de projet : https://trello.com/b/i7f7NKVa/vite-gourmand
+- Livrables (charte graphique, copie ECF, documentation technique, gestion de projet, manuel d'utilisation, export SQL de la BDD) : https://drive.google.com/drive/folders/1ntFZfuAD4Cl80xBsnG_FO6uRKOrUsgEW?usp=sharing
 
 
 ## Technologies
